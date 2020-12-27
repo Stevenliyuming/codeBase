@@ -1,0 +1,21 @@
+{
+	"groups": [
+		{
+			"keys": "bg_png,comRes_1_json",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/bg.png",
+			"type": "image",
+			"name": "bg_png"
+		},
+		{
+			"url": "assets/comRes_1.json",
+			"type": "sheet",
+			"name": "comRes_1_json",
+			"subkeys": "hand,playSound,restart"
+		}
+	]
+}
