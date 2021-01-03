@@ -1,4 +1,4 @@
-module codeBase{
+module codeBase {
     /**
      * 使用材质显示字符
      */
@@ -47,6 +47,7 @@ module codeBase{
         public constructor(drawDelay: boolean = false) {
             super(drawDelay);
         }
+
         /**
          * 初始化主场景的组件,加入场景时,主动调用一次
          * 子类覆写该方法,添加UI逻辑
@@ -99,7 +100,6 @@ module codeBase{
         public get texture(): egret.Texture {
             return this._texture;
         }
-
         /**
          * 设置材质
          * @param value
@@ -111,10 +111,10 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         public get chars(): string {
             return this._chars;
         }
-
         /**
          * 设置材质对应的字符
          * @param value
@@ -126,10 +126,10 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         public get step(): number {
             return this._step;
         }
-
         /**
          * 设置滚动的增量值
          * 这个值必须在滚动之前设置进入
@@ -143,10 +143,10 @@ module codeBase{
                 //this.invalidate();
             }
         }
+
         public get horizontalSplit(): boolean {
             return this._horizontalSplit;
         }
-
         /**
          * 材质切割的方向,默认水平切割
          * @param value
@@ -158,10 +158,10 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         public get gapSplit(): number {
             return this._gapSplit;
         }
-
         /**
          * 材质切割的间隔
          * @param value
@@ -173,10 +173,10 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         public get charSplit(): string {
             return this._charSplit;
         }
-
         /**
          * 切割符号,默认是,
          * @param value
@@ -188,6 +188,7 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         /**
          * Draws the visual ui of the component.
          */
@@ -224,34 +225,36 @@ module codeBase{
             }
             super.draw();
         }
+
         private splitTextureSource(): void {
             if (this._texture && StringUtil.isUsage(this._chars)) {
-                var charArr: Array<string> = StringUtil.spliteStrArr(this._chars, this._charSplit);
+                var charArr: Array<string> = StringUtil.splitStrArr(this._chars, this._charSplit);
                 if (charArr.length > 0) {
                     this._initDisplayData = true;
                     var spriteSheet: egret.SpriteSheet = new egret.SpriteSheet(this._texture);
-                    var splietWidth: number = 0;
-                    var splietHeight: number = 0;
+                    var splitWidth: number = 0;
+                    var splitHeight: number = 0;
                     var textureWidth: number = this._texture.textureWidth;
                     var textureHeight: number = this._texture.textureHeight;
                     if (this._horizontalSplit) {
-                        splietWidth = (textureWidth - charArr.length * this._gapSplit) / charArr.length;
-                        splietHeight = textureHeight;
+                        splitWidth = (textureWidth - charArr.length * this._gapSplit) / charArr.length;
+                        splitHeight = textureHeight;
                     } else {
-                        splietWidth = textureWidth;
-                        splietHeight = (textureHeight - charArr.length * this._gapSplit) / charArr.length;
+                        splitWidth = textureWidth;
+                        splitHeight = (textureHeight - charArr.length * this._gapSplit) / charArr.length;
                     }
-                    //开始切割;
+                    //开始切割
                     for (var i = 0; i < charArr.length; i++) {
                         if (this._horizontalSplit) {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splietWidth + i * this._gapSplit, 0, splietWidth, splietHeight);
+                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splitWidth + i * this._gapSplit, 0, splitWidth, splitHeight);
                         } else {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splietHeight + i * this._gapSplit, splietWidth, splietHeight);
+                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splitHeight + i * this._gapSplit, splitWidth, splitHeight);
                         }
                     }
                 }
             }
         }
+
         /**
          * 初始化声音对象,并播放声音
          */
@@ -263,6 +266,7 @@ module codeBase{
                 this._sound.play();
             }
         }
+
         /**
          * 设置播放的声音名称
          * @param value
@@ -273,6 +277,7 @@ module codeBase{
         public get sound(): string {
             return this._soundName;
         }
+
         /**
          * 文字滚动设置
          * @param value
@@ -307,6 +312,7 @@ module codeBase{
         public get rollingZoomValue(): number {
             return this._rollingZoomValue;
         }
+
         /**
          * 设置文字滚动的对齐方式
          * @param value
@@ -318,6 +324,7 @@ module codeBase{
         public get rollingZoomAlign(): string {
             return this._rollingZoomAlign;
         }
+
         /**
          * 设置是否下一帧计算相对位置
          * 不需要对子元素,进行布局,所以覆写,减少消耗
@@ -328,6 +335,8 @@ module codeBase{
                 this.addEventListener(egret.Event.ENTER_FRAME, this.resetPosition, this);
             }
         }
+        
+
         /**
          * 设置滚动结束的回调通知
          */
@@ -347,11 +356,15 @@ module codeBase{
                 this._rollingEffect.callbackFuncThis = this._callbackFuncThis;
             }
         }
+
         //滚动回调的函数设置
         private _callbackFunc: any = null;
         private _callbackFuncThis: any = null;
     }
 
+    /**
+     * 控制数字滚动类
+     */
     class EffectNumberRolling {
         public zoomEnable: boolean = false;
         public zoomValue: number = 1;
@@ -370,6 +383,7 @@ module codeBase{
         //滚动回调的函数设置
         public callbackFunc: any = null;
         public callbackFuncThis: any = null;
+
         public constructor(lableImg: LabelImage) {
             this._labelImg = lableImg;
             this._xOld = this._labelImg.x;
@@ -571,6 +585,7 @@ module codeBase{
             console.log("step=" + value);
             return value;
         }
+
         private onChangeText(): void {
             if (this._rollingText.length > 0) {
                 this._labelImg.setText(this._rollingText.shift());

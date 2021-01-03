@@ -65,9 +65,9 @@ var codeBase;
         BaseGroup.prototype.createChildren = function () {
             this.touchEnabled = false; //默认不接受事件
             if (this.width == 0)
-                this.width = 100;
+                this.width = codeBase.Style.BASEGROUP_WIDTH;
             if (this.height == 0)
-                this.height = 100;
+                this.height = codeBase.Style.BASEGROUP_HEIGHT;
         };
         Object.defineProperty(BaseGroup.prototype, "width", {
             get: function () {
@@ -294,10 +294,10 @@ var codeBase;
                 if (!isNaN(s._left) && isNaN(s._right)) {
                     s.x = s._left;
                 }
-                else if (!isNaN(s._right) && isNaN(s._right)) {
+                else if (!isNaN(s._right) && isNaN(s.left)) {
                     s.x = parentWidth - s._right - thisWidth;
                 }
-                else if (!isNaN(s._right) && !isNaN(s._right)) {
+                else if (!isNaN(s.left) && !isNaN(s._right)) {
                     s.x = s._left;
                     thisWidth = parentWidth - s._left - s._right;
                     if (s.width != thisWidth) {

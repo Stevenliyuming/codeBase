@@ -131,8 +131,8 @@ module codeBase{
 				let video: HTMLVideoElement = s.video;
 				//计算缩放比例
 				let csf = 1 / egret.sys.DisplayList.$canvasScaleFactor;
-				let scaleFactorX = s.canvas.width * csf / SceneManager.Instance.designWidth;
-				let scaleFactorY = s.canvas.height * csf / SceneManager.Instance.designHeight;
+				let scaleFactorX = s.canvas.width * csf / SceneManager.instance.designWidth;
+				let scaleFactorY = s.canvas.height * csf / SceneManager.instance.designHeight;
 				//console.log(s._canvas.width + "=======" + s._canvas.height);
 				//计算视频宽高
 				let videoScale = 1;
@@ -154,8 +154,8 @@ module codeBase{
 				if (s.relyDisplayObject && s.relyDisplayObject.parent) {
 					let pos = s.relyDisplayObject.parent.localToGlobal(s.relyDisplayObject.x, s.relyDisplayObject.y);
 					if (s.offsetPoint) {
-						pos.x += s.offsetPoint.x * SceneManager.Instance.gameScale;
-						pos.y += s.offsetPoint.y * SceneManager.Instance.gameScale;
+						pos.x += s.offsetPoint.x * SceneManager.instance.gameScale;
+						pos.y += s.offsetPoint.y * SceneManager.instance.gameScale;
 					}
 					//console.log(pos);
 					vx = pos.x;// * scaleFactorX;//egret.sys.DisplayList.$canvasScaleX;

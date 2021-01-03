@@ -43,84 +43,74 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var codeBase;
-(function (codeBase) {
-    var Main = (function (_super) {
-        __extends(Main, _super);
-        function Main() {
-            var _this = _super.call(this) || this;
-            _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
-            return _this;
-        }
-        Main.prototype.onAddToStage = function (event) {
-            // egret.lifecycle.addLifecycleListener((context) => {
-            //     // custom lifecycle plugin
-            //     context.onUpdate = () => {
-            //     }
-            // })
-            // egret.lifecycle.onPause = () => {
-            //     egret.ticker.pause();
-            // }
-            // egret.lifecycle.onResume = () => {
-            //     egret.ticker.resume();
-            // }
-            this.runGame().catch(function (e) {
-                console.log(e);
+var Main = (function (_super) {
+    __extends(Main, _super);
+    function Main() {
+        var _this = _super.call(this) || this;
+        _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
+        return _this;
+    }
+    Main.prototype.onAddToStage = function (event) {
+        // egret.lifecycle.addLifecycleListener((context) => {
+        //     // custom lifecycle plugin
+        //     context.onUpdate = () => {
+        //     }
+        // })
+        // egret.lifecycle.onPause = () => {
+        //     egret.ticker.pause();
+        // }
+        // egret.lifecycle.onResume = () => {
+        //     egret.ticker.resume();
+        // }
+        this.runGame();
+    };
+    Main.prototype.runGame = function () {
+        var _this = this;
+        codeBase.SceneManager.instance.Init();
+        codeBase.GlobalSetting.initData();
+        codeBase.HeartBeat.init();
+        this.loadingView = new codeBase.LoadingUI();
+        codeBase.SceneManager.instance.showScene(this.loadingView);
+        codeBase.EventManager.addEventListener(codeBase.EventType.LOADINGUI_FINISH, function () {
+            _this.loadResource();
+            _this.createGameScene();
+        }, this);
+        // await platform.login();
+        // const userInfo = await platform.getUserInfo();
+        // console.log(userInfo);
+    };
+    Main.prototype.loadResource = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, RES.loadGroup("preload", 0, this.loadingView)];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _a.sent();
+                        console.error(e_1);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
             });
-        };
-        Main.prototype.runGame = function () {
-            return __awaiter(this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            codeBase.SceneManager.Instance.Init();
-                            codeBase.GlobalSetting.initData();
-                            codeBase.HeartBeat.init();
-                            return [4 /*yield*/, this.loadResource()];
-                        case 1:
-                            _a.sent();
-                            this.createGameScene();
-                            return [2 /*return*/];
-                    }
-                });
-            });
-        };
-        Main.prototype.loadResource = function () {
-            return __awaiter(this, void 0, void 0, function () {
-                var loadingView, e_1;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            _a.trys.push([0, 3, , 4]);
-                            loadingView = new codeBase.LoadingUI();
-                            codeBase.SceneManager.Instance.showScene(loadingView);
-                            return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
-                        case 1:
-                            _a.sent();
-                            return [4 /*yield*/, RES.loadGroup("preload", 0, loadingView)];
-                        case 2:
-                            _a.sent();
-                            return [3 /*break*/, 4];
-                        case 3:
-                            e_1 = _a.sent();
-                            console.error(e_1);
-                            return [3 /*break*/, 4];
-                        case 4: return [2 /*return*/];
-                    }
-                });
-            });
-        };
-        /**
-         * 创建游戏场景
-         * Create a game scene
-         */
-        Main.prototype.createGameScene = function () {
-            egret.setTimeout(function () {
-                codeBase.SceneManager.Instance.showScene(new codeBase.MainScene());
-            }, this, 1000);
-        };
-        return Main;
-    }(egret.DisplayObjectContainer));
-    codeBase.Main = Main;
-    __reflect(Main.prototype, "codeBase.Main");
-})(codeBase || (codeBase = {}));
+        });
+    };
+    /**
+     * 创建游戏场景
+     * Create a game scene
+     */
+    Main.prototype.createGameScene = function () {
+        egret.setTimeout(function () {
+            codeBase.SceneManager.instance.showScene(new codeBase.MainScene());
+        }, this, 1000);
+    };
+    return Main;
+}(egret.DisplayObjectContainer));
+__reflect(Main.prototype, "Main");

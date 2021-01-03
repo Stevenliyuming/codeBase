@@ -81,16 +81,18 @@ var codeBase;
             this.addChild(this._imgDisplay);
             this._imgDisplay.width = this.width;
             this._imgDisplay.height = this.height;
-            this._imgDisplay.fillMode = egret.BitmapFillMode.SCALE;
+            this._imgDisplay.fillMode = this._fillMode;
             this._imgDisplay.touchEnabled = false;
             //文字显示
             this._label = new codeBase.Label(this.drawDelay);
             this._label.autoSize = true;
             this._label.clip = false;
             this._label.hAlign = egret.HorizontalAlign.CENTER;
+            this._label.vAlign = egret.VerticalAlign.MIDDLE;
             this._label.showBg = false;
             this.addChild(this._label);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchEvent, this);
+            //this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchEvent, this);
             this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEvent, this);
             this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchRleaseOutside, this);
             this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchRleaseOutside, this);
@@ -118,6 +120,7 @@ var codeBase;
                 if (codeBase.StringUtil.isUsage(this._toggleGroup)) {
                     if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
                         this.selected = !this._selected;
+                        this.callClickFunction();
                     }
                     this.onPlaySound();
                     // console.log("Button _toggleGroup=" + this._toggleGroup + ", _selected=" + this._selected);
@@ -125,6 +128,7 @@ var codeBase;
                 else {
                     if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
                         this._currentState = Button.STATE_DOWN;
+                        this.callClickFunction();
                         this.onPlaySound();
                     }
                     else if (event.type == egret.TouchEvent.TOUCH_END) {
@@ -134,13 +138,13 @@ var codeBase;
                         this._currentState = Button.STATE_OVER;
                     }
                     if (this.statesLength == 1 && this._currentState == Button.STATE_DOWN) {
-                        this.scaleX = 0.9;
-                        this.scaleY = 0.9;
+                        // this.scaleX = 0.9;
+                        // this.scaleY = 0.9;
                         this.alpha = 0.8;
                     }
                     else {
-                        this.scaleX = 1;
-                        this.scaleY = 1;
+                        // this.scaleX = 1;
+                        // this.scaleY = 1;
                         this.alpha = 1;
                     }
                 }
@@ -158,6 +162,18 @@ var codeBase;
                 this.scaleX = 1;
                 this.scaleY = 1;
                 this.alpha = 1;
+            }
+        };
+        /**
+         * 设置点击按钮回调
+         */
+        Button.prototype.setClickFunction = function (fun, obj) {
+            this.clickFun = fun;
+            this.clickFunObj = obj;
+        };
+        Button.prototype.callClickFunction = function () {
+            if (this.clickFun && this.clickFunObj) {
+                this.clickFun.call(this.clickFunObj, this);
             }
         };
         Object.defineProperty(Button.prototype, "currentState", {
@@ -203,120 +219,39 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Button.prototype, "scale9GridEnable", {
-            /**
-             * 默认背景texture的九宫格拉伸设定
-             * 只有showDefaultSkin并且设置了defaultSkinTexture,才有效
-             * 默认绘制的背景是纯色的,所以不需要进行九宫拉伸设定
-             */
-            get: function () {
-                return this._scale9GridEnable;
-            },
-            set: function (value) {
-                if (this._scale9GridEnable != value) {
-                    this._scale9GridEnable = value;
-                    if (this._scale9GridEnable && this._scale9GridRect == null)
-                        this._scale9GridRect = new egret.Rectangle();
-                    this.invalidate();
+        /**
+         * 九宫设置的区域
+         * @returns {egret.Rectangle}
+         */
+        Button.prototype.scale9GridRect = function () {
+            return this._scale9GridRect;
+        };
+        /**
+         * 默认背景texture的九宫格拉伸设定
+         * 只有showDefaultSkin并且设置了defaultSkinTexture,才有效
+         * 默认绘制的背景是纯色的,所以不需要进行九宫拉伸设定
+         * scale9Rectangle : [左边距,右边距,上边距,下边距]
+         */
+        Button.prototype.scale9Grid = function (scale9Rectangle) {
+            if (scale9Rectangle === void 0) { scale9Rectangle = []; }
+            if (scale9Rectangle.length == 4) {
+                if (this._scale9GridRect == null) {
+                    this._scale9GridRect = new egret.Rectangle;
                 }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Button.prototype, "scale9GridX", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.x;
-                return 0;
-            },
-            /**
-             * Sets the x of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.x != value) {
-                    this._scale9GridRect.x = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Button.prototype, "scale9GridY", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.y;
-                return 0;
-            },
-            /**
-             * Sets the y of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.y != value) {
-                    this._scale9GridRect.y = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Button.prototype, "scale9GridWidth", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.width;
-                return 0;
-            },
-            /**
-             * Sets the width of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.width != value) {
-                    this._scale9GridRect.width = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Button.prototype, "scale9GridHeight", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.height;
-                return 0;
-            },
-            /**
-             * Sets the height of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.height != value) {
-                    this._scale9GridRect.height = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Button.prototype, "scale9GridRect", {
-            /**
-             * 九宫设置的区域
-             * @returns {egret.Rectangle}
-             */
-            get: function () {
-                return this._scale9GridRect;
-            },
-            set: function (rect) {
-                this._scale9GridRect = rect;
-            },
-            enumerable: true,
-            configurable: true
-        });
+                var x = scale9Rectangle[0];
+                var y = scale9Rectangle[2];
+                var width = this.width - (scale9Rectangle[0] + scale9Rectangle[1]);
+                var height = this.height - (scale9Rectangle[2] + scale9Rectangle[3]);
+                this._scale9GridRect.x = x;
+                this._scale9GridRect.y = y;
+                this._scale9GridRect.width = width;
+                this._scale9GridRect.height = height;
+            }
+            else {
+                this._scale9GridRect = null;
+            }
+            this.invalidate();
+        };
         /**
          * 绘制
          */
@@ -335,15 +270,16 @@ var codeBase;
             }
             if (this._imgDisplay == null)
                 return;
-            //一态的时候，第二态用第一态的资源 但是alpha 为0.8 scale为0.9
+            //只设置了一个状态的时候，第二态用第一态的资源
             if (this.statesLength == 1 && this._currentState == Button.STATE_DOWN) {
                 this._imgDisplay.texture = this._textureDict[Button.STATE_UP];
             }
             else {
                 this._imgDisplay.texture = this._textureDict[this._currentState];
             }
-            if (this.scale9GridEnable && this.scale9GridRect != null) {
-                this._imgDisplay.scale9Grid = this.scale9GridRect;
+            //按钮图片九宫拉伸设置
+            if (this._scale9GridRect != null) {
+                this._imgDisplay.scale9Grid = this._scale9GridRect;
             }
             else {
                 this._imgDisplay.scale9Grid = null;
@@ -353,9 +289,10 @@ var codeBase;
             this._imgDisplay.height = this.height;
             this._imgDisplay.anchorOffsetX = this._imgDisplay.width / 2;
             this._imgDisplay.anchorOffsetY = this._imgDisplay.height / 2;
-            this._imgDisplay.x = this._imgDisplay.width / 2;
-            this._imgDisplay.y = this._imgDisplay.height / 2;
+            this._imgDisplay.x = this.width / 2;
+            this._imgDisplay.y = this.height / 2;
             //console.log("Button.draw 1111 this.width=" + this.width + ", this.height=" + this.height);
+            //文字图片显示
             if (this._textureLabel != null) {
                 if (this._imgLabel == null) {
                     this._imgLabel = new egret.Bitmap();
@@ -363,19 +300,20 @@ var codeBase;
                     this.addChild(this._imgLabel);
                 }
                 this._imgLabel.texture = this._textureLabel;
-                if (this._labelMarginLeftEnable) {
+                if (!isNaN(this._labelMarginLeft)) {
                     this._imgLabel.x = this._labelMarginLeft;
                 }
                 else {
                     this._imgLabel.x = (this.width - this._imgLabel.width) / 2;
                 }
-                if (this._labelMarginTopEnable) {
+                if (!isNaN(this._labelMarginTop)) {
                     this._imgLabel.y = this._labelMarginTop;
                 }
                 else {
                     this._imgLabel.y = (this.height - this._imgLabel.height) / 2;
                 }
             }
+            //图标显示
             if (this._textureIcon != null) {
                 if (this._imgIcon == null) {
                     this._imgIcon = new egret.Bitmap(null);
@@ -383,19 +321,20 @@ var codeBase;
                     this.addChild(this._imgIcon);
                 }
                 this._imgIcon.texture = this._textureIcon;
-                if (this._iconMarginLeftEnable) {
+                if (!isNaN(this._iconMarginLeft)) {
                     this._imgIcon.x = this._iconMarginLeft;
                 }
                 else {
                     this._imgIcon.x = (this.width - this._imgIcon.width) / 2;
                 }
-                if (this._iconMarginTopEnable) {
+                if (!isNaN(this._iconMarginTop)) {
                     this._imgIcon.y = this._iconMarginTop;
                 }
                 else {
                     this._imgIcon.y = (this.height - this._imgIcon.height) / 2;
                 }
             }
+            //文字标签
             if (this._label) {
                 if (!this._label.parent)
                     this.addChild(this._label);
@@ -409,14 +348,14 @@ var codeBase;
                 this._label.stroke = this._labelStroke;
                 this._label.strokeColor = this._labelStrokeColor;
                 this._label.onInvalidate(null); //立即生效,这样下面的数据才准
-                if (this._labelMarginLeftEnable) {
+                if (!isNaN(this._labelMarginLeft)) {
                     this._label.x = this._labelMarginLeft;
                 }
                 else {
                     this._label.x = (this.width - this._label.width) / 2;
                     //console.log("Button.draw 222 this.width=" +this.width + ", this._label.width=" + this._label.width);
                 }
-                if (this._labelMarginTopEnable) {
+                if (!isNaN(this._labelMarginTop)) {
                     this._label.y = this._labelMarginTop;
                 }
                 else {
@@ -434,18 +373,10 @@ var codeBase;
                 shape.height = this.height;
                 shape.graphics.beginFill(codeBase.Style.BUTTON_FACE);
                 shape.graphics.drawRect(0, 0, this.width, this.height);
-                // shape.graphics.beginFill(0xfff666);
-                // shape.graphics.drawRect(0, this.height , this.width, this.height);
-                //shape.graphics.beginFill(0x33ff66);
-                //shape.graphics.drawRect(0, this.height * 2, this.width, this.height);
                 shape.graphics.endFill();
                 //boder
                 shape.graphics.lineStyle(1, 0x000000);
                 shape.graphics.drawRect(0, 0, this.width - 1, this.height - 1);
-                // shape.graphics.moveTo(1, this.height-1);
-                // shape.graphics.lineTo(this.width-2, this.height-1);
-                // shape.graphics.moveTo(1, this.height + 1);
-                // shape.graphics.lineTo(this.width-2, this.height + 1);
                 var renderTexture = new egret.RenderTexture();
                 renderTexture.drawToTexture(shape);
                 Button.DEFAULT_TEXTURE = renderTexture;
@@ -459,13 +390,13 @@ var codeBase;
             if (this._texture) {
                 //console.log("splitTextureSource texture.w=" + this._texture._sourceWidth + ", h=" + this._texture._sourceHeight + ", name=" + this.name)
                 this._initDisplayData = true;
-                var splietWidth = 0;
-                var splietHeight = 0;
+                var splitWidth = 0;
+                var splitHeight = 0;
                 var textureWidth = this._texture.textureWidth;
                 var textureHeight = this._texture.textureHeight;
                 if (this.stateArray.length == 1) {
-                    splietWidth = textureWidth;
-                    splietHeight = textureHeight;
+                    splitWidth = textureWidth;
+                    splitHeight = textureHeight;
                     this._textureDict[this.stateArray[0]] = this._texture;
                 }
                 else {
@@ -473,26 +404,26 @@ var codeBase;
                     var xOffset = 0; //this._texture._bitmapX;
                     var yOffset = 0; //this._texture._bitmapY;
                     if (this._verticalSplit) {
-                        splietWidth = textureWidth;
-                        splietHeight = textureHeight / this.statesLength;
+                        splitWidth = textureWidth;
+                        splitHeight = textureHeight / this.statesLength;
                     }
                     else {
-                        splietWidth = textureWidth / this.statesLength;
-                        splietHeight = textureHeight;
+                        splitWidth = textureWidth / this.statesLength;
+                        splitHeight = textureHeight;
                     }
                     var spriteSheet = new egret.SpriteSheet(this._texture);
                     for (i = 0; i < this.stateArray.length; i++) {
                         if (this._verticalSplit) {
-                            this._textureDict[this.stateArray[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + this.stateArray[i], xOffset, i * splietHeight + yOffset, splietWidth, splietHeight);
+                            this._textureDict[this.stateArray[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + this.stateArray[i], xOffset, yOffset + i * splitHeight, splitWidth, splitHeight);
                         }
                         else {
-                            this._textureDict[this.stateArray[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + this.stateArray[i], i * splietWidth + xOffset, yOffset, splietWidth, splietHeight);
+                            this._textureDict[this.stateArray[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + this.stateArray[i], xOffset + i * splitWidth, yOffset, splitWidth, splitHeight);
                         }
                     }
                 }
                 if (this._autoSize) {
-                    this.width = splietWidth;
-                    this.height = splietHeight;
+                    this.width = splitWidth;
+                    this.height = splitHeight;
                 }
             }
         };
@@ -612,36 +543,53 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
+        /**
+         * 设置按钮可用状态
+         * <p>在预设基础下修改状态数组长度</p>
+         * <p>[STATE_UP, STATE_OVER, STATE_DOWN, STATE_DISABLE, STATE_TOGGLE]</p>
+         * @param value 长度值
+         */
+        Button.prototype.setStatus = function (statusNum, statusSkin) {
+            if (statusSkin === void 0) { statusSkin = []; }
+            statusNum = statusNum < 0 ? 1 : statusNum;
+            //if (this.stateArray.length == value) return;
+            //this.stateArray.length = 0;
+            switch (statusNum) {
+                case 1:
+                    this.stateArray = [Button.STATE_UP]; //设置只有一个状态的时候，第二态用第一态的资源
+                    break;
+                case 2:
+                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN];
+                    break;
+                case 3:
+                    this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN];
+                    break;
+                case 4:
+                    this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN, Button.STATE_DISABLE];
+                    break;
+            }
+            //初始化按钮状态皮肤
+            this._initDisplayData = false;
+            if (statusSkin.length > 0) {
+                this._initDisplayData = true;
+                for (var i = 0; i < this.stateArray.length; ++i) {
+                    if (statusSkin[i]) {
+                        this._textureDict[this.stateArray[i]] = statusSkin[i];
+                    }
+                    else {
+                        this._initDisplayData = false;
+                        console.warn("指定的状态数和状态图片数不一致");
+                        break;
+                    }
+                }
+            }
+            if (this._initDisplayData)
+                this.setSize(statusSkin[0].textureWidth, statusSkin[0].textureHeight);
+            this.invalidate();
+        };
         Object.defineProperty(Button.prototype, "statesLength", {
             get: function () {
                 return this.stateArray.length;
-            },
-            /**
-             * 设置按钮可用状态
-             * <p>在预设基础下修改状态数组长度</p>
-             * <p>[STATE_UP, STATE_OVER, STATE_DOWN, STATE_DISABLE, STATE_TOGGLE]</p>
-             * @param value 长度值
-             */
-            set: function (value) {
-                value = value < 0 ? 1 : value;
-                //if (this.stateArray.length == value) return;
-                //this.stateArray.length = 0;
-                switch (value) {
-                    case 1:
-                        this.stateArray = [Button.STATE_UP]; //一态的时候，第二态用第一态的资源 但是alpha 为0.8 scale为0.9
-                        break;
-                    case 2:
-                        this.stateArray = [Button.STATE_UP, Button.STATE_DOWN];
-                        break;
-                    case 3:
-                        this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN];
-                        break;
-                    case 4:
-                        this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN, Button.STATE_DISABLE];
-                        break;
-                }
-                this._initDisplayData = false;
-                this.invalidate();
             },
             enumerable: true,
             configurable: true
@@ -748,19 +696,6 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Button.prototype, "labelMarginLeftEnable", {
-            get: function () {
-                return this._labelMarginLeftEnable;
-            },
-            set: function (value) {
-                if (this._labelMarginLeftEnable != value) {
-                    this._labelMarginLeftEnable = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(Button.prototype, "labelMarginTop", {
             get: function () {
                 return this._labelMarginTop;
@@ -768,19 +703,6 @@ var codeBase;
             set: function (value) {
                 if (this._labelMarginTop != value) {
                     this._labelMarginTop = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Button.prototype, "labelMarginTopEnable", {
-            get: function () {
-                return this._labelMarginTopEnable;
-            },
-            set: function (value) {
-                if (this._labelMarginTopEnable != value) {
-                    this._labelMarginTopEnable = value;
                     this.invalidate();
                 }
             },
@@ -800,19 +722,6 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Button.prototype, "iconMarginLeftEnable", {
-            get: function () {
-                return this._iconMarginLeftEnable;
-            },
-            set: function (value) {
-                if (this._iconMarginLeftEnable != value) {
-                    this._iconMarginLeftEnable = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(Button.prototype, "iconMarginTop", {
             get: function () {
                 return this._iconMarginTop;
@@ -820,19 +729,6 @@ var codeBase;
             set: function (value) {
                 if (this._iconMarginTop != value) {
                     this._iconMarginTop = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Button.prototype, "iconMarginTopEnable", {
-            get: function () {
-                return this._iconMarginTopEnable;
-            },
-            set: function (value) {
-                if (this._iconMarginTopEnable != value) {
-                    this._iconMarginTopEnable = value;
                     this.invalidate();
                 }
             },
@@ -884,7 +780,7 @@ var codeBase;
         };
         Button.prototype.setSize = function (w, h) {
             _super.prototype.setSize.call(this, w, h);
-            this.autoSize = false;
+            //this.autoSize = false;
         };
         /**
          * 初始化声音对象,并播放声音
@@ -1051,9 +947,9 @@ var codeBase;
                     return datas;
                 }
             }
-            //icon
-            if (this._imgIcon && this._imgIcon.texture) {
-                datas = this._imgIcon.texture.getPixel32(x, y);
+            //label
+            if (this._imgLabel && this._imgLabel.texture) {
+                datas = this._imgLabel.texture.getPixel32(x, y);
             }
             for (var i = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {
@@ -1061,9 +957,9 @@ var codeBase;
                     return datas;
                 }
             }
-            //label
-            if (this._imgLabel && this._imgLabel.texture) {
-                datas = this._imgLabel.texture.getPixel32(x, y);
+            //icon
+            if (this._imgIcon && this._imgIcon.texture) {
+                datas = this._imgIcon.texture.getPixel32(x, y);
             }
             for (var i = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {

@@ -25,13 +25,13 @@ var codeBase;
              * 是否将子代剪切到视区的边界,
              * 默认为true,剪切.
              */
-            _this._clip = false;
+            _this._clip = true;
             /**
              * 运行状态
              * @type {boolean}
              * @private
              */
-            _this._runing = false;
+            _this._running = false;
             //自动播放
             _this._autoplay = false;
             return _this;
@@ -43,7 +43,6 @@ var codeBase;
          */
         ScrollGroup.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            this.clip = true;
         };
         /**
          * 设置卷轴数据
@@ -89,7 +88,7 @@ var codeBase;
          */
         ScrollGroup.prototype.play = function (index) {
             if (index === void 0) { index = -1; }
-            this._runing = true;
+            this._running = true;
             this.setItemState(ScrollGroup.STATE_START, index);
             //初始数据
             codeBase.HeartBeat.addListener(this, this.onHeartBeat);
@@ -100,7 +99,7 @@ var codeBase;
         ScrollGroup.prototype.stop = function (index) {
             if (index === void 0) { index = -1; }
             this.setItemState(ScrollGroup.STATE_STOP, index);
-            if (!this._runing)
+            if (!this._running)
                 codeBase.HeartBeat.removeListener(this, this.onHeartBeat);
         };
         /**
@@ -109,7 +108,7 @@ var codeBase;
         ScrollGroup.prototype.pause = function (index) {
             if (index === void 0) { index = -1; }
             this.setItemState(ScrollGroup.STATE_STOP, index);
-            if (!this._runing)
+            if (!this._running)
                 codeBase.HeartBeat.removeListener(this, this.onHeartBeat);
         };
         /**
@@ -167,13 +166,13 @@ var codeBase;
                 this._scrollItemArr[index]._state = state;
             }
             if (state == ScrollGroup.STATE_START) {
-                this._runing = true;
+                this._running = true;
             }
             else {
-                this._runing = false;
+                this._running = false;
                 for (var i = 0; i < this._scrollItemArr.length; i++) {
                     if (this._scrollItemArr[i]._state == ScrollGroup.STATE_START) {
-                        this._runing = true;
+                        this._running = true;
                         break;
                     }
                 }
@@ -208,12 +207,12 @@ var codeBase;
             else {
                 this.scrollRect = null;
             }
-            if (this.width != 100 || this.height != 100) {
+            if (this.width != codeBase.Style.BASEGROUP_WIDTH || this.height != codeBase.Style.BASEGROUP_HEIGHT) {
                 for (var i = 0; i < this._scrollItemArr.length; i++) {
-                    if (this._scrollItemArr[i].width == 100 || this._scrollItemArr[i].width == 0) {
+                    if (this._scrollItemArr[i].width == codeBase.Style.BASEGROUP_WIDTH || this._scrollItemArr[i].width == 0) {
                         this._scrollItemArr[i].width = this.width;
                     }
-                    if (this._scrollItemArr[i].height == 100 || this._scrollItemArr[i].height == 0) {
+                    if (this._scrollItemArr[i].height == codeBase.Style.BASEGROUP_HEIGHT || this._scrollItemArr[i].height == 0) {
                         this._scrollItemArr[i].height = this.height;
                     }
                     this._scrollItemArr[i]._initData = false;
@@ -271,6 +270,9 @@ var codeBase;
     }(codeBase.BaseGroup));
     codeBase.ScrollGroup = ScrollGroup;
     __reflect(ScrollGroup.prototype, "codeBase.ScrollGroup");
+    /**
+     * 滚动项类
+     */
     var ScrollItemGroup = (function (_super) {
         __extends(ScrollItemGroup, _super);
         function ScrollItemGroup(delay) {
@@ -292,7 +294,7 @@ var codeBase;
              * 是否将子代剪切到视区的边界,
              * 默认为true,剪切.
              */
-            _this._clip = false;
+            _this._clip = true;
             /**
              * 设置卷轴数据
              * @param textures
@@ -308,10 +310,6 @@ var codeBase;
          */
         ScrollItemGroup.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            //this._scrollBitmapArr = [new egret.Bitmap(), new egret.Bitmap(), new egret.Bitmap()];
-            //for(var i:number = 0; i < this._scrollBitmapArr.length; i++){
-            //    this.addChild(this._scrollBitmapArr[i]);
-            //}
         };
         ScrollItemGroup.prototype.setScrollData = function (textures, speed, direction, gap) {
             if (speed === void 0) { speed = 3; }
@@ -455,6 +453,7 @@ var codeBase;
                 for (var i = 0; i < this._scrollBitmapArr.length; i++) {
                     this._scrollBitmapArr[i].y -= this.speed;
                 }
+                //补充显示项
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y <= (this.height - this._scrollBitmapArr[this._scrollBitmapArr.length - 1].texture.textureHeight - this.speed)) {
                     var image = codeBase.ObjectPool.getByClass(egret.Bitmap, "scroll_group");
                     this.addChild(image);

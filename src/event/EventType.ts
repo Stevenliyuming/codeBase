@@ -83,5 +83,7 @@ module codeBase{
 		public static ERASE_CHANGE:string = "erase_change";
 
 		public static CLOSE_VIDEO: string = "CLOSE_VIDEO";
+
+		public static LOADINGUI_FINISH:string = "LOADINGUI_FINISH";
     }
 }

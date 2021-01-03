@@ -117,8 +117,8 @@ var codeBase;
                 var video = s.video;
                 //计算缩放比例
                 var csf = 1 / egret.sys.DisplayList.$canvasScaleFactor;
-                var scaleFactorX = s.canvas.width * csf / codeBase.SceneManager.Instance.designWidth;
-                var scaleFactorY = s.canvas.height * csf / codeBase.SceneManager.Instance.designHeight;
+                var scaleFactorX = s.canvas.width * csf / codeBase.SceneManager.instance.designWidth;
+                var scaleFactorY = s.canvas.height * csf / codeBase.SceneManager.instance.designHeight;
                 //console.log(s._canvas.width + "=======" + s._canvas.height);
                 //计算视频宽高
                 var videoScale = 1;
@@ -141,8 +141,8 @@ var codeBase;
                 if (s.relyDisplayObject && s.relyDisplayObject.parent) {
                     var pos = s.relyDisplayObject.parent.localToGlobal(s.relyDisplayObject.x, s.relyDisplayObject.y);
                     if (s.offsetPoint) {
-                        pos.x += s.offsetPoint.x * codeBase.SceneManager.Instance.gameScale;
-                        pos.y += s.offsetPoint.y * codeBase.SceneManager.Instance.gameScale;
+                        pos.x += s.offsetPoint.x * codeBase.SceneManager.instance.gameScale;
+                        pos.y += s.offsetPoint.y * codeBase.SceneManager.instance.gameScale;
                     }
                     //console.log(pos);
                     vx = pos.x; // * scaleFactorX;//egret.sys.DisplayList.$canvasScaleX;

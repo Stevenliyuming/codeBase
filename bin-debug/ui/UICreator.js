@@ -15,12 +15,6 @@ var codeBase;
             result.texture = texture;
             return result;
         };
-        /**创建九宫格图片 */
-        UICreator.createScale9Image = function (name, alias, rect) {
-            if (alias === void 0) { alias = null; }
-            var result = new codeBase.Scale9Image(name, alias, rect);
-            return result;
-        };
         /**
          * 获取xy位置的像素值,xy是舞台值
          * @param x

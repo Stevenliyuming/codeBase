@@ -12,14 +12,18 @@ module codeBase{
 		/**水平和垂直对齐方式 */
 		public verticalAlign: string;
 		public horizontalAlign: string;
+
+		public constructor() {
+			super();
+		}
+
 		/**
 		 * imageAlias 单张字体图片命名格式
 		 * sheetAlias 全部字体图片的纹理图集
 		 * verticalAlign 垂直方向的对齐方式 默认顶部对齐
 		 * horizontalAlign 水平方向的对齐方式 默认左边对齐
 		 */
-		public constructor(imageAlias: string, sheetAlias: string = "", verticalAlign: string = "top", horizontalAlign: string = "left") {
-			super();
+		public init(imageAlias: string, sheetAlias: string = "", verticalAlign: string = "top", horizontalAlign: string = "left") {
 			let s = this;
 			s.imageAlias = imageAlias;
 			s.sheetAlias = sheetAlias;
@@ -104,6 +108,13 @@ module codeBase{
 				}
 				s.width = spriteWidth;
 				s.height = spriteHeight;
+			}
+		}
+
+		public hide() {
+			let s = this;
+			if(s.parent) {
+				s.parent.removeChild(s);
 			}
 		}
 	}

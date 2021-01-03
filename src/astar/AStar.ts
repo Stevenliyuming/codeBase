@@ -1,127 +1,289 @@
 module codeBase{
-
-	export class AStar {
-        private _open:BinaryHeap;
-        private _grid:Grid;
-        private _endNode:Node;
-        private _startNode:Node;
-        public path:Array<Node>;
-        public heuristic:Function;
-        private _straightCost:number = 1.0;
-        private _diagCost:number = Math.SQRT2;
-        private nowversion:number = 1;
-        
-        public constructor(){
+    export class AStar {
+        private _open: BinaryHeap;
+        private _grid: Grid;
+        private _endNode: Node;
+        private _startNode: Node;
+        public path: Array<Node>;
+        public heuristic: Function;
+        private _straightCost: number = 10;////1.0;
+        private _diagCost: number = 14;//Math.SQRT2;
+        //过滤斜向行走的可能，避免穿墙效果
+        public avoidSideGrids:boolean = false;
+        private nowVersion: number = 1;
+        private openSet: Array<Node> = new Array<Node>();
+        private closeSet: Array<Node> = new Array<Node>();
+        public constructor() {
             this.heuristic = this.euclidian2;
-            
         }
-        public get grid():Grid{
+
+        public get grid(): Grid {
             return this._grid;
         }
-        private justMin(x:any, y:any):boolean {
+
+        private floydPath(source: egret.Point, target: egret.Point, nodes: Array<Node>): Array<egret.Point> {
+            /** 弗洛伊德路径平滑处理 **/
+            var floydPath: Array<Node> = nodes.concat();
+            var len: number = floydPath.length;
+            var i: number = 0;
+            if (len > 2) {
+                //遍历路径数组中全部路径节点，合并在同一直线上的路径节点
+                //假设有1,2,3,三点，若2与1的横、纵坐标差值分别与3与2的横、纵坐标差值相等则
+                //判断此三点共线，此时可以删除中间点2
+                var vector: Node = new Node(0, 0, 1);
+                var tempVector: Node = new Node(0, 0, 1);
+                this.floydVector(vector, floydPath[len - 1], floydPath[len - 2]);
+                for (i = len - 3; i >= 0; i--) {
+                    this.floydVector(tempVector, floydPath[i + 1], floydPath[i]);
+                    if (vector.row == tempVector.row && vector.column == tempVector.column) {
+                        floydPath.splice(i + 1, 1);
+                    } else {
+                        vector.row = tempVector.row;
+                        vector.column = tempVector.column;
+                    }
+                }
+            }
+            //合并共线节点后进行第二步，消除拐点操作。算法流程如下：
+            //使用两点之间的样本数值,不停的测试直线上的节点是不是可行走区域
+            len = floydPath.length;
+            if (len > 2) {
+                for (i = len - 3; i >= 0; i--) {
+                    if (!this.hasBarrier(floydPath[i + 2], floydPath[i])) {
+                        floydPath.splice(i + 1, 1);
+                    }
+                }
+            }
+            var result: Array<egret.Point> = new Array<egret.Point>();
+            result.push(source);
+            for (i = 1; i < floydPath.length - 1; i++) {
+                result.push(floydPath[i].point);
+            }
+            result.push(target);
+            floydPath.length = 0;
+            return result;
+        }
+
+        /**
+         * 判断两节点之间是否存在障碍物
+         * @param node1
+         * @param node2
+         * @return
+         */
+        private hasBarrier(node1: Node, node2: Node): boolean {
+            var d: number = Math.abs(egret.Point.distance(node1.point, node2.point));
+            var index: number = 1;
+            var grid: number = this.grid.cellSize / 2;
+            var gridPoint: egret.Point = null;
+            var gridNode: Node = null;
+            //取样点
+            //while(index*grid<d){
+            //    gridPoint = egret.Point.interpolate(node1.point, node2.point, index*grid/d);
+            //    gridNode = this.getNode(gridPoint);
+            //    if (!gridNode.walkable) return true;
+            //    index ++;
+            //}
+            return false;
+        }
+
+        private floydVector(target: Node, n1: Node, n2: Node): void {
+            target.row = n1.row - n2.row;
+            target.column = n1.column - n2.column;
+        }
+
+        /**
+         * 二叉堆排序算法
+         */
+        private justMin(x: any, y: any): boolean {
             return x.f < y.f;
         }
-        
-        public findPath(grid:Grid):boolean {
-            this._grid = grid;
-            this._endNode = this._grid.endNode;
-            this.nowversion++;
-            this._startNode = this._grid.startNode;
-            //_open = [];
-            this._open = new BinaryHeap(this.justMin);
-            this._startNode.g = 0;
-            return this.search();
+
+        /**
+         * 把节点放进二叉堆开放列表
+         */
+        private pushOpenSetNode(node:Node) {
+            this.openSet.push(node);
+            //将新加入的节点在二叉堆中做上浮处理：F值最小的放在最顶层位置
+            BinaryHeap.upAdjust(this.openSet);
         }
-        
-        public search():boolean {
-            var node:Node = this._startNode;
-            node.version = this.nowversion;
-            while (node != this._endNode){
-                var len:number = node.links.length;
-                for (var i:number = 0; i < len; i++){
-                    var test:Node = node.links[i].node;
-                    var cost:number = node.links[i].cost;
-                    var g:number = node.g + cost;
-                    var h:number = this.heuristic(test);
-                    var f:number = g + h;
-                    if (test.version == this.nowversion){
-                        if (test.f > f){
-                            test.f = f;
-                            test.g = g;
-                            test.h = h;
-                            test.parent = node;
-                        }
-                    } else {
-                        test.f = f;
-                        test.g = g;
-                        test.h = h;
-                        test.parent = node;
-                        this._open.ins(test);
-                        test.version = this.nowversion;
-                    }
-                    
+
+        /**
+         * 从二叉堆开放列表中拿最小F值消耗的节点
+         */
+        private popOpenSetNode():Node {
+            if(this.openSet.length > 0) {
+                let node: Node = this.openSet[0];
+                if (this.openSet.length > 1) {
+                    //把二叉堆最后一个叶子节点放在顶部位置
+                    this.openSet[0] = this.openSet[this.openSet.length - 1];
+                    //从顶部节点位置开始向下排序节点，把最小F值节点放到最顶节点位置
+                    BinaryHeap.downAdjust(this.openSet, 0, this.openSet.length - 1);
+                } else {
+                    this.openSet.length = 0;
                 }
-                if (this._open.a.length == 1){
-                    return false;
-                }
-                node = <Node><any> (this._open.pop());
+                return node;
             }
-            this.buildPath();
-            return true;
+            return null;
         }
-        
-        private buildPath():void {
+
+        public findPath(grid: Grid): boolean {
+            this._grid = grid;
+            this._startNode = this._grid.startNode;
+            this._endNode = this._grid.endNode;
+            this._startNode.g = 0;
+            this.openSet.length = 0;
+            this.closeSet.length = 0;
+            //this.openSet.push(this._startNode);
+            BinaryHeap.setJudgeFunction(this.justMin);
+            this.pushOpenSetNode(this._startNode);
+            while (this.openSet.length > 0) {
+                //选择 F 值最小的 ( 方格 ) 节点，优化：可以通过维护一个排好序的表来改进，每次当你需要找到具有最小 F 值的方格时，仅取出表的第一项即可
+                //let curNode: Node = this.openSet[0];
+                // for (let i = 0, max = this.openSet.length; i < max; i++) {
+                //     if (this.openSet[i].f < curNode.f) 
+                //     //if (this.openSet[i].f <= curNode.f && this.openSet[i].h < curNode.h) 
+                //     {
+                //         curNode = this.openSet[i];
+                //     }
+                // }
+                //this.openSet.splice(this.openSet.indexOf(curNode), 1);
+                let curNode:Node = this.popOpenSetNode();
+                this.closeSet.push(curNode);
+
+                // 找到的目标节点
+                if (curNode == this._endNode) {
+                    this.buildPath();
+                    return true;
+                }
+
+                // 判断周围节点，选择一个最优的节点
+                let neighbourNodes: Node[] = grid.getNeighbourNodes(curNode, 0);
+                let item: Node;
+                for (let i = 0; i < neighbourNodes.length; ++i) {
+                    item = neighbourNodes[i];
+
+                    // 如果是墙或者已经在关闭列表中
+                    if (!item.walkable || this.closeSet.indexOf(item) >= 0)
+                        continue;
+                    
+                    if(this.avoidSideGrids) {
+                        //当前节点左上角和左下角的相邻节点
+                        if(item.row != curNode.row && item.column < curNode.column) {
+                            let leftNode = this.grid.getLeftNode(curNode);
+                            let upNode = this.grid.getUpNode(curNode);
+                            let downNode = this.grid.getDownNode(curNode);
+                            if(item.row < curNode.row && (leftNode && !leftNode.walkable) || (upNode && !upNode.walkable)) continue;
+                            if(item.row > curNode.row && (leftNode && !leftNode.walkable) || (downNode && !downNode.walkable)) continue;
+                        }
+                        
+                        //当前节点右上角和右下角的相邻节点
+                        if(item.row != curNode.row && item.column > curNode.column) {
+                            let rightNode = this.grid.getLeftNode(curNode);
+                            let upNode = this.grid.getUpNode(curNode);
+                            let downNode = this.grid.getDownNode(curNode);
+                            if(item.row < curNode.row && (rightNode && !rightNode.walkable || (upNode && !upNode.walkable))) continue;
+                            if(item.row > curNode.row && (rightNode && !rightNode.walkable || (downNode && !downNode.walkable))) continue;
+                        }
+                    }
+
+                    // 计算当前相邻节点和开始节点距离
+                    let newCost = curNode.g + this.getDistanceNodes2(curNode, item);
+                    let index = this.openSet.indexOf(item);
+                    // 如果距离更小，或者原来不在开始列表中
+                    if (newCost < item.g || index < 0) {
+                        // 更新与开始节点的距离
+                        item.g = newCost;
+                        // 更新与终点的距离
+                        item.h = this.manhattan2(item);//this.getDistanceNodes(this.grid.endNode, item);
+                        //总的权重
+                        item.f = item.g + item.h;
+                        // 更新父节点为当前选定的节点
+                        item.parent = curNode;
+                        // 如果节点是新加入的，将它加入打开列表中
+                        if (index < 0) {
+                            //this.openSet.push(item);
+                            this.pushOpenSetNode(item);
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        // 获取两个节点之间的距离
+        public getDistanceNodes(a: Node, b: Node):number {
+            let cntX = Math.abs(a.point.x - b.point.x);
+            let cntY = Math.abs(a.point.y - b.point.y);
+            return Math.sqrt(cntX * cntX + cntY * cntY);
+        }
+
+        public getDistanceNodes2(a: Node, b: Node):number {
+            // let cntX = Math.abs(a.row - b.row) * this._straightCost;
+            // let cntY = Math.abs(a.column - b.column) * this._straightCost;
+            // return Math.sqrt(cntX * cntX + cntY * cntY);
+            
+            let cntX = Math.abs(a.row - b.row);
+            let cntY = Math.abs(a.column - b.column);
+            if (cntX > cntY) {
+                return this._diagCost * cntY + this._straightCost * (cntX - cntY);
+            } else {
+                return this._diagCost * cntX + this._straightCost * (cntY - cntX);
+            }
+        }
+
+        private buildPath(): void {
             this.path = new Array<Node>();
-            var node:Node = this._endNode;
+            var node: Node = this._endNode;
             this.path.push(node);
-            while (node != this._startNode){
+            while (node != this._startNode) {
                 node = node.parent;
                 this.path.unshift(node);
             }
         }
-        
-        public manhattan(node:Node):number {
-            return Math.abs(node.row - this._endNode.row) + Math.abs(node.column - this._endNode.column);
+
+        // 曼哈顿距离, 表示两个点在标准坐标系上的绝对轴距之和
+        public manhattan(node: Node): number {
+            return Math.abs(node.point.x - this._endNode.point.x) + Math.abs(node.point.y - this._endNode.point.y);
         }
-        
-        public manhattan2(node:Node):number {
-            var dx:number = Math.abs(node.row - this._endNode.row);
-            var dy:number = Math.abs(node.column - this._endNode.column);
-            return dx + dy + Math.abs(dx - dy) / 1000;
+
+        public manhattan2(node: Node): number {
+            var dx: number = Math.abs(node.row - this._endNode.row);
+            var dy: number = Math.abs(node.column - this._endNode.column);
+            return (dx + dy) * this._straightCost;
         }
-        
-        public euclidian(node:Node):number {
-            var dx:number = node.row - this._endNode.row;
-            var dy:number = node.column - this._endNode.column;
+
+        //欧式距离, 其实就是应用勾股定理计算两个点的直线距离
+        public euclidian(node: Node): number {
+            var dx: number = node.point.x - this._endNode.point.x;
+            var dy: number = node.point.y - this._endNode.point.y;
             return Math.sqrt(dx * dx + dy * dy);
         }
-        
-        private TwoOneTwoZero:number = 2 * Math.cos(Math.PI / 3);
-        
-        public chineseCheckersEuclidian2(node:Node):number {
-            var y:number = node.column / this.TwoOneTwoZero;
-            var x:number = node.row + node.column / 2;
-            var dx:number = x - this._endNode.row - this._endNode.column / 2;
-            var dy:number = y - this._endNode.column / this.TwoOneTwoZero;
+
+        public euclidian2(node: Node): number {
+            var dx: number = node.row - this._endNode.row;
+            var dy: number = node.column - this._endNode.column;
+            return Math.sqrt(dx * dx + dy * dy) * this._straightCost;
+        }
+
+        public diagonal(node: Node): number {
+            var dx: number = Math.abs(node.point.x - this._endNode.point.x);
+            var dy: number = Math.abs(node.point.y - this._endNode.point.y);
+            var diag: number = Math.min(dx, dy);
+            var straight: number = dx + dy;
+            return this._diagCost * diag + this._straightCost * (straight - 2 * diag);
+        }
+
+        private TwoOneTwoZero: number = 2 * Math.cos(Math.PI / 3);
+        public chineseCheckersEuclidian2(node: Node): number {
+            var y: number = node.column / this.TwoOneTwoZero;
+            var x: number = node.row + node.column / 2;
+            var dx: number = x - this._endNode.row - this._endNode.column / 2;
+            var dy: number = y - this._endNode.column / this.TwoOneTwoZero;
             return this.sqrt(dx * dx + dy * dy);
         }
-        
-        private sqrt(x:number):number {
+
+        private sqrt(x: number): number {
             return Math.sqrt(x);
-        }
-        
-        public euclidian2(node:Node):number {
-            var dx:number = node.row - this._endNode.row;
-            var dy:number = node.column - this._endNode.column;
-            return dx * dx + dy * dy;
-        }
-        
-        public diagonal(node:Node):number {
-            var dx:number = Math.abs(node.row - this._endNode.row);
-            var dy:number = Math.abs(node.column - this._endNode.column);
-            var diag:number = Math.min(dx, dy);
-            var straight:number = dx + dy;
-            return this._diagCost * diag + this._straightCost * (straight - 2 * diag);
         }
     }
 }

@@ -1,10 +1,10 @@
 module codeBase{
-
     export class List extends Group {
         /**
          * 消息和方法的映射关系表
          */
         private METHOD_DEF: Object = {};
+        public static ITEM_SELECTED:string = "ITEM_SELECTED";
         private _itemRenderer: any = DefaultRenderer;
         private _itemContainer: BaseGroup = null;
         private _gap: number = 2;
@@ -20,7 +20,7 @@ module codeBase{
         private _marginLeft: number = 4;
         private _marginRight: number = 4;
         private _line: number = 1;//设置排数
-        private _lineGap: number = 2;//设置排间距
+        private _lineGap: number = 0;//设置排间距
 
         private _effect: string = null;//效果选择
         private _isDragBegin: boolean = false;//点击开始
@@ -28,6 +28,7 @@ module codeBase{
         private _moveCount: number = 0;//移动的通知次数
         private _dragBeginPoint: egret.Point = null;
         private _dragLastTime: number = 0;
+        private bounceBack:boolean = false;//列表项回弹
 
         private _autoScrollGap: number = 0;//自动滚动的间距
         private _lastTimeNum: number = 0;//
@@ -52,7 +53,6 @@ module codeBase{
             this._itemContainer.touchEnabled = true;
             this._itemContainer.setSize(this.width, this.height);
             this._itemContainer.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
-            //this._itemContainer.showBg = false;
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginEvent, this);
             this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMoveEvent, this);
             this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndEvent, this);
@@ -61,6 +61,7 @@ module codeBase{
             this.addHandleEvent(EventType.RESOURCE_DOWNLOADED, "onMyEventResDownloaded");
             this.touchNonePixel = true;
         }
+
         /**
          * 添加事件的处理
          * 注意:必须调用MessageControler.addEvent()注册事件名称,否者不会转发到这里
@@ -110,7 +111,8 @@ module codeBase{
          * @param event
          */
         public onTouchMoveEvent(event: egret.TouchEvent): void {
-            if (!this._itemDatas || this._itemDatas.length == 0 || !this._isDragBegin) return;
+            //if (!this._isDragBegin || !this._itemDatas || this._itemDatas.length == 0) return;
+            if (!this._itemDatas || this._itemDatas.length == 0 || this.bounceBack) return;
             //console.log("onTouchMoveEvent x=" + event.stageX + ", y=" + event.stageY)
             if (this._isDragBegin) {
                 this._isMoveBegin = true;
@@ -135,6 +137,7 @@ module codeBase{
             this._dragBeginPoint.y = event.stageY;
             this._dragLastTime = egret.getTimer();
         }
+
         public onTouchReleaseOutsideEvent(event: egret.TouchEvent): void {
             //this._isDragBegin = false;
             //this._isMoveBegin = false;
@@ -148,17 +151,22 @@ module codeBase{
          * @param event
          */
         public onTouchEndEvent(event: egret.TouchEvent): void {
-            //console.log("onTouchEndEvent this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd);
-            if (this._isDragBegin && (!this._isMoveBegin || (this._moveCount < 4 && Math.abs(event.stageX - this._dragBeginPoint.x) < 5 && Math.abs(event.stageY - this._dragBeginPoint.y) < 5))) {//单击处理
+            console.log("onTouchEndEvent this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd);
+            //单击处理
+            if (this._isDragBegin && (!this._isMoveBegin || (this._moveCount < 4 && Math.abs(event.stageX - this._dragBeginPoint.x) < 5 && Math.abs(event.stageY - this._dragBeginPoint.y) < 5))) {
                 //console.log("onTouchEndEvent tap!!");
                 var sp: egret.DisplayObject = null;
-                var spPoint: egret.Point = null;
+                var spPoint: egret.Point = this._itemContainer.globalToLocal(event.stageX, event.stageY);
                 for (var i: number = 0; i < this._itemContainer.numChildren; i++) {
                     sp = this._itemContainer.getChildAt(i);
-                    spPoint = this.localToGlobal(sp.x, sp.y);
-                    if (spPoint.x < event.stageX && spPoint.y < event.stageY && (spPoint.x + sp.width) > event.stageX && (spPoint.y + sp.height) > event.stageY) {
+                    //spPoint = sp.localToGlobal(0, 0);
+                    //if (spPoint.x < event.stageX && spPoint.y < event.stageY && (spPoint.x + sp.width) > event.stageX && (spPoint.y + sp.height) > event.stageY) 
+                    //if(sp.hitTestPoint(event.stageX, event.stageY))
+                    if (sp.x < spPoint.x && sp.y < spPoint.y && (sp.x + sp.width) > spPoint.x && (sp.y + sp.height) > spPoint.y) 
+                    {
                         try {
                             this.selected = sp["_data"];
+                            console.log(sp["dataIndex"]);
                             //console.log("list.selected=" + JSON.stringify(sp["_data"]));
                             break;
                         } catch (e) {
@@ -174,7 +182,7 @@ module codeBase{
             this._isMoveBegin = false;
             //console.log("000timer=" + this._lastTimeNum + ", gap.value=" + this._autoScrollGap);
             //Debug.log = "timer=" + this._lastTimeNum;
-            if (this._lastTimeNum < 40 && (this._dataIndexBegin > 0 && this._autoScrollGap > 0 || this._itemDatas && this._dataIndexEnd < this._itemDatas.length - 1 && this._autoScrollGap < 0)) {
+            if (this._lastTimeNum < 40 && ((this._dataIndexBegin > 0 && this._autoScrollGap > 0) || (this._itemDatas && this._dataIndexEnd < this._itemDatas.length - 1 && this._autoScrollGap < 0))) {
                 //console.log("111timer=" + timer);
                 //时间越短,倍数越大
                 //Debug.log = "_autoScrollGap=" + this._autoScrollGap + ", caculte=" + (this._autoScrollGap / this._lastTimeNum);
@@ -240,6 +248,8 @@ module codeBase{
                     //console.log("list.freeback.5555=" + pos);
                 }
                 if (pos != 0) {
+                    //设置列表回弹状态
+                    this.bounceBack = true;
                     //console.log("list.freeback.66666=" + pos);
                     for (var i: number = 0; i < this._itemContainer.numChildren; i++) {
                         if (this._direction == Style.VERTICAL) {//yv值
@@ -248,6 +258,10 @@ module codeBase{
                             egret.Tween.get(this._itemContainer.getChildAt(i)).to({ x: this._itemContainer.getChildAt(i).x - pos }, 100);
                         }
                     }
+                    //取消列表回弹状态
+                    egret.setTimeout(()=>{
+                        this.bounceBack = false;
+                    }, this, 110);
                 }
             }
         }
@@ -259,22 +273,21 @@ module codeBase{
         private removeRender(render: egret.DisplayObject): void {
             if (!render) return;
             for (var key in this._dataIndexToRender) {
-                if (this._dataIndexToRender[key] == render) {
+                if (this._dataIndexToRender[key] === render) {
                     delete this._dataIndexToRender[key];
                     break;
                 }
             }
             try {
+                //render["destroy"]();
                 render["data"] = null;
-            } catch (e) {
-            }
-            try {
                 render["list"] = null;
             } catch (e) {
             }
             if (render && render.parent) render.parent.removeChild(render);
             ObjectPool.recycleClass(render, "list_" + this.name);
         }
+
         /**
          * 对整体render进行位移,并补足空出的位置
          * @param xv
@@ -282,28 +295,29 @@ module codeBase{
          */
         private moveItemUIPosition(xv: number, yv: number): void {
             //console.log("moveItemUIPosition this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd + ", x=" + xv + ", y=" + yv)
-            var itemRederer: egret.Sprite = null;
+            var itemRederer: egret.DisplayObject = null;
             var optNum: number = 0;
             for (var i: number = this._itemContainer.numChildren - 1; i >= 0; i--) {
-                itemRederer = <egret.Sprite>this._itemContainer.getChildAt(i);
+                itemRederer = <egret.DisplayObject>this._itemContainer.getChildAt(i);
                 if (this._direction == Style.VERTICAL) {//yv值
                     if (!this._fixed) itemRederer.y += yv;
                     if (this._dataIndexBegin == 0 && yv >= 0 || this._dataIndexEnd == this._itemDatas.length - 1 && yv < 0) {
                         continue;
                     }
-                    if (this._fixed) itemRederer.y += yv;
+                    //if (this._fixed) itemRederer.y += yv;
                     //补充一个
-                    if (yv < 0 && this._dataIndexEnd < this._itemDatas.length - 1) {//^向上
-                        if (this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y + itemRederer.height + this._gap < this._itemContainer.height) {
+                    console.log("this._dataIndexEnd=" + this._dataIndexEnd + ":this._itemDatas.length - 1=" + (this._itemDatas.length - 1));
+                    if (yv < 0 && this._dataIndexEnd <= this._itemDatas.length - 1) {//^向上
+                        if (this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).height + this._gap < this._itemContainer.height) {
                             optNum = this.addUIItem(this._dataIndexEnd + 1, false);
                             this._dataIndexEnd += optNum;
-                            //console.log("moveItemUIPosition 00000 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            console.log("moveItemUIPosition 00000 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
                         }
                         if ((itemRederer.y + itemRederer.height) < 0) {
-                            this.removeRender(this._itemContainer.getChildAt(i));
-                            //console.log("remove 000 index.value=" + this._dataIndexBegin);
+                            this.removeRender(itemRederer);
+                            console.log("remove 000 index.value=" + this._dataIndexBegin);
                             this._dataIndexBegin++;
-                            //console.log("moveItemUIPosition 11111 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            console.log("moveItemUIPosition 11111 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
                         }
                     } else if (this._dataIndexBegin > 0) {//v向下
                         if (this._itemContainer.getChildAt(0).y - this._gap > 0) {
@@ -312,7 +326,7 @@ module codeBase{
                             //console.log("moveItemUIPosition 22222 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
                         }
                         if (itemRederer.y > this._itemContainer.height) {
-                            this.removeRender(this._itemContainer.getChildAt(i));
+                            this.removeRender(itemRederer);
                             //console.log("remove 111 index.value=" + this._dataIndexEnd);
                             this._dataIndexEnd--;
                             //console.log("moveItemUIPosition 33333 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
@@ -370,21 +384,18 @@ module codeBase{
             var xPos: number = 0;
             while (indexAdd < this._line) {
                 if (!this._itemDatas || dataIndex < 0 || dataIndex >= this._itemDatas.length) break;
-                var displayItemUI: egret.Sprite = ObjectPool.getByClass(this._itemRenderer, "list_" + this.name);
-                //往容器中添加显示项
+                var displayItemUI: egret.DisplayObject = ObjectPool.getByClass(this._itemRenderer, "list_" + this.name);
+                //初始化显示项
                 if (!displayItemUI["isAddedToStage"]) {
                     this._itemContainer.addChild(displayItemUI);
-                    this._itemContainer.removeChild(displayItemUI);//???看不懂啥操作
+                    this._itemContainer.removeChild(displayItemUI);
                 }
-                //给显示项绑定数据
-                if (displayItemUI && displayItemUI["validateNow"]) displayItemUI["validateNow"]();
+
                 try {
-                    displayItemUI["data"] = this._itemDatas[dataIndex];
-                } catch (e) {
-                }
-                //给显示项绑定所属列表
-                try {
-                    displayItemUI["list"] = this;
+                    displayItemUI["data"] = this._itemDatas[dataIndex];//给显示项绑定数据
+                    displayItemUI["list"] = this;//给显示项绑定所属列表
+                    displayItemUI["dataIndex"] = dataIndex;
+                    if (displayItemUI && displayItemUI["validateNow"]) displayItemUI["validateNow"]();
                 } catch (e) {
                 }
 
@@ -401,7 +412,7 @@ module codeBase{
                     if (this._itemContainer.numChildren > 0 && indexAdd == 0) {
                         if (topPlace) {
                             yPos = this._itemContainer.getChildAt(0).y;
-                            yPos = yPos - (this._gap + displayItemUI.height);
+                            yPos -= (this._gap + displayItemUI.height);
                             //console.log("000=" + yPos + ", indexAdd=" + indexAdd);
                         } else {
                             yPos = this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y;
@@ -409,12 +420,12 @@ module codeBase{
                             //console.log("111=" + yPos + ", indexAdd=" + indexAdd);
                         }
                     }
-                    if (yPos > this._itemContainer.height || yPos < - displayItemUI.height) {
+                    if (yPos > this._itemContainer.height || yPos < -displayItemUI.height) {
                         this.removeRender(displayItemUI);
                         return indexAdd;
                     }
-                    displayItemUI.y = yPos;
                     displayItemUI.x = xPos;
+                    displayItemUI.y = yPos;
                 } else {
                     yPos = (displayItemUI.height + this._lineGap) * indexAdd;
                     //console.log("yPos=" + yPos + ", indexAdd=" + indexAdd);
@@ -464,11 +475,14 @@ module codeBase{
             this._dataIndexToRender = {};
             this.setItemContainerSize();
             //清空显示
-            var displayItemUI: egret.Sprite = null;
+            var displayItemUI: egret.DisplayObject = null;
             while (this._itemContainer.numChildren > 0) {
-                displayItemUI = <egret.Sprite>this._itemContainer.removeChildAt(0);
-                if (displayItemUI["data"]) displayItemUI["data"] = null;
-                ObjectPool.recycleClass(displayItemUI, "list_" + this.name);
+                displayItemUI = this._itemContainer.removeChildAt(0);
+                if(displayItemUI instanceof this._itemRenderer) {
+                    this.removeRender(displayItemUI);
+                    // if (displayItemUI["data"]) displayItemUI["data"] = null;
+                    // ObjectPool.recycleClass(displayItemUI, "list_" + this.name);
+                }
             }
             if (this._data instanceof Array) {
                 //进行首次填充
@@ -497,6 +511,10 @@ module codeBase{
             if (datas) {
                 this._itemDatas = this._itemDatas.concat(datas);
             }
+        }
+
+        private renderItem() {
+            
         }
 
         /**
@@ -549,6 +567,11 @@ module codeBase{
                     if (sp["_data"] == item) {
                         sp["selected"] = true;
                         //console.log("list.selected=" + JSON.stringify(item));
+                        // let selectEvent = new MyEvent(List.ITEM_SELECTED);
+                        // selectEvent.addItem("item", sp);
+                        // selectEvent.addItem("dataIndex", 0);
+                        // selectEvent.send();
+                        this.dispatchEventWith(List.ITEM_SELECTED, false, { item:sp }, false);
                     }
                 } catch (e) {
                 }
@@ -582,10 +605,10 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         public get autoSize(): boolean {
             return this._autoSize;
         }
-
         /**
          * 设置自动大小
          * @param value
@@ -596,10 +619,10 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         public get marginTop(): number {
             return this._marginTop;
         }
-
         /**
          * 设置顶边距
          * @param value
@@ -614,7 +637,6 @@ module codeBase{
         public get marginBottom(): number {
             return this._marginBottom;
         }
-
         /**
          * 设置底边距
          * @param value
@@ -629,7 +651,6 @@ module codeBase{
         public get marginLeft(): number {
             return this._marginLeft;
         }
-
         /**
          * 设置左边距
          * @param value
@@ -638,7 +659,6 @@ module codeBase{
             this._marginLeft = value;
             this.invalidate();
         }
-
         public get marginRight(): number {
             return this._marginRight;
         }
@@ -653,6 +673,7 @@ module codeBase{
                 this.invalidate();
             }
         }
+
         public get gap(): number {
             return this._gap;
         }

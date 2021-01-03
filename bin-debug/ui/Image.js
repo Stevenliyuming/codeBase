@@ -17,9 +17,10 @@ var codeBase;
             var _this = _super.call(this, drawDelay) || this;
             _this._bitmap = null;
             _this._texture = null;
-            _this._autoSize = false;
+            _this._autoSize = true;
             _this._scale9GridEnable = false;
             _this._scale9GridRect = null; //九宫拉伸的尺寸
+            _this.scale9RectData = [];
             _this._fillMode = "scale"; //scale, repeat.
             _this._smoothing = false;
             return _this;
@@ -82,120 +83,29 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Image.prototype, "scale9GridEnable", {
-            /**
-             * 默认背景texture的九宫格拉伸设定
-             * 只有showDefaultSkin并且设置了defaultSkinTexture,才有效
-             * 默认绘制的背景是纯色的,所以不需要进行九宫拉伸设定
-             */
-            get: function () {
-                return this._scale9GridEnable;
-            },
-            set: function (value) {
-                if (this._scale9GridEnable != value) {
-                    this._scale9GridEnable = value;
-                    if (this._scale9GridEnable && this._scale9GridRect == null)
-                        this._scale9GridRect = new egret.Rectangle();
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Image.prototype, "scale9GridX", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.x;
-                return 0;
-            },
-            /**
-             * Sets the x of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.x != value) {
-                    this._scale9GridRect.x = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Image.prototype, "scale9GridY", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.y;
-                return 0;
-            },
-            /**
-             * Sets the y of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.y != value) {
-                    this._scale9GridRect.y = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Image.prototype, "scale9GridWidth", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.width;
-                return 0;
-            },
-            /**
-             * Sets the width of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.width != value) {
-                    this._scale9GridRect.width = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Image.prototype, "scale9GridHeight", {
-            get: function () {
-                if (this._scale9GridRect)
-                    return this._scale9GridRect.height;
-                return 0;
-            },
-            /**
-             * Sets the height of the bitmap's scale9Grid.
-             */
-            set: function (value) {
-                if (this._scale9GridRect == null)
-                    this._scale9GridRect = new egret.Rectangle();
-                if (this._scale9GridRect.height != value) {
-                    this._scale9GridRect.height = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Image.prototype, "scale9GridRect", {
-            /**
-             * 九宫设置的区域
-             * @returns {egret.Rectangle}
-             */
-            get: function () {
-                return this._scale9GridRect;
-            },
-            set: function (rect) {
-                this._scale9GridRect = rect;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        /**
+         * scale9Rectangle : [左边距,右边距,上边距,下边距]
+         *
+         */
+        Image.prototype.scale9Grid = function (scale9RectData) {
+            if (scale9RectData === void 0) { scale9RectData = []; }
+            var s = this;
+            if (scale9RectData.length == 4) {
+                this.scale9RectData = scale9RectData.concat();
+            }
+            else {
+                this.scale9RectData.length = 0;
+            }
+            this.invalidate();
+        };
+        Image.prototype.scale9Rect = function () {
+            var rect = new egret.Rectangle();
+            rect.x = 1;
+            rect.y = 1;
+            rect.width = 1;
+            rect.height = 1;
+            return rect;
+        };
         Object.defineProperty(Image.prototype, "smoothing", {
             get: function () {
                 return this._smoothing;
@@ -215,21 +125,27 @@ var codeBase;
             configurable: true
         });
         Image.prototype.draw = function () {
-            if (!this._bitmap || this._texture == null && this._bitmap.texture == null)
+            if (!this._bitmap || this._texture == null)
                 return;
             if (this._bitmap.texture != this._texture) {
                 this._bitmap.texture = this._texture;
+                this.width = this._bitmap.texture.textureWidth;
+                this.height = this._bitmap.texture.textureHeight;
             }
-            if (this._bitmap.texture == null)
-                return;
-            if (this._scale9GridEnable && this._scale9GridRect) {
+            if (this.scale9RectData.length == 4) {
+                if (this._scale9GridRect == null)
+                    this._scale9GridRect = this.scale9Rect();
+                this._scale9GridRect.x = this.scale9RectData[0];
+                this._scale9GridRect.y = this.scale9RectData[2];
+                this._scale9GridRect.width = this._bitmap.texture.$getTextureWidth() - (this.scale9RectData[0] + this.scale9RectData[1]);
+                this._scale9GridRect.height = this._bitmap.texture.$getTextureHeight() - (this.scale9RectData[2] + this.scale9RectData[3]);
                 this._bitmap.scale9Grid = this._scale9GridRect;
                 this._bitmap.width = this.width;
                 this._bitmap.height = this.height;
             }
             else {
                 this._bitmap.scale9Grid = null;
-                if (!this._scale9GridEnable && this._autoSize) {
+                if (this._autoSize) {
                     if (this._fillMode != "scale") {
                         this._bitmap.width = this.width;
                         this._bitmap.height = this.height;
@@ -253,6 +169,8 @@ var codeBase;
                 }
             }
             this._bitmap.fillMode = this._fillMode;
+            // if(this._bitmap.width != this.width) this._bitmap.width = this.width;
+            // if(this._bitmap.height != this.height) this._bitmap.height = this.height;
         };
         Image.prototype.getBitmap = function () {
             return this._bitmap;

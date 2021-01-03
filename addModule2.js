@@ -15,7 +15,8 @@ function selectTs(_src) {
                     selectTs(_path);
                 } else {
                     if (stat.isFile()) {
-                        if (val.split('.').pop() == "ts")// && val != "Module.ts") 
+                        let arr = val.split('.');
+                        if (arr[0] !== "Main" && arr[1] == "ts") 
                         {
                             addModule(_path);
                         }

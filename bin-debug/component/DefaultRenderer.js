@@ -12,8 +12,9 @@ var codeBase;
 (function (codeBase) {
     var DefaultRenderer = (function (_super) {
         __extends(DefaultRenderer, _super);
-        function DefaultRenderer() {
-            var _this = _super.call(this) || this;
+        function DefaultRenderer(drawDelay) {
+            if (drawDelay === void 0) { drawDelay = false; }
+            var _this = _super.call(this, drawDelay) || this;
             /**
              * 对应的ui展现
              */
@@ -34,6 +35,15 @@ var codeBase;
         DefaultRenderer.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
             this.setSize(100, 65);
+        };
+        /**
+         * 初始化一些必要的逻辑数据
+         * 这个方法是在第一次加入stage的时候,做调用
+         */
+        DefaultRenderer.prototype.initData = function () {
+        };
+        DefaultRenderer.prototype.draw = function () {
+            _super.prototype.draw.call(this);
         };
         Object.defineProperty(DefaultRenderer.prototype, "data", {
             get: function () {

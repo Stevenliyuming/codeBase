@@ -22,22 +22,26 @@ var codeBase;
             _this._fontSize = codeBase.Style.fontSize; //字体大小
             _this._fontColor = codeBase.Style.TEXTINPUT_COLOR; //字体颜色
             _this._hAlign = egret.HorizontalAlign.LEFT;
-            _this._vAlign = egret.VerticalAlign.MIDDLE;
+            _this._vAlign = egret.VerticalAlign.TOP;
             _this._bold = false;
             _this._italic = false;
-            _this._lineSpacing = 0; //行间距
-            _this._multiline = false; //多行显示
+            _this._lineSpacing = 10; //行间距
+            _this._multiline = true; //多行显示
             _this._stroke = 0;
             _this._strokeColor = 0;
             _this._wordWrap = true; //自动换行
             _this._maxChars = 0; //输入最大字符
             _this._restrict = null; //限制输入
             _this._inputType = null; //键盘输入类型
+            _this._paddingLeft = 0;
+            _this._paddingRight = 0;
+            _this._paddingTop = 0;
+            _this._paddingBottom = 0;
             return _this;
         }
         TextInput.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            this.setSize(codeBase.Style.TEXTINPUT_WIDTH, codeBase.Style.TEXTINPUT_HEIGHT);
+            //this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
             this.bgColor = codeBase.Style.INPUT_TEXT;
             this.clip = false;
             this.touchEnabled = true;
@@ -46,17 +50,17 @@ var codeBase;
             this._textField.width = this.width;
             this._textField.displayAsPassword = false;
             this._textField.type = egret.TextFieldType.INPUT;
-            this._textField.addEventListener(egret.Event.CHANGE, this.onChangeHdl, this);
+            this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
             this._textField.touchEnabled = true;
             this.addChild(this._textField);
         };
         /**
          * 文字输入变化处理
          */
-        TextInput.prototype.onChangeHdl = function (event) {
+        TextInput.prototype.onTextChange = function (event) {
             this._text = this._textField.text;
             //console.log("TextInput Change text=" + this._text);
-            this.invalidate();
+            //this.invalidate();
         };
         /**
          * 返回文字输入对象
@@ -75,6 +79,16 @@ var codeBase;
             if (this._fontName != null) {
                 this._textField.fontFamily = this._fontName;
             }
+            if (this._textField.width != this.width)
+                this._textField.width = this.width;
+            if (this._textField.height != this.height)
+                this._textField.height = this.height;
+            var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
+            var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
+            this._textField.width = newWidth;
+            this._textField.height = newHeight;
+            this._textField.x = this._paddingLeft;
+            this._textField.y = this._paddingTop;
             if (this._fontColor >= 0)
                 this._textField.textColor = this._fontColor;
             if (this._fontSize > 0)
@@ -87,8 +101,6 @@ var codeBase;
             this._textField.lineSpacing = this._lineSpacing;
             this._textField.stroke = this._stroke;
             this._textField.strokeColor = this._strokeColor;
-            this._textField.width = this.width;
-            this._textField.height = this.height;
             this._textField.displayAsPassword = this._password;
             this._textField.text = this._text;
             this._textField.wordWrap = this._wordWrap;
@@ -98,6 +110,70 @@ var codeBase;
             if (codeBase.StringUtil.isUsage(this._inputType))
                 this._textField.inputType = this._inputType;
         };
+        Object.defineProperty(TextInput.prototype, "paddingLeft", {
+            get: function () {
+                return this._paddingLeft;
+            },
+            /**
+             * 文本区域左边距偏移
+             */
+            set: function (value) {
+                if (this._paddingLeft != value) {
+                    this._paddingLeft = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TextInput.prototype, "paddingRight", {
+            get: function () {
+                return this._paddingRight;
+            },
+            /**
+             * 文本区域右边距偏移
+             */
+            set: function (value) {
+                if (this._paddingRight != value) {
+                    this._paddingRight = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TextInput.prototype, "paddingTop", {
+            get: function () {
+                return this._paddingTop;
+            },
+            /**
+             * 文本区域顶部边距偏移
+             */
+            set: function (value) {
+                if (this._paddingTop != value) {
+                    this._paddingTop = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TextInput.prototype, "paddingBottom", {
+            get: function () {
+                return this._paddingBottom;
+            },
+            /**
+             * 文本区域底部边距偏移
+             */
+            set: function (value) {
+                if (this._paddingBottom != value) {
+                    this._paddingBottom = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(TextInput.prototype, "fontName", {
             get: function () {
                 return this._fontName;

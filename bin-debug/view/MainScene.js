@@ -35,8 +35,12 @@ var codeBase;
             _this.counter = 0;
             return _this;
         }
-        MainScene.prototype.init = function () {
-            _super.prototype.init.call(this);
+        /**
+         * 初始化一些必要的逻辑数据
+         * 这个方法是在第一次加入stage的时候,做调用
+         */
+        MainScene.prototype.initData = function () {
+            _super.prototype.initData.call(this);
             this.showScene();
         };
         MainScene.prototype.showScene = function () {
@@ -47,28 +51,105 @@ var codeBase;
             s.bg.width = 1920;
             s.bg.height = 1080;
             s.addChild(s.bg);
-            s.bg.horizontalCenter = 0;
-            s.bg.verticalCenter = 0;
-            //GameUtil.Instance.setScreenAuto(s.bg);
+            // s.bg.horizontalCenter = 0;
+            // s.bg.verticalCenter = 0;
+            codeBase.GameUtil.Instance.setScreenAuto(s.bg);
+            // let group = new Group;
+            // group.width = 1920;
+            // group.height = 1080;
+            // s.group_play.addChild(group);
+            // group.horizontalCenter = 0;
+            // group.verticalCenter = 0;
+            // //GameUtil.Instance.setScreenAuto(group);
+            // group.showBg = true;
             //交互区
-            s.group_play = new codeBase.BaseGroup;
+            s.group_play = new codeBase.Group;
             s.addChild(s.group_play);
             s.group_play.width = 1920;
             s.group_play.height = 1080;
             s.group_play.horizontalCenter = 0;
             s.group_play.verticalCenter = 0;
-            //s.group_play.addChild(s.bg);
+            //s.group_play.showBg = true;
             var label = new codeBase.Label;
+            label.setSize(100, 50);
             label.text = "这是一个具有布局约束的文本";
             s.group_play.addChild(label);
-            label.left = 500;
+            label.left = 50;
             label.top = 500;
+            label.showBg = true;
             label.autoSize = true;
+            egret.setTimeout(function () {
+                label.text = "一个具有布局约束的文本00000000000";
+            }, s, 100);
             var hand = new codeBase.Image;
             hand.texture = RES.getRes("comRes_1_json.hand");
             s.group_play.addChild(hand);
             hand.left = 0;
             hand.top = 0;
+            // let textInput = new TextInput;
+            // textInput.width = 300;
+            // textInput.height = 100;
+            // s.group_play.addChild(textInput);
+            // textInput.x = 100;
+            // textInput.y = 100;
+            // textInput.showBg = true;
+            // textInput.paddingLeft = 10;
+            // textInput.paddingTop = 10;
+            // textInput.paddingRight = 10;
+            // textInput.paddingBottom = 20;
+            var textArea = new codeBase.TextArea;
+            textArea.width = 300;
+            textArea.height = 300;
+            s.group_play.addChild(textArea);
+            textArea.x = 200;
+            textArea.y = 100;
+            textArea.showBg = true;
+            textArea.text = "1月1日";
+            // textArea.editable = true;
+            // textArea.paddingLeft = 10;
+            // textArea.paddingTop = 20;
+            // textArea.paddingRight = 10;
+            // textArea.paddingBottom = 20;
+            var button = new codeBase.Button;
+            s.group_play.addChild(button);
+            button.x = 300;
+            button.y = 800;
+            button.setStatus(2, [RES.getRes("A_png"), RES.getRes("A点击_png")]);
+            //button.setSize(100, 60);
+            var listItemDataArr = [
+                {
+                    res: "A_png"
+                },
+                {
+                    res: "A点击_png"
+                },
+                {
+                    res: "A_png"
+                },
+                {
+                    res: "A点击_png"
+                },
+                {
+                    res: "A_png"
+                },
+                {
+                    res: "A点击_png"
+                },
+            ];
+            var listGroup = new codeBase.List;
+            s.group_play.addChild(listGroup);
+            listGroup.x = 800;
+            listGroup.y = 0;
+            listGroup.width = 700;
+            listGroup.height = 500;
+            listGroup.itemRenderer = codeBase.ListItemRenderer;
+            listGroup.gap = 100;
+            listGroup.line = 2;
+            listGroup.lineGap = 20;
+            listGroup.data = listItemDataArr;
+            listGroup.addEventListener(codeBase.List.ITEM_SELECTED, function (ev) {
+                console.log(ev.data);
+            }, s);
             //标题
             // s.titleGroup = new BaseGroup;
             // s.titleGroup.touchEnabled = true;

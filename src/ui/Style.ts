@@ -23,7 +23,7 @@ module codeBase{
 		
 		public static embedFonts:boolean = false;
 		public static fontName:string = null;
-		public static fontSize:number = 16;
+		public static fontSize:number = 26;
 		/**
 		 * 是否允许文本加载默认滤镜. 
 		 */		
@@ -55,6 +55,9 @@ module codeBase{
         
         public static SCROLLBAR_WIDTH:number = 300;
         public static SCROLLBAR_HEIGHT:number = 17;
+
+		public static BASEGROUP_WIDTH:number = 100;
+		public static BASEGROUP_HEIGHT:number = 100;
         
 		
 		public constructor(){

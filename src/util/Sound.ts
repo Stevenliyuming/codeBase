@@ -48,7 +48,7 @@ module codeBase{
             var channelConfig:any = null;
             for(var key in Sound._soundDict){
                 channelConfig = Sound._soundDict[key];
-                var myEvent:codeBase.MyEvent = codeBase.MyEvent.getEvent(codeBase.EventType.SOUND_COMPLETE);
+                var myEvent:MyEvent = MyEvent.getEvent(EventType.SOUND_COMPLETE);
                 myEvent.addItem("name", key);
                 myEvent.send();
                 if (channelConfig.channel == channel) {
@@ -63,7 +63,7 @@ module codeBase{
                             channelConfig.func = null;
                             channelConfig.thisObj = null;
                             channelConfig.channel = null;
-                            delete Sound._soundDict[key];
+                            //delete Sound._soundDict[key];
                         }
                     }
                     break;

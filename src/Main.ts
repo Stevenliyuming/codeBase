@@ -1,6 +1,4 @@
-module codeBase{ 
-export class  Main extends egret.DisplayObjectContainer {
-
+class  Main extends egret.DisplayObjectContainer {
     public constructor() {
         super();
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
@@ -22,17 +20,21 @@ export class  Main extends egret.DisplayObjectContainer {
         //     egret.ticker.resume();
         // }
 
-        this.runGame().catch(e => {
-            console.log(e);
-        })
+        this.runGame();
     }
 
-    private async runGame() {
-        codeBase.SceneManager.Instance.Init();
+    private loadingView:codeBase.LoadingUI;
+    private runGame() {
+        codeBase.SceneManager.instance.Init();
         codeBase.GlobalSetting.initData();
         codeBase.HeartBeat.init();
-        await this.loadResource()
-        this.createGameScene();
+        this.loadingView = new codeBase.LoadingUI();
+        codeBase.SceneManager.instance.showScene(this.loadingView);
+        codeBase.EventManager.addEventListener(codeBase.EventType.LOADINGUI_FINISH, () => {
+            this.loadResource()
+            this.createGameScene();
+        }, this);
+
         // await platform.login();
         // const userInfo = await platform.getUserInfo();
         // console.log(userInfo);
@@ -40,17 +42,13 @@ export class  Main extends egret.DisplayObjectContainer {
 
     private async loadResource() {
         try {
-            const loadingView = new codeBase.LoadingUI();
-            codeBase.SceneManager.Instance.showScene(loadingView);
             await RES.loadConfig("resource/default.res.json", "resource/");
-            await RES.loadGroup("preload", 0, loadingView);
+            await RES.loadGroup("preload", 0, this.loadingView);
         }
         catch (e) {
             console.error(e);
         }
     }
-
-    private textfield: egret.TextField;
 
     /**
      * 创建游戏场景
@@ -58,8 +56,7 @@ export class  Main extends egret.DisplayObjectContainer {
      */
     private createGameScene() {
         egret.setTimeout(()=>{
-            codeBase.SceneManager.Instance.showScene(new codeBase.MainScene());
+            codeBase.SceneManager.instance.showScene(new codeBase.MainScene());
         }, this, 1000);
     }
-}
 }

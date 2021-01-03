@@ -13,12 +13,6 @@ module codeBase{
 			return result;
 		}
 
-        /**创建九宫格图片 */
-        public static createScale9Image(name:string, alias:string=null, rect: Rectangle): egret.Bitmap {
-            let result = new Scale9Image(name, alias, rect);
-			return result;
-        }
-
 		/**
          * 获取xy位置的像素值,xy是舞台值
          * @param x

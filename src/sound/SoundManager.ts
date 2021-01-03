@@ -21,8 +21,58 @@ module codeBase{
 			if (!SoundManager.instance) {
 				SoundManager.instance = new SoundManager();
 				SoundManager.instance.modulePath = "";//UIControl.getInstance().curUIIDPath;
+				SoundManager.instance.init();
 			}
 			return SoundManager.instance;
+		}
+
+		private init() {
+			let s = this;
+			// if (Browser.onMobile) {
+			// 	MsgBase.getMsgHandle().regMsg(MsgBase.FRONT_BACK_CHANGE, s.frontBackChange, s);
+			// }
+			// else {
+			// 	document.addEventListener("visibilitychange", function () {
+			// 		if (document.visibilityState == "visible") {
+			// 			s.viewIn();
+			// 		}
+			// 		if (document.visibilityState == "hidden") {
+			// 			s.viewOut();
+			// 		}
+
+			// 	});
+			// }
+			document.addEventListener("visibilitychange", function () {
+				if (document.visibilityState == "visible") {
+					s.viewIn();
+				}
+				if (document.visibilityState == "hidden") {
+					s.viewOut();
+				}
+
+			});
+		}
+
+		private frontBackChange(d: any): void {
+			if (d == null) return;
+			let s = this;
+			if (d.data) {
+				if (d.data.type == 1) {
+					s.viewOut();
+				}
+				else if (d.data.type == 2) {
+					s.viewIn();
+				}
+			}
+		}
+
+		private viewIn(): void {
+			//SoundManager.instance.resume();
+			this.resumeSound();
+		}
+		private viewOut(): void {
+			//SoundManager.instance.pause();
+			this.pauseSound();
 		}
 
 		/**播放正确0和错误1音效 */
@@ -44,8 +94,13 @@ module codeBase{
 		 * playTimes 播放次数 小于等于0循环播放
 		 * replay 是否重新开始播放
 		*/
-		public PlaySoundByName(name: string, playTimes: number = 1, callBack: Function = null, thisObj: any = null, volume: number = 0, replay:boolean=false) {
+		public PlaySoundByName(name: string, playTimes: number = 1, callBack: Function = null, thisObj: any = null, volume: number = 0, replay:boolean=false, stopAll:boolean=false) {
 			let s = this;
+
+			if(stopAll) {
+				s.stopAllSound();
+			}
+
 			let num = s.soundChannelArr.length;
 			let obj: any;
 			for (let i = 0; i < num; ++i) {
@@ -81,9 +136,78 @@ module codeBase{
 			if (callBack && thisObj) {
 				obj.callBack = callBack;
 				obj.thisObj = thisObj;
-				(<egret.SoundChannel>obj.soundChannel).once(egret.Event.SOUND_COMPLETE, callBack, thisObj);
+				(<egret.SoundChannel>obj.soundChannel).addEventListener(egret.Event.SOUND_COMPLETE, s.playEnd, s);
 			}
 		}
+
+		private playEnd(ev: egret.Event) {
+			let s = this;
+			let obj;
+			let target = ev.target;
+			let num = s.soundChannelArr.length;
+			for (let i = 0; i < num; ++i) {
+				obj = s.soundChannelArr[i];
+				let channel = <egret.SoundChannel>obj.sound.originChannel;
+				if (target == channel) {
+					if (obj.callBack && obj.thisObj) {
+						obj.callBack.call(obj.thisObj);
+						channel.removeEventListener(egret.Event.SOUND_COMPLETE, obj.callBack, obj.thisObj);
+						obj.callBack = null;
+						obj.thisObj = null;
+					}
+				}
+			}
+		}
+
+		/**
+		 * 停止当前播放的所有声音
+		 */
+		public stopAllSound() {
+			let s = this;
+			s.stopSoundByName();
+		}
+
+		/**
+		 * 暂停声音
+		 */
+		public pauseSound() {
+			let s = this;
+			let num = s.soundChannelArr.length;
+			let obj: any;
+			for (let i = 0; i < num; ++i) {
+				obj = s.soundChannelArr[i];
+				let channel = <egret.SoundChannel>obj.soundChannel;
+				if(channel && channel.position > 0) {
+					if (obj.callBack && obj.thisObj && channel.hasEventListener(egret.Event.SOUND_COMPLETE)) {
+						channel.removeEventListener(egret.Event.SOUND_COMPLETE, obj.callBack, obj.thisObj);
+					}
+					obj.pause = true;
+					obj.position = channel.position;
+					channel.stop();
+					channel = null;
+				}
+			}
+		}
+
+		/**
+		 * 重新播放声音
+		 */
+		public resumeSound() {
+			let s = this;
+			let num = s.soundChannelArr.length;
+			let obj: any;
+			for (let i = 0; i < num; ++i) {
+				obj = s.soundChannelArr[i];
+				if(obj.pause) {
+					obj.pause = false;
+					obj.soundChannel = (<egret.Sound>obj.sound).play(obj.position, obj.playTimes);
+					if (obj.callBack && obj.thisObj) {
+						(<egret.SoundChannel>obj.soundChannel).once(egret.Event.SOUND_COMPLETE, obj.callBack, obj.thisObj);
+					}
+				}
+			}
+		}
+		
 
 		/** 播放多个短暂的相同音效可以使用此接口
 		 * 
@@ -103,16 +227,27 @@ module codeBase{
 		}
 
 		/**停止播放音效 */
-		public stopSoundByName(name: string) {
+		public stopSoundByName(name: string=null) {
 			let s = this;
-			let num = s.soundChannelArr.length;
 			let obj: any;
+			let num = s.soundChannelArr.length;
 			for (let i = 0; i < num; ++i) {
 				obj = s.soundChannelArr[i];
-				if (obj.name == name) {
+				if(!name || obj.name == name) {
 					let channel = <egret.SoundChannel>obj.soundChannel;
+					if (obj.callBack && obj.thisObj && channel.hasEventListener(egret.Event.SOUND_COMPLETE)) {
+						//obj.callBack.call(obj.thisObj);
+						channel.removeEventListener(egret.Event.SOUND_COMPLETE, obj.callBack, obj.thisObj);
+						obj.callBack = null;
+						obj.thisObj = null;
+					}
 					channel.stop();
-				}
+					channel.position = 0;
+				} 
+				// else if (obj.name == name) {
+				// 	let channel = <egret.SoundChannel>obj.soundChannel;
+				// 	channel.stop();
+				// }
 			}
 		}
 

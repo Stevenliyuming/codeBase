@@ -1,4 +1,4 @@
-module codeBase{
+module codeBase {
 	export class BaseGroup extends egret.DisplayObjectContainer {
 		//是否已加入过显示列表中,可用来判断各组件是否已经具备显示赋值的作用
 		private _isAddedToStage: boolean = false;
@@ -27,11 +27,11 @@ module codeBase{
 
 		public constructor(drawDelay: boolean = false) {
 			super();
-
 			this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onFirstAddToStage, this);
 			this._drawDelay = drawDelay;
 			//console.log("this._drawDelay=" + this._drawDelay)
 		}
+
 		/**
 		 * 第一次加入场景的时候会运行该方法
 		 */
@@ -49,6 +49,7 @@ module codeBase{
 		 */
 		public initData(): void {
 		}
+
 		/**
 		 * 初始化主场景的组件
 		 * 子类覆写该方法,添加UI逻辑
@@ -56,9 +57,9 @@ module codeBase{
 		public createChildren(): void {
 			this.touchEnabled = false;//默认不接受事件
 			if (this.width == 0)
-				this.width = 100;
+				this.width = Style.BASEGROUP_WIDTH;
 			if (this.height == 0)
-				this.height = 100;
+				this.height = Style.BASEGROUP_HEIGHT;
 		}
 
 		/**
@@ -104,6 +105,7 @@ module codeBase{
 			this.x = xpos;
 			this.y = ypos;
 		}
+
 		/**
 		 * Sets the size of the component.
 		 * @param w The width of the component.
@@ -264,9 +266,9 @@ module codeBase{
 
 				if (!isNaN(s._left) && isNaN(s._right)) {
 					s.x = s._left;
-				} else if (!isNaN(s._right) && isNaN(s._right)) {
+				} else if (!isNaN(s._right) && isNaN(s.left)) {
 					s.x = parentWidth - s._right - thisWidth;
-				} else if (!isNaN(s._right) && !isNaN(s._right)) {
+				} else if (!isNaN(s.left) && !isNaN(s._right)) {
 					s.x = s._left;
 					thisWidth = parentWidth - s._left - s._right;
 					if (s.width != thisWidth) {

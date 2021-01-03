@@ -1,29 +1,32 @@
-module codeBase{
-    export class Image extends BaseGroup{
-        private _bitmap:egret.Bitmap = null;
-        private _texture:egret.Texture = null;
-        private _autoSize:boolean = false;
-        private _scale9GridEnable:boolean = false;
-        private _scale9GridRect:egret.Rectangle = null;//九宫拉伸的尺寸
-        private _fillMode:string = "scale";//scale, repeat.
-        private _smoothing:boolean = false;
-        public constructor(drawDelay:boolean = false) {
+module codeBase {
+    export class Image extends BaseGroup {
+        private _bitmap: egret.Bitmap = null;
+        private _texture: egret.Texture = null;
+        private _autoSize: boolean = true;
+        private _scale9GridEnable: boolean = false;
+        private _scale9GridRect: egret.Rectangle = null;//九宫拉伸的尺寸
+        private scale9RectData: number[] = [];
+        private _fillMode: string = "scale";//scale, repeat.
+        private _smoothing: boolean = false;
+
+        public constructor(drawDelay: boolean = false) {
             super(drawDelay);
         }
-        public createChildren():void {
+
+        public createChildren(): void {
             super.createChildren();
             this._bitmap = new egret.Bitmap();
             this.addChild(this._bitmap);
         }
+
         /**
          * Sets/gets the fillMode of the scale9Grid bitmap.(scale|repeat)
          */
-        public get fillMode():string{
+        public get fillMode(): string {
             return this._fillMode;
         }
-
-        public set fillMode(value:string){
-            if (this._fillMode != value){
+        public set fillMode(value: string) {
+            if (this._fillMode != value) {
                 this._fillMode = value;
                 this.invalidate();
             }
@@ -32,11 +35,10 @@ module codeBase{
         /**
          *  Sets/gets the common scaleEnable of the bitmap.
          */
-        public get autoSize():boolean{
+        public get autoSize(): boolean {
             return this._autoSize;
         }
-
-        public set autoSize(value:boolean){
+        public set autoSize(value: boolean) {
             if (this._autoSize != value) {
                 this._autoSize = value;
                 //if (!this._autoSize) {
@@ -50,100 +52,38 @@ module codeBase{
         /**
          * Sets/gets the bitmapData of the bitmap.
          */
-        public get texture():egret.Texture{
+        public get texture(): egret.Texture {
             return this._texture;
         }
-
-        public set texture(value:egret.Texture){
+        public set texture(value: egret.Texture) {
             if (this._texture != value) {
                 this._texture = value;
                 this.invalidate();
                 this.onInvalidatePosition();
             }
         }
-        /**
-         * 默认背景texture的九宫格拉伸设定
-         * 只有showDefaultSkin并且设置了defaultSkinTexture,才有效
-         * 默认绘制的背景是纯色的,所以不需要进行九宫拉伸设定
-         */
-        public get scale9GridEnable():boolean{
-            return this._scale9GridEnable;
+
+		/**
+		 * scale9Rectangle : [左边距,右边距,上边距,下边距]
+		 * 
+		 */
+        public scale9Grid(scale9RectData: number[] = []) {
+            let s = this;
+            if (scale9RectData.length == 4) {
+                this.scale9RectData = scale9RectData.concat();
+            } else {
+                this.scale9RectData.length = 0;
+            }
+            this.invalidate();
         }
 
-        public set scale9GridEnable(value:boolean){
-            if (this._scale9GridEnable != value) {
-                this._scale9GridEnable = value;
-                if (this._scale9GridEnable && this._scale9GridRect == null) this._scale9GridRect = new egret.Rectangle();
-                this.invalidate();
-            }
-        }
-        /**
-         * Sets the x of the bitmap's scale9Grid.
-         */
-        public set scale9GridX(value:number){
-            if (this._scale9GridRect == null) this._scale9GridRect = new egret.Rectangle();
-            if(this._scale9GridRect.x != value){
-                this._scale9GridRect.x = value;
-                this.invalidate();
-            }
-        }
-        public get scale9GridX():number{
-            if (this._scale9GridRect)return this._scale9GridRect.x;
-            return 0;
-        }
-        /**
-         * Sets the y of the bitmap's scale9Grid.
-         */
-        public set scale9GridY(value:number){
-            if (this._scale9GridRect == null) this._scale9GridRect = new egret.Rectangle();
-            if(this._scale9GridRect.y != value){
-                this._scale9GridRect.y = value;
-                this.invalidate();
-            }
-        }
-        public get scale9GridY():number{
-            if (this._scale9GridRect)return this._scale9GridRect.y;
-            return 0;
-        }
-        /**
-         * Sets the width of the bitmap's scale9Grid.
-         */
-        public set scale9GridWidth(value:number){
-            if (this._scale9GridRect == null) this._scale9GridRect = new egret.Rectangle();
-            if(this._scale9GridRect.width != value){
-                this._scale9GridRect.width = value;
-                this.invalidate();
-            }
-        }
-        public get scale9GridWidth():number{
-            if (this._scale9GridRect)return this._scale9GridRect.width;
-            return 0;
-        }
-        /**
-         * Sets the height of the bitmap's scale9Grid.
-         */
-        public set scale9GridHeight(value:number){
-            if (this._scale9GridRect == null) this._scale9GridRect = new egret.Rectangle();
-            if(this._scale9GridRect.height != value){
-                this._scale9GridRect.height = value;
-                this.invalidate();
-            }
-        }
-        public get scale9GridHeight():number{
-            if (this._scale9GridRect)return this._scale9GridRect.height;
-            return 0;
-        }
-
-        /**
-         * 九宫设置的区域
-         * @returns {egret.Rectangle}
-         */
-        public get scale9GridRect():egret.Rectangle{
-            return this._scale9GridRect;
-        }
-
-        public set scale9GridRect(rect:egret.Rectangle) {
-            this._scale9GridRect = rect;
+        private scale9Rect() {
+            let rect = new egret.Rectangle();
+            rect.x = 1;
+            rect.y = 1;
+            rect.width = 1;
+            rect.height = 1;
+            return rect;
         }
 
         /**
@@ -151,36 +91,44 @@ module codeBase{
          * @param value
          *
          */
-        public set smoothing(value:boolean){
+        public set smoothing(value: boolean) {
             if (this._smoothing != value) {
                 this._smoothing = value;
                 this.invalidate();
             }
         }
-        public get smoothing():boolean{
+        public get smoothing(): boolean {
             return this._smoothing;
         }
-        public draw():void{
-            if (!this._bitmap || this._texture == null && this._bitmap.texture == null) return;
-            if (this._bitmap.texture != this._texture){
+        
+        public draw(): void {
+            if (!this._bitmap || this._texture == null) return;
+            if (this._bitmap.texture != this._texture) {
                 this._bitmap.texture = this._texture;
+                this.width = this._bitmap.texture.textureWidth;
+                this.height = this._bitmap.texture.textureHeight;
             }
-            if (this._bitmap.texture == null) return;
-            if (this._scale9GridEnable && this._scale9GridRect) {
+            if (this.scale9RectData.length == 4) {
+                if (this._scale9GridRect == null) this._scale9GridRect = this.scale9Rect();
+                this._scale9GridRect.x = this.scale9RectData[0];
+                this._scale9GridRect.y = this.scale9RectData[2];
+                this._scale9GridRect.width = this._bitmap.texture.$getTextureWidth() - (this.scale9RectData[0] + this.scale9RectData[1]);
+                this._scale9GridRect.height = this._bitmap.texture.$getTextureHeight() - (this.scale9RectData[2] + this.scale9RectData[3]);
                 this._bitmap.scale9Grid = this._scale9GridRect;
                 this._bitmap.width = this.width;
                 this._bitmap.height = this.height;
-            } else {
+            } 
+            else {
                 this._bitmap.scale9Grid = null;
-                if (!this._scale9GridEnable && this._autoSize) {
+                if (this._autoSize) {
                     if (this._fillMode != "scale") {
                         this._bitmap.width = this.width;
                         this._bitmap.height = this.height;
                     } else {
-                        this._bitmap.scaleX = this.width/this._bitmap.texture.textureWidth;
-                        this._bitmap.scaleY = this.height/this._bitmap.texture.textureHeight;
+                        this._bitmap.scaleX = this.width / this._bitmap.texture.textureWidth;
+                        this._bitmap.scaleY = this.height / this._bitmap.texture.textureHeight;
                     }
-                } else if (this._texture){
+                } else if (this._texture) {
                     this._bitmap.scaleX = 1;
                     this._bitmap.scaleY = 1;
                     this._bitmap.width = this._texture.textureWidth;
@@ -194,9 +142,11 @@ module codeBase{
                 }
             }
             this._bitmap.fillMode = this._fillMode;
+            // if(this._bitmap.width != this.width) this._bitmap.width = this.width;
+            // if(this._bitmap.height != this.height) this._bitmap.height = this.height;
         }
 
-        public getBitmap():egret.Bitmap{
+        public getBitmap(): egret.Bitmap {
             return this._bitmap;
         }
 
@@ -205,9 +155,9 @@ module codeBase{
          * @param x
          * @param y
          */
-        public getPixel32( x:number,y:number ):Array<number>{
-            if (this._bitmap && this._bitmap.texture){
-                var locolPoint:egret.Point = this.globalToLocal(x,y);
+        public getPixel32(x: number, y: number): Array<number> {
+            if (this._bitmap && this._bitmap.texture) {
+                var locolPoint: egret.Point = this.globalToLocal(x, y);
                 return this._bitmap.texture.getPixel32(locolPoint.x, locolPoint.y);
             }
             return [];
@@ -219,10 +169,10 @@ module codeBase{
          * @param y 舞台值
          * @return true:有像素值, false:无像素值
          */
-        public testPixel32(x:number,y:number):boolean {
-            var datas:Array<number> = this.getPixel32(x, y);
-            for(var i:number = 0; i < datas.length; i++){
-                if (datas[i] > 0 ) {
+        public testPixel32(x: number, y: number): boolean {
+            var datas: Array<number> = this.getPixel32(x, y);
+            for (var i: number = 0; i < datas.length; i++) {
+                if (datas[i] > 0) {
                     return true;
                 }
             }

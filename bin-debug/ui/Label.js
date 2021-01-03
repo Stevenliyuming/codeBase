@@ -28,11 +28,15 @@ var codeBase;
             _this._italic = false;
             _this._lineSpacing = 0; //行间距
             _this._multiline = false; //多行显示
+            _this._wordWrap = false; //自动换行
             _this._stroke = 0;
             _this._strokeColor = 0x003350;
             _this._html = false;
-            _this._autoSize = false; //根据文字自动调整Label的尺寸
-            _this._link = null;
+            _this._autoSize = true; //根据文字自动调整Label的尺寸
+            _this._paddingLeft = 0;
+            _this._paddingRight = 0;
+            _this._paddingTop = 0;
+            _this._paddingBottom = 0;
             return _this;
         }
         Label.prototype.initData = function () {
@@ -44,17 +48,16 @@ var codeBase;
          */
         Label.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            if (!this._autoSize)
-                this.setSize(codeBase.Style.TEXTINPUT_WIDTH, codeBase.Style.TEXTINPUT_HEIGHT);
+            //if (!this._autoSize) this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
             this._textField = new egret.TextField();
-            this._textField.addEventListener(egret.Event.CHANGE, this.onChangeHdl, this);
+            this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
             this.addChild(this._textField);
             this.invalidate();
         };
         /**
          * Called when the text in the text field is manually changed.
          */
-        Label.prototype.onChangeHdl = function (event) {
+        Label.prototype.onTextChange = function (event) {
             this._text = this._textField.text;
         };
         Object.defineProperty(Label.prototype, "text", {
@@ -95,14 +98,11 @@ var codeBase;
         Label.prototype.getTextField = function () {
             return this._textField;
         };
-        ///////////////////////////////////
-        // public methods
-        ///////////////////////////////////
         /**
          * Draws the visual ui of the component.
          */
         Label.prototype.draw = function () {
-            _super.prototype.draw.call(this);
+            // super.draw();
             if (this._textField == null)
                 return;
             //console.log("@@label draw text=" + this._text);
@@ -119,6 +119,7 @@ var codeBase;
             this._textField.lineSpacing = this._lineSpacing;
             this._textField.stroke = this._stroke;
             this._textField.strokeColor = this._strokeColor;
+            this._textField.wordWrap = this._wordWrap;
             if (this._html) {
                 if (this._initFlow)
                     this._textField.textFlow = this._initFlow;
@@ -128,25 +129,120 @@ var codeBase;
                 this._textField.text = this._text;
             }
             if (this._autoSize) {
-                this.height = this._textField.measuredHeight;
-                this.width = this._textField.measuredWidth;
+                this.setSize(this._textField.measuredWidth, this._textField.measuredHeight);
+                //this.width = this._textField.width;
+                //this.height = this._textField.height;
+                // this._textField.textAlign = this._hAlign;
+                // this._textField.verticalAlign = this._vAlign;
             }
             else {
                 this._textField.width = this.width;
-                //this._textField.height = this.height;
-                if (this._vAlign == egret.VerticalAlign.MIDDLE) {
-                    this._textField.y = (this.height - this._textField.height) / 2;
-                }
-                else if (this._vAlign == egret.VerticalAlign.BOTTOM) {
-                    this._textField.y = this.height - this._textField.height;
-                }
-                else {
-                    this._textField.y = 0;
-                }
+                this._textField.height = this.height;
+                // if (this._hAlign == egret.HorizontalAlign.LEFT) {
+                // 	this._textField.x = 0;
+                // } else if (this._hAlign == egret.HorizontalAlign.RIGHT) {
+                // 	this._textField.x = this.width - this._textField.width;
+                // } else {
+                // 	this._textField.x = (this.width - this._textField.width)/2;
+                // }
+                // if (this._vAlign == egret.VerticalAlign.MIDDLE) {
+                // 	this._textField.y = (this.height - this._textField.height) / 2;
+                // } else if (this._vAlign == egret.VerticalAlign.BOTTOM) {
+                // 	this._textField.y = this.height - this._textField.height;
+                // } else {
+                // 	this._textField.y = 0;
+                // }
             }
+            // var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
+            // var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
+            // this._textField.width = newWidth;
+            // this._textField.height = newHeight;
+            // this._textField.x = this._paddingLeft;
+            // this._textField.y = this._paddingTop;
             this._textField.textAlign = this._hAlign;
             this._textField.verticalAlign = this._vAlign;
+            _super.prototype.draw.call(this);
         };
+        Object.defineProperty(Label.prototype, "paddingLeft", {
+            get: function () {
+                return this._paddingLeft;
+            },
+            /**
+             * 文本区域左边距偏移
+             */
+            set: function (value) {
+                if (this._paddingLeft != value) {
+                    this._paddingLeft = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Label.prototype, "paddingRight", {
+            get: function () {
+                return this._paddingRight;
+            },
+            /**
+             * 文本区域右边距偏移
+             */
+            set: function (value) {
+                if (this._paddingRight != value) {
+                    this._paddingRight = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Label.prototype, "paddingTop", {
+            get: function () {
+                return this._paddingTop;
+            },
+            /**
+             * 文本区域顶部边距偏移
+             */
+            set: function (value) {
+                if (this._paddingTop != value) {
+                    this._paddingTop = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Label.prototype, "paddingBottom", {
+            get: function () {
+                return this._paddingBottom;
+            },
+            /**
+             * 文本区域底部边距偏移
+             */
+            set: function (value) {
+                if (this._paddingBottom != value) {
+                    this._paddingBottom = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Label.prototype, "wordWrap", {
+            /**
+             * 设置自动换行
+             */
+            get: function () {
+                return this._wordWrap;
+            },
+            set: function (value) {
+                if (this._wordWrap != value) {
+                    this._wordWrap = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Label.prototype, "italic", {
             get: function () {
                 return this._italic;
@@ -319,9 +415,9 @@ var codeBase;
         });
         Object.defineProperty(Label.prototype, "hAlign", {
             /**
-     * 水平对齐设置
-     * 默认egret.HorizontalAlign.LEFT;
-     */
+             * 水平对齐设置
+             * 默认egret.HorizontalAlign.LEFT;
+             */
             get: function () {
                 return this._hAlign;
             },

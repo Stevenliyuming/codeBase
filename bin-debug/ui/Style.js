@@ -62,7 +62,7 @@ var codeBase;
         Style.VIDEO_DEFAULT_HEIGHT = 250;
         Style.embedFonts = false;
         Style.fontName = null;
-        Style.fontSize = 16;
+        Style.fontSize = 26;
         /**
          * 是否允许文本加载默认滤镜.
          */
@@ -90,6 +90,8 @@ var codeBase;
         Style.SLIDER_HEIGHT = 17;
         Style.SCROLLBAR_WIDTH = 300;
         Style.SCROLLBAR_HEIGHT = 17;
+        Style.BASEGROUP_WIDTH = 100;
+        Style.BASEGROUP_HEIGHT = 100;
         return Style;
     }());
     codeBase.Style = Style;

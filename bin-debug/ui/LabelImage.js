@@ -259,29 +259,29 @@ var codeBase;
         };
         LabelImage.prototype.splitTextureSource = function () {
             if (this._texture && codeBase.StringUtil.isUsage(this._chars)) {
-                var charArr = codeBase.StringUtil.spliteStrArr(this._chars, this._charSplit);
+                var charArr = codeBase.StringUtil.splitStrArr(this._chars, this._charSplit);
                 if (charArr.length > 0) {
                     this._initDisplayData = true;
                     var spriteSheet = new egret.SpriteSheet(this._texture);
-                    var splietWidth = 0;
-                    var splietHeight = 0;
+                    var splitWidth = 0;
+                    var splitHeight = 0;
                     var textureWidth = this._texture.textureWidth;
                     var textureHeight = this._texture.textureHeight;
                     if (this._horizontalSplit) {
-                        splietWidth = (textureWidth - charArr.length * this._gapSplit) / charArr.length;
-                        splietHeight = textureHeight;
+                        splitWidth = (textureWidth - charArr.length * this._gapSplit) / charArr.length;
+                        splitHeight = textureHeight;
                     }
                     else {
-                        splietWidth = textureWidth;
-                        splietHeight = (textureHeight - charArr.length * this._gapSplit) / charArr.length;
+                        splitWidth = textureWidth;
+                        splitHeight = (textureHeight - charArr.length * this._gapSplit) / charArr.length;
                     }
-                    //开始切割;
+                    //开始切割
                     for (var i = 0; i < charArr.length; i++) {
                         if (this._horizontalSplit) {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splietWidth + i * this._gapSplit, 0, splietWidth, splietHeight);
+                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splitWidth + i * this._gapSplit, 0, splitWidth, splitHeight);
                         }
                         else {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splietHeight + i * this._gapSplit, splietWidth, splietHeight);
+                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splitHeight + i * this._gapSplit, splitWidth, splitHeight);
                         }
                     }
                 }
@@ -407,6 +407,9 @@ var codeBase;
     }(codeBase.HGroup));
     codeBase.LabelImage = LabelImage;
     __reflect(LabelImage.prototype, "codeBase.LabelImage");
+    /**
+     * 控制数字滚动类
+     */
     var EffectNumberRolling = (function () {
         function EffectNumberRolling(lableImg) {
             this.zoomEnable = false;

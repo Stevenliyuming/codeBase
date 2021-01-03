@@ -23,7 +23,7 @@ var codeBase;
             _this._color = codeBase.Style.LABEL_TEXT; //字体颜色
             _this._fontName = codeBase.Style.fontName; //字体名称
             _this._hAlign = egret.HorizontalAlign.LEFT;
-            _this._vAlign = egret.VerticalAlign.MIDDLE;
+            _this._vAlign = egret.VerticalAlign.TOP;
             _this._bold = false;
             _this._italic = false;
             _this._lineSpacing = 0; //行间距
@@ -38,12 +38,17 @@ var codeBase;
             _this._follow = TextArea.FOLLOW_NONE; //当追加数据时,自动追踪,none,top,bottom
             _this.isAddScollListener = false;
             _this._link = null;
+            _this._paddingLeft = 0;
+            _this._paddingRight = 0;
+            _this._paddingTop = 0;
+            _this._paddingBottom = 0;
             /**
              * 鼠标按下
              * @param event
              */
             _this._isTouchBegin = false;
             _this._touchPoint = null;
+            _this.moveDelta = 0;
             return _this;
         }
         TextArea.prototype.initData = function () {
@@ -55,13 +60,13 @@ var codeBase;
          */
         TextArea.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            this.setSize(codeBase.Style.SLIDER_WIDTH, codeBase.Style.SLIDER_WIDTH);
+            //this.setSize(Style.SLIDER_WIDTH, Style.SLIDER_WIDTH);
             this._textField = new egret.TextField();
             this._textField.multiline = true;
-            this._textField.addEventListener(egret.Event.CHANGE, this.onChangeHdl, this);
+            this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
             this.addChild(this._textField);
-            this.invalidate();
             this.touchChildren = false;
+            this.invalidate();
         };
         /**
          * 文本滚动设置
@@ -93,8 +98,9 @@ var codeBase;
             }
         };
         TextArea.prototype.onTouchBegin = function (event) {
-            console.log("onTouchBegin numline=" + this._textField.numLines + ", scollv=" + this._textField.scrollV);
+            //console.log("onTouchBegin numline=" + this._textField.numLines + ", scollv=" + this._textField.scrollV);
             this._isTouchBegin = true;
+            this.moveDelta = 0;
             if (this._touchPoint == null)
                 this._touchPoint = new egret.Point();
             this._touchPoint.x = event.stageX;
@@ -105,7 +111,10 @@ var codeBase;
         };
         TextArea.prototype.onTouchMove = function (event) {
             if (this._isTouchBegin) {
-                if (Math.abs(event.stageY - this._touchPoint.y) >= 3) {
+                //console.log("move");
+                this.moveDelta += Math.abs(event.stageY - this._touchPoint.y);
+                if (this.moveDelta >= this._fontSize) {
+                    this.moveDelta -= this._fontSize;
                     if (event.stageY - this._touchPoint.y > 0) {
                         //console.log("down")
                         if (this._textField.scrollV > 1) {
@@ -129,9 +138,73 @@ var codeBase;
         /**
          * Called when the text in the text field is manually changed.
          */
-        TextArea.prototype.onChangeHdl = function (event) {
+        TextArea.prototype.onTextChange = function (event) {
             this._text = this._textField.text;
         };
+        Object.defineProperty(TextArea.prototype, "paddingLeft", {
+            get: function () {
+                return this._paddingLeft;
+            },
+            /**
+             * 文本区域左边距偏移
+             */
+            set: function (value) {
+                if (this._paddingLeft != value) {
+                    this._paddingLeft = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TextArea.prototype, "paddingRight", {
+            get: function () {
+                return this._paddingRight;
+            },
+            /**
+             * 文本区域右边距偏移
+             */
+            set: function (value) {
+                if (this._paddingRight != value) {
+                    this._paddingRight = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TextArea.prototype, "paddingTop", {
+            get: function () {
+                return this._paddingTop;
+            },
+            /**
+             * 文本区域顶部边距偏移
+             */
+            set: function (value) {
+                if (this._paddingTop != value) {
+                    this._paddingTop = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TextArea.prototype, "paddingBottom", {
+            get: function () {
+                return this._paddingBottom;
+            },
+            /**
+             * 文本区域底部边距偏移
+             */
+            set: function (value) {
+                if (this._paddingBottom != value) {
+                    this._paddingBottom = value;
+                    this.invalidate();
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(TextArea.prototype, "text", {
             /**
              * 文本内容
@@ -244,9 +317,6 @@ var codeBase;
         TextArea.prototype.getTextField = function () {
             return this._textField;
         };
-        ///////////////////////////////////
-        // public methods
-        ///////////////////////////////////
         /**
          * Draws the visual ui of the component.
          */
@@ -273,9 +343,11 @@ var codeBase;
                 this._textField.text = this._text;
             }
             if (this._editable) {
+                this.touchChildren = true;
                 this._textField.type = egret.TextFieldType.INPUT;
             }
             else {
+                this.touchChildren = false;
                 this._textField.type = egret.TextFieldType.DYNAMIC;
             }
             this._textField.maxChars = this._maxChars;
@@ -286,17 +358,25 @@ var codeBase;
             this._textField.lineSpacing = this._lineSpacing;
             this._textField.stroke = this._stroke;
             this._textField.strokeColor = this._strokeColor;
-            this._textField.width = this.width;
-            this._textField.height = this.height;
-            if (this._vAlign == egret.VerticalAlign.MIDDLE) {
-                this._textField.y = (this.height - this._textField.height) / 2;
-            }
-            else if (this._vAlign == egret.VerticalAlign.BOTTOM) {
-                this._textField.y = this.height - this._textField.height;
-            }
-            else {
-                this._textField.y = 0;
-            }
+            if (this._textField.width != this.width)
+                this._textField.width = this.width;
+            if (this._textField.height != this.height)
+                this._textField.height = this.height;
+            var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
+            var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
+            this._textField.width = newWidth;
+            this._textField.height = newHeight;
+            this._textField.x = this._paddingLeft;
+            this._textField.y = this._paddingTop;
+            // this._textField.width = this.width;
+            // this._textField.height = this.height;
+            // if (this._vAlign == egret.VerticalAlign.MIDDLE) {
+            // 	this._textField.y = (this.height - this._textField.height) / 2;
+            // } else if (this._vAlign == egret.VerticalAlign.BOTTOM) {
+            // 	this._textField.y = this.height - this._textField.height;
+            // } else {
+            // 	this._textField.y = 0;
+            // }
             this._textField.textAlign = this._hAlign;
             this._textField.verticalAlign = this._vAlign;
             //console.log("textHeight=" + this._textField.textHeight + ", height=" + this.height);

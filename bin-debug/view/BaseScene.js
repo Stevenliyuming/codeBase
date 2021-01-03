@@ -15,16 +15,20 @@ var codeBase;
         function BaseScene() {
             var _this = _super.call(this) || this;
             _this.isClear = false;
-            _this.once(egret.Event.ADDED_TO_STAGE, _this.init, _this);
             return _this;
+            //this.once(egret.Event.ADDED_TO_STAGE, this.init, this);
         }
-        BaseScene.prototype.init = function () {
+        /**
+         * 初始化一些必要的逻辑数据
+         * 这个方法是在第一次加入stage的时候,做调用
+         */
+        BaseScene.prototype.initData = function () {
+            _super.prototype.initData.call(this);
             var s = this;
             s.stage = codeBase.curStage();
             s.modulePath = ""; //UIControl.getInstance().curUIIDPath;
             s.skeletonPath = s.modulePath + "/skeleton/";
             s.videopath = "video/" + s.modulePath + "/";
-            s.addEventListener(egret.Event.REMOVED_FROM_STAGE, s.hide, s);
         };
         BaseScene.prototype.hide = function () {
             console.log("remove" + egret.getQualifiedClassName(this));

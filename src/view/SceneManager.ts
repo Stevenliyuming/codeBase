@@ -2,19 +2,22 @@ module codeBase{
 	//场景管理类
 	export class SceneManager {
 		private static _instance: SceneManager;
-		//private _moduleBase: ModuleBase;
 		public _stage: egret.Stage;
-		public currentScene: any;
-		//private _video: VideoWin;
+		public currentScene: BaseScene;
 		public gameScale: number = 1;
 		public gameLayer:egret.Sprite;
+		/**
+		 * 设计分辨率
+		 */
 		public designWidth: number = 1920;
 		public designHeight: number = 1080;
+
+		private fixDisplayArr:FixDisplay[] = [];
 
 		private constructor() {
 		}
 
-		public static get Instance(): SceneManager {
+		public static get instance(): SceneManager {
 			if (!this._instance) {
 				this._instance = new SceneManager();
 			}
@@ -23,13 +26,12 @@ module codeBase{
 
 		public Init() {
 			let s = this;
-			//s._moduleBase = moduleBase;
-			s._stage = curStage();//s._moduleBase.stage;
-			//this._stage.scaleMode = egret.StageScaleMode.FIXED_WIDTH;
-			//this._stage.orientation = egret.OrientationMode.AUTO;
+			s._stage = curStage();
+			//s._stage.scaleMode = egret.StageScaleMode.FIXED_WIDTH;
+			//s._stage.orientation = egret.OrientationMode.AUTO;
 			s.gameLayer = new egret.Sprite;
-			s.gameLayer.width = 1920;
-			s.gameLayer.height = 1080;
+			s.gameLayer.width = s.designWidth;
+			s.gameLayer.height = s.designHeight;
 			s._stage.addChildAt(s.gameLayer, 0);
 			s._stage.addEventListener(egret.Event.RESIZE, s.contentSizeChanged, s, false, 1000);
 			s.contentSizeChanged();
@@ -61,8 +63,8 @@ module codeBase{
 			}
 
 			if(s.gameLayer) {
-				s.gameLayer.width = 1920 ;
-				s.gameLayer.height = 1080 ;
+				s.gameLayer.width = s.designWidth;
+				s.gameLayer.height = s.designHeight;
 				s.gameLayer.scaleX = s.gameLayer.scaleY = s.gameScale;
 				s.gameLayer.x = (stageWidth - s.gameLayer.width * s.gameScale ) / 2;
 				s.gameLayer.y = (stageHeight - s.gameLayer.height * s.gameScale ) / 2;
@@ -72,27 +74,148 @@ module codeBase{
 				// s.gameLayer.graphics.endFill();
 			}
 
-			// if (s.currentScene) {
-			// 	let left_top = s.gameLayer.globalToLocal(0, 0);
-			// 	let right_bottom = s.gameLayer.globalToLocal(stageWidth, stageHeight);
-			// 	s.currentScene.width = right_bottom.x - left_top.x;
-			// 	s.currentScene.height = right_bottom.y - left_top.y;
-			// 	s.currentScene.x = left_top.x;
-			// 	s.currentScene.y = left_top.y;
-			// }
+			//约束布局
+			s.fixLayout();
 		}
 
-		// public get currentModule(): ModuleBase {
-		// 	return this._moduleBase;
-		// }
+		/**
+		 * obj 需要布局约束的对象
+		 * left 相对左边距
+		 * right 右边距
+		 * top 上边距
+		 * bottom 下边距
+		 * relativeParent 约束布局的父级对象
+		 */
+		public fixListen(obj:egret.DisplayObject, left:number=NaN, right:number=NaN, top:number=NaN, bottom:number=NaN, relativeParent:egret.DisplayObject=null) {
+			let s = this;
+			let fixObj:FixDisplay;
+			let index:number = -1;
+			for(let i=0; i<s.fixDisplayArr.length; ++i) {
+				if(s.fixDisplayArr[i].display == obj) {
+					index = i;
+					fixObj = s.fixDisplayArr[i];
+					break;
+				}
+			}
+
+			if(left != left && right != right && top != top && bottom != bottom) {
+				if(fixObj) {
+					s.fixDisplayArr.splice(index, 1);
+					ObjectPool.recycleClass(fixObj);
+				}
+			} else {
+				if(!fixObj) {
+					fixObj = ObjectPool.getByClass(FixDisplay);
+					s.fixDisplayArr.push(fixObj);
+				}
+				fixObj.display = obj;
+				fixObj.left = left;
+				fixObj.right = right;
+				fixObj.top = top;
+				fixObj.bottom = bottom;
+				fixObj.relativeParent = relativeParent;
+			}
+			s.fixLayout();
+		}
+
+		private fixLayout() {
+			let s = this;
+			let num = s.fixDisplayArr.length;
+			let fixObj:FixDisplay;
+			let parentWidth:number;
+			let parentHeight:number;
+			let thisWidth:number;
+			let thisHeight:number;
+			let relativeObj:egret.DisplayObject;
+			let newX:number, newY:number;
+			let localPos:egret.Point;
+			let globalPos:egret.Point;
+			for(let i=0;i<num; ++i) {
+				fixObj = s.fixDisplayArr[i];
+				relativeObj = fixObj.relativeParent?fixObj.relativeParent:s._stage;
+				parentWidth = relativeObj==s._stage?s._stage.stageWidth:relativeObj.width;
+				parentHeight = relativeObj==s._stage?s._stage.stageHeight:relativeObj.height;
+				thisWidth = fixObj.display.width;
+				thisWidth = fixObj.display.height;
+
+				//为了保证得到的宽高是数值型,这里进行了严格的检测
+				if (isNaN(parentWidth) || parentHeight == undefined) {
+					parentWidth = 0;
+				}
+				if (isNaN(parentHeight) || parentHeight == undefined) {
+					parentHeight = 0;
+				}
+
+				if (isNaN(thisWidth) || thisWidth == undefined) {
+					thisWidth = 0;
+				}
+				if (isNaN(thisHeight) || thisHeight == undefined) {
+					thisWidth = 0;
+				}
+
+				// var widthChanged: boolean = false;//宽度有改变
+				// var heightChanged: boolean = false;//高度有改变
+
+				if (!isNaN(fixObj.left) && isNaN(fixObj.right)) {
+					//fixObj.display.x = fixObj.left;
+					globalPos = relativeObj.localToGlobal(fixObj.left, 0);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+					newX = localPos.x;
+				} else if (!isNaN(fixObj.right) && isNaN(fixObj.left)) {
+					//fixObj.display.x = parentWidth - fixObj.right - thisWidth;
+					globalPos = relativeObj.localToGlobal(parentWidth - fixObj.right, 0);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+					newX = localPos.x;
+				} else if (!isNaN(fixObj.left) && !isNaN(fixObj.right)) {
+					//fixObj.display.x = fixObj.left;
+					globalPos = relativeObj.localToGlobal(fixObj.left, 0);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+					newX = localPos.x;
+
+					globalPos = relativeObj.localToGlobal(parentWidth - fixObj.right, 0);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+
+					thisWidth = localPos.x - newX;
+				}
+
+				if (!isNaN(fixObj.top) && isNaN(fixObj.bottom)) {
+					//fixObj.display.y = fixObj.top;
+					globalPos = relativeObj.localToGlobal(0, fixObj.top);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+					newY = localPos.y;
+				} else if (!isNaN(fixObj.bottom) && isNaN(fixObj.top)) {
+					//fixObj.display.y = parentHeight - fixObj.bottom - thisHeight;
+					globalPos = relativeObj.localToGlobal(0, parentHeight - fixObj.bottom);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+					newY = localPos.y;
+				} else if (!isNaN(fixObj.top) && !isNaN(fixObj.bottom)) {
+					//fixObj.display.y = fixObj.top;
+					globalPos = relativeObj.localToGlobal(0, fixObj.top);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+					newY = localPos.y;
+
+					globalPos = relativeObj.localToGlobal(0, parentHeight - fixObj.bottom);
+					localPos = fixObj.display.parent.globalToLocal(globalPos.x, globalPos.y);
+
+					thisHeight = localPos.y - newY;
+
+				}
+
+				fixObj.display.x = newX;
+				fixObj.display.y = newY;
+				if (fixObj.display.width != thisWidth) {
+					fixObj.display.width = thisWidth;
+				}
+
+				if (fixObj.display.height != thisHeight) {
+					fixObj.display.height = thisHeight;
+				}
+			}
+		}
 
 		public showScene(_scene: BaseScene) {
 			let s = this;
 			if (_scene) {
-				_scene.width = 1920;
-				_scene.height = 1080;
-				_scene.horizontalCenter = 0;
-				_scene.verticalCenter = 0;
 				s.gameLayer.addChild(_scene);
 				s.setCurrentScene(_scene);
 			}
@@ -101,21 +224,18 @@ module codeBase{
 		private setCurrentScene(scene: any) {
 			let s = this;
 			if (s.currentScene) {
-				//LayerManager.getInstance().fixListen(s.currentScene, NaN, NaN, NaN, NaN);
-				s.gameLayer.removeChild(s.currentScene);
-				s.currentScene = null;
+				s.removeScene(s.currentScene);
+				s.fixListen(s.currentScene, NaN, NaN, NaN, NaN);
 			}
 			s.currentScene = scene;
-			//LayerManager.getInstance().fixListen(s.currentScene, 0, 0, 0, 0);
+			s.fixListen(s.currentScene, 0, 0, 0, 0);
 		}
 
 		public removeScene(scene:BaseScene) {
 			let s = this;
 			if(scene && scene.parent == s.gameLayer) {
 				s.gameLayer.removeChild(scene);
-				if(scene === s.currentScene) {
-					s.currentScene = null;
-				}
+				scene = null;
 			}
 		}
 
@@ -125,18 +245,31 @@ module codeBase{
 			while(num > 0) {
 				let child = s.gameLayer.getChildAt(0);
 				if(child instanceof BaseScene) {
-					//LayerManager.getInstance().fixListen(child, NaN, NaN, NaN, NaN);
+					s.removeScene(child);
+				} else {
+					s.gameLayer.removeChild(child);
 				}
-				s.gameLayer.removeChild(child);
 				num -= 1;
 			}
-			if(s.gameLayer) {
+			if(s.gameLayer && s.gameLayer.parent == s._stage) {
 				s._stage.removeChild(s.gameLayer);
 				s.gameLayer = null;
 			}
 			s.currentScene = null;
 			s._stage.removeEventListener(egret.Event.RESIZE, s.contentSizeChanged, s);
 		}
+	}
+
+	/**
+	 * 约束布局对象类
+	 */
+	class FixDisplay {
+		display: egret.DisplayObject;
+		left: number;
+		right: number;
+		top: number;
+		bottom: number;
+		relativeParent: egret.DisplayObject
 	}
 
 }

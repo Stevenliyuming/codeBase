@@ -15,8 +15,12 @@ var codeBase;
         function LoadingUI() {
             return _super.call(this) || this;
         }
-        LoadingUI.prototype.init = function () {
-            _super.prototype.init.call(this);
+        /**
+         * 初始化一些必要的逻辑数据
+         * 这个方法是在第一次加入stage的时候,做调用
+         */
+        LoadingUI.prototype.initData = function () {
+            _super.prototype.initData.call(this);
             this.createView();
         };
         LoadingUI.prototype.createView = function () {
@@ -24,10 +28,15 @@ var codeBase;
             this.addChild(this.textField);
             this.textField.horizontalCenter = 0;
             this.textField.verticalCenter = 0;
-            this.textField.width = 480;
+            this.textField.width = 1920;
             this.textField.height = 100;
-            this.textField.autoSize = true;
-            this.textField.showBg = false;
+            this.textField.hAlign = egret.HorizontalAlign.CENTER;
+            this.textField.autoSize = false;
+            this.textField.showBg = true;
+            this.textField.bgColor = codeBase.TextColors.blue;
+            this.textField.fontSize = 36;
+            this.textField.text = "Loading...";
+            codeBase.MyEvent.sendEvent(codeBase.EventType.LOADINGUI_FINISH);
         };
         LoadingUI.prototype.onProgress = function (current, total) {
             this.textField.text = "Loading..." + current + "/" + total;

@@ -71,7 +71,7 @@ var codeBase;
                             channelConfig.func = null;
                             channelConfig.thisObj = null;
                             channelConfig.channel = null;
-                            delete Sound._soundDict[key];
+                            //delete Sound._soundDict[key];
                         }
                     }
                     break;

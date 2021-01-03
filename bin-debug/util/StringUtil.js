@@ -202,7 +202,7 @@ var codeBase;
          * @param split 切割的符号
          * @returns {Array<any>}
          */
-        StringUtil.spliteStrArr = function (str, split) {
+        StringUtil.splitStrArr = function (str, split) {
             var result = [];
             if (StringUtil.isUsage(str)) {
                 var sd = str.split(split);
@@ -230,10 +230,10 @@ var codeBase;
             if (!StringUtil.isUsage(str))
                 return obj;
             //大切割
-            var result1 = StringUtil.spliteStrArr(str, split);
+            var result1 = StringUtil.splitStrArr(str, split);
             var keyvalue = null;
             for (var i = 0; i < result1.length; i++) {
-                keyvalue = StringUtil.spliteStrArr(result1[i], kvSplit);
+                keyvalue = StringUtil.splitStrArr(result1[i], kvSplit);
                 if (keyvalue.length == 2) {
                     var typeValue = typeof (obj[keyvalue[0]]);
                     if (typeValue == "number") {
@@ -244,7 +244,7 @@ var codeBase;
                     }
                     else {
                         if (obj[keyvalue[0]] instanceof Array) {
-                            obj[keyvalue[0]] = StringUtil.spliteStrArr(keyvalue[1], ",");
+                            obj[keyvalue[0]] = StringUtil.splitStrArr(keyvalue[1], ",");
                         }
                         else {
                             obj[keyvalue[0]] = keyvalue[1];

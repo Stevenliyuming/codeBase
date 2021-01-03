@@ -78,6 +78,7 @@ var codeBase;
         //擦除信息有变化
         EventType.ERASE_CHANGE = "erase_change";
         EventType.CLOSE_VIDEO = "CLOSE_VIDEO";
+        EventType.LOADINGUI_FINISH = "LOADINGUI_FINISH";
         return EventType;
     }());
     codeBase.EventType = EventType;

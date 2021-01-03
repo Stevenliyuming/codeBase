@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_png,comRes_1_json",
+			"keys": "bg_png,comRes_1_json,A_png,A点击_png",
 			"name": "preload"
 		}
 	],
@@ -16,6 +16,16 @@
 			"type": "sheet",
 			"name": "comRes_1_json",
 			"subkeys": "hand,playSound,restart"
+		},
+		{
+			"name": "A_png",
+			"type": "image",
+			"url": "assets/A.png"
+		},
+		{
+			"name": "A点击_png",
+			"type": "image",
+			"url": "assets/A点击.png"
 		}
 	]
 }

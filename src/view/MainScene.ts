@@ -12,7 +12,7 @@ module codeBase{
 		// public rect_mask:eui.Rect;
 
 		public bg: Image;
-		public group_play: BaseGroup;
+		public group_play: Group;
 		public rect_mask: Image;
 		public titleGroup:BaseGroup;
 		public title:Image;
@@ -42,45 +42,132 @@ module codeBase{
 			super();
 		}
 
-		protected init() {
-			super.init();
+		/**
+		 * 初始化一些必要的逻辑数据
+		 * 这个方法是在第一次加入stage的时候,做调用
+		 */
+		public initData() {
+			super.initData();
 			this.showScene();
 		}
 
 		private showScene() {
 			let s = this;
+
 			//背景
 			s.bg = new Image();//SkinManager.createImage(s, 0, 0, s.modulePath + "/img/bg.jpg");
 			s.bg.texture = RES.getRes("bg_png");
 			s.bg.width = 1920;
 			s.bg.height = 1080;
 			s.addChild(s.bg);
-			s.bg.horizontalCenter = 0;
-			s.bg.verticalCenter = 0;
-			//GameUtil.Instance.setScreenAuto(s.bg);
+			// s.bg.horizontalCenter = 0;
+			// s.bg.verticalCenter = 0;
+			GameUtil.Instance.setScreenAuto(s.bg);
+
+			// let group = new Group;
+			// group.width = 1920;
+			// group.height = 1080;
+			// s.group_play.addChild(group);
+			// group.horizontalCenter = 0;
+			// group.verticalCenter = 0;
+			// //GameUtil.Instance.setScreenAuto(group);
+			// group.showBg = true;
 
 			//交互区
-			s.group_play = new BaseGroup;
+			s.group_play = new Group;
 			s.addChild(s.group_play);
 			s.group_play.width = 1920;
 			s.group_play.height = 1080;
 			s.group_play.horizontalCenter = 0;
 			s.group_play.verticalCenter = 0;
-
-			//s.group_play.addChild(s.bg);
+			//s.group_play.showBg = true;
 
 			let label:Label = new Label;
+			label.setSize(100, 50);
 			label.text = "这是一个具有布局约束的文本";
 			s.group_play.addChild(label);
-			label.left = 500;
+			label.left = 50;
 			label.top = 500;
+			label.showBg = true;
 			label.autoSize = true;
+
+			egret.setTimeout(()=>{
+				label.text = "一个具有布局约束的文本00000000000";
+			}, s, 100);
 
 			let hand = new Image;
 			hand.texture = RES.getRes("comRes_1_json.hand");
 			s.group_play.addChild(hand);
 			hand.left = 0;
 			hand.top = 0;
+
+			// let textInput = new TextInput;
+			// textInput.width = 300;
+			// textInput.height = 100;
+			// s.group_play.addChild(textInput);
+			// textInput.x = 100;
+			// textInput.y = 100;
+			// textInput.showBg = true;
+			// textInput.paddingLeft = 10;
+			// textInput.paddingTop = 10;
+			// textInput.paddingRight = 10;
+			// textInput.paddingBottom = 20;
+
+			let textArea = new TextArea;
+			textArea.width = 300;
+			textArea.height = 300;
+			s.group_play.addChild(textArea);
+			textArea.x = 200;
+			textArea.y = 100;
+			textArea.showBg = true;
+			textArea.text = "1月1日"
+			// textArea.editable = true;
+			// textArea.paddingLeft = 10;
+			// textArea.paddingTop = 20;
+			// textArea.paddingRight = 10;
+			// textArea.paddingBottom = 20;
+
+			let button = new Button;
+			s.group_play.addChild(button);
+			button.x = 300;
+			button.y = 800;
+			button.setStatus(2, [RES.getRes("A_png"), RES.getRes("A点击_png")]);
+			//button.setSize(100, 60);
+
+			let listItemDataArr:any[] = [
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},				
+				{
+					res: "A点击_png"
+				},
+			];
+			let listGroup = new List;
+			s.group_play.addChild(listGroup);
+			listGroup.x = 800;
+			listGroup.y = 0;
+			listGroup.width = 700;
+			listGroup.height = 500;
+			listGroup.itemRenderer = ListItemRenderer;
+			listGroup.gap = 100;
+			listGroup.line = 2;
+			listGroup.lineGap = 20;
+			listGroup.data = listItemDataArr;
+			listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
+				console.log(ev.data);
+			}, s);
 
 			//标题
 			// s.titleGroup = new BaseGroup;

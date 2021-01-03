@@ -13,27 +13,29 @@ var codeBase;
     //图片字体类
     var ImageNumber = (function (_super) {
         __extends(ImageNumber, _super);
+        function ImageNumber() {
+            var _this = _super.call(this) || this;
+            _this.numberImages = [];
+            _this.numberImagePool = [];
+            _this.numberTexture = {};
+            return _this;
+        }
         /**
          * imageAlias 单张字体图片命名格式
          * sheetAlias 全部字体图片的纹理图集
          * verticalAlign 垂直方向的对齐方式 默认顶部对齐
          * horizontalAlign 水平方向的对齐方式 默认左边对齐
          */
-        function ImageNumber(imageAlias, sheetAlias, verticalAlign, horizontalAlign) {
+        ImageNumber.prototype.init = function (imageAlias, sheetAlias, verticalAlign, horizontalAlign) {
             if (sheetAlias === void 0) { sheetAlias = ""; }
             if (verticalAlign === void 0) { verticalAlign = "top"; }
             if (horizontalAlign === void 0) { horizontalAlign = "left"; }
-            var _this = _super.call(this) || this;
-            _this.numberImages = [];
-            _this.numberImagePool = [];
-            _this.numberTexture = {};
-            var s = _this;
+            var s = this;
             s.imageAlias = imageAlias;
             s.sheetAlias = sheetAlias;
             s.verticalAlign = verticalAlign.toLowerCase();
             s.horizontalAlign = horizontalAlign.toLowerCase();
-            return _this;
-        }
+        };
         ImageNumber.prototype.show = function (pr, px, py, defaultText) {
             if (defaultText === void 0) { defaultText = null; }
             var s = this;
@@ -117,6 +119,12 @@ var codeBase;
                 }
                 s.width = spriteWidth;
                 s.height = spriteHeight;
+            }
+        };
+        ImageNumber.prototype.hide = function () {
+            var s = this;
+            if (s.parent) {
+                s.parent.removeChild(s);
             }
         };
         return ImageNumber;

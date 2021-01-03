@@ -193,7 +193,7 @@ module codeBase{
          * @param split 切割的符号
          * @returns {Array<any>}
          */
-        public static spliteStrArr(str:string, split:string):Array<string> {
+        public static splitStrArr(str:string, split:string):Array<string> {
             var result:Array<string> = [];
             if (StringUtil.isUsage(str)){
                 var sd:Array<string> = str.split(split);
@@ -217,10 +217,10 @@ module codeBase{
             if (item)obj = item;
             if (!StringUtil.isUsage(str)) return obj;
             //大切割
-            var result1:Array<string> = StringUtil.spliteStrArr(str, split);
+            var result1:Array<string> = StringUtil.splitStrArr(str, split);
             var keyvalue:Array<string> = null;
             for (var i:number = 0; i < result1.length; i++)  {
-                keyvalue =StringUtil.spliteStrArr(result1[i], kvSplit);
+                keyvalue =StringUtil.splitStrArr(result1[i], kvSplit);
                 if (keyvalue.length == 2){
                     var typeValue:string = typeof(obj[keyvalue[0]]);
                     if (typeValue == "number"){
@@ -229,7 +229,7 @@ module codeBase{
                         obj[keyvalue[0]] = keyvalue[1] == "true";
                     } else {
                         if (obj[keyvalue[0]] instanceof Array){
-                            obj[keyvalue[0]] = StringUtil.spliteStrArr(keyvalue[1], ",");
+                            obj[keyvalue[0]] = StringUtil.splitStrArr(keyvalue[1], ",");
                         } else {
                             obj[keyvalue[0]] = keyvalue[1];
                         }
