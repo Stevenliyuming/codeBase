@@ -31,6 +31,7 @@ module codeBase{
         private bounceBack:boolean = false;//列表项回弹
 
         private _autoScrollGap: number = 0;//自动滚动的间距
+        private _autoScrollStep:number = 0;
         private _lastTimeNum: number = 0;//
 
         private _selected: any = null;//选择的对象
@@ -143,7 +144,7 @@ module codeBase{
             //this._isMoveBegin = false;
             //if (!this._fixed)this.checkUIFreeback();
             this.onTouchEndEvent(event);
-            console.log("onTouchReleaseOutsideEvent");
+            //console.log("onTouchReleaseOutsideEvent");
         }
 
         /**
@@ -191,7 +192,8 @@ module codeBase{
                 HeartBeat.addListener(this, this.onAutoScroll);
                 return;
             }
-            this.checkUIFreeback();
+            //this.checkUIFreeback();
+            this.checkBounceBack();
         }
 
         private onAutoScroll(): void {
@@ -201,19 +203,19 @@ module codeBase{
                 this.moveItemUIPosition(this._autoScrollGap, 0);
             }
             this._autoScrollGap -= this._autoScrollGap / 20;
-            if (Math.abs(this._autoScrollGap) < 0.5 || this._dataIndexBegin == 0 || this._dataIndexEnd >= this._itemDatas.length - 1) {
+            if (Math.abs(this._autoScrollGap) < 0.5 || this._dataIndexBegin == 0 || this._dataIndexEnd == this._itemDatas.length - 1) {
                 HeartBeat.removeListener(this, this.onAutoScroll);
-                this.checkUIFreeback();
+                //this.checkUIFreeback();
+                this.checkBounceBack();
             }
         }
 
         /**
          * 检测是否需要回弹
          */
-        private checkUIFreeback(): void {
-            //console.log("checkUIFreeback 000 this._dataIndexEnd=" + this._dataIndexEnd);
+        private checkBounceBack() {
+            // if(this._dataIndexBegin == 0 && this._dataIndexEnd != this._itemDatas.length - 1) return;
             if (this._itemContainer.numChildren > 0 && this._itemDatas && this._itemDatas.length > 0 && (this._dataIndexBegin == 0 || this._dataIndexEnd >= this._itemDatas.length - 1)) {
-                //console.log("checkUIFreeback 111")
                 var pos: number = 0;
                 if (this._dataIndexBegin == 0) {
                     //console.log("list.freeback.11111");
@@ -222,23 +224,10 @@ module codeBase{
                     } else {
                         pos = this._itemContainer.getChildAt(0).x;
                     }
-                    if (pos < 0) {
-                        //计算最后的边界
-                        //console.log("list.freeback.2222");
-                        if (this._direction == Style.VERTICAL) {//yv值
-                            pos = this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).height - this._itemContainer.height;
-                            if (pos + this._itemContainer.height > 0) {
-                                pos = this._itemContainer.getChildAt(0).y;
-                            }
-                        } else {
-                            pos = this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).x + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).width - this._itemContainer.width;
-                        }
-                        if (pos > 0) {
-                            pos = 0;
-                        }
-                        //console.log("list.freeback.333=" + pos);
+                    if(pos < 0 && this._dataIndexEnd != (this._itemDatas.length - 1)) {
+                        return;
                     }
-                } else if (this._dataIndexEnd >= this._itemDatas.length - 1) {
+                } else if (this._dataIndexEnd == this._itemDatas.length - 1) {
                     //console.log("list.freeback.4444");
                     if (this._direction == Style.VERTICAL) {//yv值
                         pos = this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).height - this._itemContainer.height;
@@ -246,23 +235,40 @@ module codeBase{
                         pos = this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).x + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).width - this._itemContainer.width;
                     }
                     //console.log("list.freeback.5555=" + pos);
+                    if (pos > 0 && this._dataIndexBegin != 0) {
+                        return;
+                    }
                 }
+
                 if (pos != 0) {
                     //设置列表回弹状态
                     this.bounceBack = true;
-                    //console.log("list.freeback.66666=" + pos);
-                    for (var i: number = 0; i < this._itemContainer.numChildren; i++) {
-                        if (this._direction == Style.VERTICAL) {//yv值
-                            egret.Tween.get(this._itemContainer.getChildAt(i)).to({ y: this._itemContainer.getChildAt(i).y - pos }, 100);
-                        } else {
-                            egret.Tween.get(this._itemContainer.getChildAt(i)).to({ x: this._itemContainer.getChildAt(i).x - pos }, 100);
-                        }
-                    }
-                    //取消列表回弹状态
-                    egret.setTimeout(()=>{
-                        this.bounceBack = false;
-                    }, this, 110);
+                    this._autoScrollStep = Number((-pos / 5).toFixed(2));
+                    this._autoScrollGap = Number(Math.abs(pos).toFixed(2));
+                   // console.log(this._autoScrollStep);
+                    //console.log(this._autoScrollGap);
+                    HeartBeat.addListener(this, this.doBounceBack);
                 }
+            }
+        }
+
+        private doBounceBack() {
+            if(this._autoScrollGap < Math.abs(this._autoScrollStep)) {
+                this._autoScrollStep = this._autoScrollStep > 0?this._autoScrollGap:-this._autoScrollGap;
+            }
+            if (this._direction == Style.VERTICAL) {//yv值
+                this.moveItemUIPosition(0, this._autoScrollStep);
+            } else {
+                this.moveItemUIPosition(this._autoScrollStep, 0);
+            }
+            this._autoScrollGap -= Math.abs(this._autoScrollStep);
+            if (this._autoScrollGap <= 0) {
+                //console.log(this._autoScrollGap);
+                //console.log(this._autoScrollStep);
+                if(this.bounceBack) this.bounceBack = false;
+                this._autoScrollStep = 0;
+                this._autoScrollGap = 0;
+                HeartBeat.removeListener(this, this.doBounceBack);
             }
         }
 
@@ -295,71 +301,76 @@ module codeBase{
          */
         private moveItemUIPosition(xv: number, yv: number): void {
             //console.log("moveItemUIPosition this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd + ", x=" + xv + ", y=" + yv)
-            var itemRederer: egret.DisplayObject = null;
-            var optNum: number = 0;
+            var itemRenderer: egret.DisplayObject = null;
+            var addNum: number = 0;
             for (var i: number = this._itemContainer.numChildren - 1; i >= 0; i--) {
-                itemRederer = <egret.DisplayObject>this._itemContainer.getChildAt(i);
+                itemRenderer = <egret.DisplayObject>this._itemContainer.getChildAt(i);
                 if (this._direction == Style.VERTICAL) {//yv值
-                    if (!this._fixed) itemRederer.y += yv;
-                    if (this._dataIndexBegin == 0 && yv >= 0 || this._dataIndexEnd == this._itemDatas.length - 1 && yv < 0) {
-                        continue;
-                    }
-                    //if (this._fixed) itemRederer.y += yv;
+                    if (!this._fixed) itemRenderer.y += yv;
                     //补充一个
-                    console.log("this._dataIndexEnd=" + this._dataIndexEnd + ":this._itemDatas.length - 1=" + (this._itemDatas.length - 1));
-                    if (yv < 0 && this._dataIndexEnd <= this._itemDatas.length - 1) {//^向上
-                        if (this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).height + this._gap < this._itemContainer.height) {
-                            optNum = this.addUIItem(this._dataIndexEnd + 1, false);
-                            this._dataIndexEnd += optNum;
-                            console.log("moveItemUIPosition 00000 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                    //console.log("this._dataIndexEnd=" + this._dataIndexEnd + ":this._itemDatas.length - 1=" + (this._itemDatas.length - 1));
+                    if (yv < 0) {//^向上
+                        if(this._dataIndexEnd < this._itemDatas.length - 1) {
+                            if (this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).height + this._gap < this._itemContainer.height) {
+                                addNum = this.addUIItem(this._dataIndexEnd + 1, false);
+                                this._dataIndexEnd += addNum;
+                                //console.log("moveItemUIPosition 00000 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            }
+
+                            if ((itemRenderer.y + itemRenderer.height) < 0) {
+                                this.removeRender(itemRenderer);
+                                //console.log("remove 000 index.value=" + this._dataIndexBegin);
+                                this._dataIndexBegin++;
+                                //console.log("moveItemUIPosition 11111 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd);
+                            }
                         }
-                        if ((itemRederer.y + itemRederer.height) < 0) {
-                            this.removeRender(itemRederer);
-                            console.log("remove 000 index.value=" + this._dataIndexBegin);
-                            this._dataIndexBegin++;
-                            console.log("moveItemUIPosition 11111 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
-                        }
-                    } else if (this._dataIndexBegin > 0) {//v向下
-                        if (this._itemContainer.getChildAt(0).y - this._gap > 0) {
-                            optNum = this.addUIItem(this._dataIndexBegin - this._line, true);
-                            this._dataIndexBegin -= optNum;
-                            //console.log("moveItemUIPosition 22222 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
-                        }
-                        if (itemRederer.y > this._itemContainer.height) {
-                            this.removeRender(itemRederer);
-                            //console.log("remove 111 index.value=" + this._dataIndexEnd);
-                            this._dataIndexEnd--;
-                            //console.log("moveItemUIPosition 33333 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                    } else {//v向下
+                        if (this._dataIndexBegin > 0) {
+                            if (this._itemContainer.getChildAt(0).y - this._gap > 0) {
+                                addNum = this.addUIItem(this._dataIndexBegin - this._line, true);
+                                this._dataIndexBegin -= addNum;
+                                //console.log("moveItemUIPosition 22222 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            }
+
+                            if (itemRenderer.y > this._itemContainer.height) {
+                                this.removeRender(itemRenderer);
+                                //console.log("remove 111 index.value=" + this._dataIndexEnd);
+                                this._dataIndexEnd--;
+                                //console.log("moveItemUIPosition 33333 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            }
                         }
                     }
                 } else {//xv值
-                    if (!this._fixed) itemRederer.x += xv;
-                    if (this._dataIndexBegin == 0 && xv >= 0 || this._dataIndexEnd == this._itemDatas.length - 1 && xv < 0) {
-                        continue;
-                    }
-                    if (this._fixed) itemRederer.x += xv;
+                    if (!this._fixed) itemRenderer.x += xv;
                     //补充一个
-                    if (xv < 0 && this._dataIndexEnd < this._itemDatas.length - 1) {//^向左
-                        if (this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).x + itemRederer.width + this._gap < this._itemContainer.width) {
-                            optNum = this.addUIItem(this._dataIndexEnd + 1, false);
-                            this._dataIndexEnd += optNum;
-                            //console.log("moveItemUIPosition 4444 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                    if (xv < 0) {//^向左
+                        if(this._dataIndexEnd < this._itemDatas.length - 1) {
+                            if (this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).x + itemRenderer.width + this._gap < this._itemContainer.width) {
+                                addNum = this.addUIItem(this._dataIndexEnd + 1, false);
+                                this._dataIndexEnd += addNum;
+                                //console.log("moveItemUIPosition 4444 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            }
+
+                            if ((itemRenderer.x + itemRenderer.width) < 0) {
+                                this.removeRender(this._itemContainer.getChildAt(i));
+                                this._dataIndexBegin++;
+                                //console.log("moveItemUIPosition 5555 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            }
                         }
-                        if ((itemRederer.x + itemRederer.width) < 0) {
-                            this.removeRender(this._itemContainer.getChildAt(i));
-                            this._dataIndexBegin++;
-                            //console.log("moveItemUIPosition 5555 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
-                        }
-                    } else if (this._dataIndexBegin > 0) {//v向右
-                        if (this._itemContainer.getChildAt(0).x - this._gap > 0) {
-                            optNum = this.addUIItem(this._dataIndexBegin - this.line, true);
-                            this._dataIndexBegin -= optNum;
-                            //console.log("moveItemUIPosition 6666 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
-                        }
-                        if (itemRederer.x > this._itemContainer.width) {
-                            this.removeRender(this._itemContainer.getChildAt(i));
-                            this._dataIndexEnd--;
-                            //console.log("moveItemUIPosition 7777 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+
+                    } else {//v向右
+                        if (this._dataIndexBegin > 0) {
+                            if (this._itemContainer.getChildAt(0).x - this._gap > 0) {
+                                addNum = this.addUIItem(this._dataIndexBegin - this.line, true);
+                                this._dataIndexBegin -= addNum;
+                                //console.log("moveItemUIPosition 6666 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            }
+
+                            if (itemRenderer.x > this._itemContainer.width) {
+                                this.removeRender(this._itemContainer.getChildAt(i));
+                                this._dataIndexEnd--;
+                                //console.log("moveItemUIPosition 7777 this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd)
+                            }
                         }
                     }
                 }
@@ -386,11 +397,6 @@ module codeBase{
                 if (!this._itemDatas || dataIndex < 0 || dataIndex >= this._itemDatas.length) break;
                 var displayItemUI: egret.DisplayObject = ObjectPool.getByClass(this._itemRenderer, "list_" + this.name);
                 //初始化显示项
-                if (!displayItemUI["isAddedToStage"]) {
-                    this._itemContainer.addChild(displayItemUI);
-                    this._itemContainer.removeChild(displayItemUI);
-                }
-
                 try {
                     displayItemUI["data"] = this._itemDatas[dataIndex];//给显示项绑定数据
                     displayItemUI["list"] = this;//给显示项绑定所属列表
@@ -480,8 +486,6 @@ module codeBase{
                 displayItemUI = this._itemContainer.removeChildAt(0);
                 if(displayItemUI instanceof this._itemRenderer) {
                     this.removeRender(displayItemUI);
-                    // if (displayItemUI["data"]) displayItemUI["data"] = null;
-                    // ObjectPool.recycleClass(displayItemUI, "list_" + this.name);
                 }
             }
             if (this._data instanceof Array) {
@@ -511,10 +515,6 @@ module codeBase{
             if (datas) {
                 this._itemDatas = this._itemDatas.concat(datas);
             }
-        }
-
-        private renderItem() {
-            
         }
 
         /**
@@ -566,11 +566,6 @@ module codeBase{
                 try {
                     if (sp["_data"] == item) {
                         sp["selected"] = true;
-                        //console.log("list.selected=" + JSON.stringify(item));
-                        // let selectEvent = new MyEvent(List.ITEM_SELECTED);
-                        // selectEvent.addItem("item", sp);
-                        // selectEvent.addItem("dataIndex", 0);
-                        // selectEvent.send();
                         this.dispatchEventWith(List.ITEM_SELECTED, false, { item:sp }, false);
                     }
                 } catch (e) {

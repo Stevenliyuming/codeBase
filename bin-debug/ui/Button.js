@@ -120,7 +120,7 @@ var codeBase;
                 if (codeBase.StringUtil.isUsage(this._toggleGroup)) {
                     if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
                         this.selected = !this._selected;
-                        this.callClickFunction();
+                        //this.callClickFunction();
                     }
                     this.onPlaySound();
                     // console.log("Button _toggleGroup=" + this._toggleGroup + ", _selected=" + this._selected);
@@ -544,14 +544,12 @@ var codeBase;
             configurable: true
         });
         /**
-         * 设置按钮可用状态
-         * <p>在预设基础下修改状态数组长度</p>
-         * <p>[STATE_UP, STATE_OVER, STATE_DOWN, STATE_DISABLE, STATE_TOGGLE]</p>
-         * @param value 长度值
+         * 设置按钮可用状态皮肤
+         * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
          */
-        Button.prototype.setStatus = function (statusNum, statusSkin) {
+        Button.prototype.setStatus = function (statusSkin) {
             if (statusSkin === void 0) { statusSkin = []; }
-            statusNum = statusNum < 0 ? 1 : statusNum;
+            var statusNum = statusSkin.length == 0 ? 1 : statusSkin.length;
             //if (this.stateArray.length == value) return;
             //this.stateArray.length = 0;
             switch (statusNum) {
@@ -562,10 +560,10 @@ var codeBase;
                     this.stateArray = [Button.STATE_UP, Button.STATE_DOWN];
                     break;
                 case 3:
-                    this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN];
+                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN, Button.STATE_OVER];
                     break;
                 case 4:
-                    this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN, Button.STATE_DISABLE];
+                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN, Button.STATE_OVER, Button.STATE_DISABLE];
                     break;
             }
             //初始化按钮状态皮肤
@@ -771,11 +769,18 @@ var codeBase;
             configurable: true
         });
         Button.prototype.onEventToggle = function (event) {
-            if (codeBase.StringUtil.isUsage(this._toggleGroup) && event.getItem("group") == this._toggleGroup && event.getItem("caller") != this) {
+            if (codeBase.StringUtil.isUsage(this._toggleGroup) && event.getItem("group") == this._toggleGroup) {
                 //console.log("0000 onEventToggle group=" + this._toggleGroup + ", data=" + this._data.id);
-                this._selected = false;
-                this._currentState = Button.STATE_UP;
-                this.invalidate();
+                if (event.getItem("caller") != this) {
+                    this._selected = false;
+                    this._currentState = Button.STATE_UP;
+                    this.invalidate();
+                }
+                else {
+                    if (this.clickFun && this.clickFunObj) {
+                        this.clickFun.call(this.clickFunObj, event);
+                    }
+                }
             }
         };
         Button.prototype.setSize = function (w, h) {
@@ -987,8 +992,8 @@ var codeBase;
         Button.TOGGLE_PREFIX = "ui#button#toggle_"; //toggle事件的前缀,尽量避免受到其他事件名称的混淆
         Button.DEFAULT_TEXTURE = null; //默认材质
         Button.STATE_UP = "up";
-        Button.STATE_OVER = "over";
         Button.STATE_DOWN = "down";
+        Button.STATE_OVER = "over";
         Button.STATE_DISABLE = "disable";
         return Button;
     }(codeBase.BaseGroup));

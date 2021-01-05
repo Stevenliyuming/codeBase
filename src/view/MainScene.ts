@@ -131,10 +131,28 @@ module codeBase{
 			s.group_play.addChild(button);
 			button.x = 300;
 			button.y = 800;
-			button.setStatus(2, [RES.getRes("A_png"), RES.getRes("A点击_png")]);
+			button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
 			//button.setSize(100, 60);
 
 			let listItemDataArr:any[] = [
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},				
+				{
+					res: "A点击_png"
+				},				
 				{
 					res: "A_png"
 				},
@@ -159,11 +177,12 @@ module codeBase{
 			listGroup.x = 800;
 			listGroup.y = 0;
 			listGroup.width = 700;
-			listGroup.height = 500;
+			listGroup.height = 600;
 			listGroup.itemRenderer = ListItemRenderer;
 			listGroup.gap = 100;
 			listGroup.line = 2;
 			listGroup.lineGap = 20;
+			//listGroup.layout = Style.HORIZONTAL;
 			listGroup.data = listItemDataArr;
 			listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
 				console.log(ev.data);

@@ -34,7 +34,7 @@ var codeBase;
         }
         DefaultRenderer.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            this.setSize(100, 65);
+            //this.setSize(100, 65);
         };
         /**
          * 初始化一些必要的逻辑数据

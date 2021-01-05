@@ -25,7 +25,7 @@ module codeBase {
 
 		public createChildren(): void {
 			super.createChildren();
-			this.setSize(100, 65);
+			//this.setSize(100, 65);
 		}
 
 		/**

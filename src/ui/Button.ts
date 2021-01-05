@@ -7,8 +7,8 @@ module codeBase {
         public static DEFAULT_TEXTURE: egret.RenderTexture = null;//默认材质
 
         public static STATE_UP: string = "up";
-        public static STATE_OVER: string = "over";
         public static STATE_DOWN: string = "down";
+        public static STATE_OVER: string = "over";
         public static STATE_DISABLE: string = "disable";
 
         private _textureLabel: egret.Texture = null;//文字图片
@@ -129,7 +129,7 @@ module codeBase {
                 if (StringUtil.isUsage(this._toggleGroup)) {
                     if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
                         this.selected = !this._selected;
-                        this.callClickFunction();
+                        //this.callClickFunction();
                     }
                     this.onPlaySound();
                     // console.log("Button _toggleGroup=" + this._toggleGroup + ", _selected=" + this._selected);
@@ -525,13 +525,11 @@ module codeBase {
         }
 
 		/**
-		 * 设置按钮可用状态
-		 * <p>在预设基础下修改状态数组长度</p>
-		 * <p>[STATE_UP, STATE_OVER, STATE_DOWN, STATE_DISABLE, STATE_TOGGLE]</p>
-		 * @param value 长度值
+		 * 设置按钮可用状态皮肤
+		 * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
 		 */
-        public setStatus(statusNum: number, statusSkin:egret.Texture[] = []) {
-            statusNum = statusNum < 0 ? 1 : statusNum;
+        public setStatus(statusSkin:egret.Texture[] = []) {
+            let statusNum = statusSkin.length == 0? 1 : statusSkin.length;
             //if (this.stateArray.length == value) return;
             //this.stateArray.length = 0;
             switch (statusNum) {
@@ -542,10 +540,10 @@ module codeBase {
                     this.stateArray = [Button.STATE_UP, Button.STATE_DOWN];
                     break;
                 case 3:
-                    this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN];
+                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN, Button.STATE_OVER];
                     break;
                 case 4:
-                    this.stateArray = [Button.STATE_UP, Button.STATE_OVER, Button.STATE_DOWN, Button.STATE_DISABLE];
+                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN, Button.STATE_OVER, Button.STATE_DISABLE];
                     break;
             }
 
@@ -713,11 +711,17 @@ module codeBase {
             return this._toggleGroup;
         }
         private onEventToggle(event: MyEvent): void {
-            if (StringUtil.isUsage(this._toggleGroup) && event.getItem("group") == this._toggleGroup && event.getItem("caller") != this) {
+            if (StringUtil.isUsage(this._toggleGroup) && event.getItem("group") == this._toggleGroup) {
                 //console.log("0000 onEventToggle group=" + this._toggleGroup + ", data=" + this._data.id);
-                this._selected = false;
-                this._currentState = Button.STATE_UP;
-                this.invalidate();
+                if(event.getItem("caller") != this) {
+                    this._selected = false;
+                    this._currentState = Button.STATE_UP;
+                    this.invalidate();
+                } else {
+                    if(this.clickFun && this.clickFunObj) {
+                        this.clickFun.call(this.clickFunObj, event);
+                    }
+                }
             }
         }
 
