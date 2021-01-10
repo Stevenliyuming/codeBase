@@ -32,8 +32,9 @@ module codeBase{
         private _firstItemIndex:number = 0;//最前端的item的下标
         private _gap:number = 2;//render对象折叠间隔
         private _stop:boolean = false;
-        public constructor(drawDelay:boolean = false){
-            super(drawDelay);
+        
+        public constructor(){
+            super();
         }
         public createChildren():void{
             super.createChildren();

@@ -32,12 +32,14 @@ module codeBase {
 		 * 默认为true,剪切.
 		 */
 		private _clip: boolean = false;
+
 		//没有像素点时是否能触发事件
 		private _touchNonePixel: boolean = false;
 
-		public constructor(drawDelay: boolean = false) {
-			super(drawDelay);
+		public constructor() {
+			super();
 		}
+
 		/**
 		 * 初始化主场景的组件
 		 * 这个方法在对象new的时候就调用,因为有些ui必须在加入stage之前就准备好
@@ -46,6 +48,7 @@ module codeBase {
 		public createChildren(): void {
 			super.createChildren();
 		}
+
 		/**
 		 * 默认样式色块颜色值. 
 		 */
@@ -67,7 +70,6 @@ module codeBase {
 		public get fillMode(): string {
 			return this._fillMode;
 		}
-
 		public set fillMode(value: string) {
 			if (this._fillMode != value) {
 				this._fillMode = value;
@@ -85,7 +87,6 @@ module codeBase {
 				this.invalidate();
 			}
 		}
-
 		public get showBg(): boolean {
 			return this._showBg;
 		}

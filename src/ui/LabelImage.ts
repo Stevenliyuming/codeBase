@@ -44,8 +44,8 @@ module codeBase {
 
         private _step: number = 0;//每次滚动增量的值
 
-        public constructor(drawDelay: boolean = false) {
-            super(drawDelay);
+        public constructor() {
+            super();
         }
 
         /**

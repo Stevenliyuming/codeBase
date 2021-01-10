@@ -1,8 +1,8 @@
 module codeBase {
 	export class ListItemRenderer extends DefaultRenderer {
 		private itemImage:Image;
-		public constructor(drawDelay: boolean = false) {
-			super(drawDelay);
+		public constructor() {
+			super();
 		}
 
 		/**

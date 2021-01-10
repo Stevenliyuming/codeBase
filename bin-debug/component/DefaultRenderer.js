@@ -12,9 +12,8 @@ var codeBase;
 (function (codeBase) {
     var DefaultRenderer = (function (_super) {
         __extends(DefaultRenderer, _super);
-        function DefaultRenderer(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function DefaultRenderer() {
+            var _this = _super.call(this) || this;
             /**
              * 对应的ui展现
              */

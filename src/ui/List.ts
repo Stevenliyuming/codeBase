@@ -41,18 +41,18 @@ module codeBase{
         private _data_end_func_this: any = null;//数据已经结束的func的this
 
 
-        public constructor(drawDelay: boolean = false) {
-            super(drawDelay);
+        public constructor() {
+            super();
         }
 
         public createChildren(): void {
             super.createChildren();
-            this.setSize(100, 300);
+            //this.setSize(100, 300);
             this.touchEnabled = true;
             this._itemContainer = new BaseGroup();
-            this.addChild(this._itemContainer);
             this._itemContainer.touchEnabled = true;
-            this._itemContainer.setSize(this.width, this.height);
+           // this._itemContainer.setSize(this.width, this.height);
+            this.addChild(this._itemContainer);
             this._itemContainer.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginEvent, this);
             this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMoveEvent, this);
@@ -475,20 +475,21 @@ module codeBase{
             return indexAdd;
         }
 
-        public set data(value: any) {
-            this._data = value;
-            this._itemDatas = null;
-            this._dataIndexToRender = {};
-            this.setItemContainerSize();
-            //清空显示
-            var displayItemUI: egret.DisplayObject = null;
-            while (this._itemContainer.numChildren > 0) {
-                displayItemUI = this._itemContainer.removeChildAt(0);
-                if(displayItemUI instanceof this._itemRenderer) {
-                    this.removeRender(displayItemUI);
+        private initList () {
+            if (this._data && this._data instanceof Array && this._data.length > 0 && !this._itemDatas) {
+
+                this._itemDatas = null;
+                this._dataIndexToRender = {};
+                this.setItemContainerSize();
+                //清空显示
+                var displayItemUI: egret.DisplayObject = null;
+                while (this._itemContainer.numChildren > 0) {
+                    displayItemUI = this._itemContainer.removeChildAt(0);
+                    if (displayItemUI instanceof this._itemRenderer) {
+                        this.removeRender(displayItemUI);
+                    }
                 }
-            }
-            if (this._data instanceof Array) {
+
                 //进行首次填充
                 this._itemDatas = <Array<any>>this._data;
                 //console.log("set data.length=" + this._itemDatas.length + ", data=" + this._itemDatas);
@@ -507,6 +508,39 @@ module codeBase{
             }
         }
 
+        public set data(value: any) {
+            this._data = value;
+
+            // this._itemDatas = null;
+            // this._dataIndexToRender = {};
+            // this.setItemContainerSize();
+            // //清空显示
+            // var displayItemUI: egret.DisplayObject = null;
+            // while (this._itemContainer.numChildren > 0) {
+            //     displayItemUI = this._itemContainer.removeChildAt(0);
+            //     if(displayItemUI instanceof this._itemRenderer) {
+            //         this.removeRender(displayItemUI);
+            //     }
+            // }
+            // if (this._data instanceof Array) {
+            //     //进行首次填充
+            //     this._itemDatas = <Array<any>>this._data;
+            //     //console.log("set data.length=" + this._itemDatas.length + ", data=" + this._itemDatas);
+            //     if (this._itemDatas.length == 0) return;
+            //     this._dataIndexBegin = 0;
+            //     var placeValue: number = 0;//占据的位置
+            //     var addNum: number = this.addUIItem(this._dataIndexBegin, false);
+            //     this._dataIndexEnd = addNum;
+            //     while (addNum != 0 && this._dataIndexEnd < this._itemDatas.length) {
+            //         addNum = this.addUIItem(this._dataIndexEnd, false);
+            //         this._dataIndexEnd += addNum;
+            //         //console.log("dataIndexEnd=" + this._dataIndexEnd + ", addNum=" + addNum);
+            //     }
+            //     this._dataIndexEnd--;//起始是从0开始,减去一个下标
+            //     //console.log("setData dataIndexBegin=" + this._dataIndexBegin + ", dataIndexEnd=" + this._dataIndexEnd)
+            // }
+        }
+
         /**
          * 追加滚动数据
          * @param value
@@ -522,14 +556,16 @@ module codeBase{
          */
         public draw(): void {
             super.draw();
+            if (this.width == 0 || this.height == 0) return;
             this.setItemContainerSize();
+            this.initList();
         }
 
         private setItemContainerSize(): void {
-            this._itemContainer.x = this._marginLeft;
-            this._itemContainer.y = this._marginTop;
             this._itemContainer.width = this.width - this._marginLeft - this._marginRight;
             this._itemContainer.height = this.height - this._marginTop - this._marginBottom;
+            this._itemContainer.x = this._marginLeft;
+            this._itemContainer.y = this._marginTop;
             this._itemContainer.scrollRect.width = this._itemContainer.width;
             this._itemContainer.scrollRect.height = this._itemContainer.height;
         }

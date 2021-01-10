@@ -3,11 +3,11 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 var codeBase;
 (function (codeBase) {
-    var StorageMap = (function () {
-        function StorageMap() {
+    var MapUtil = (function () {
+        function MapUtil() {
             this.mapObj = {};
         }
-        StorageMap.prototype.setValue = function (key, value) {
+        MapUtil.prototype.setValue = function (key, value) {
             var s = this;
             if (key != "") {
                 s.mapObj[key] = value;
@@ -16,13 +16,13 @@ var codeBase;
                 console.log("key键值不能为空字符串!");
             }
         };
-        StorageMap.prototype.getValue = function (key) {
+        MapUtil.prototype.getValue = function (key) {
             if (key != "") {
                 return this.mapObj[key];
             }
             return null;
         };
-        StorageMap.prototype.dispose = function () {
+        MapUtil.prototype.dispose = function () {
             var s = this;
             var key;
             for (key in s.mapObj) {
@@ -33,8 +33,8 @@ var codeBase;
             }
             s.mapObj = {};
         };
-        return StorageMap;
+        return MapUtil;
     }());
-    codeBase.StorageMap = StorageMap;
-    __reflect(StorageMap.prototype, "codeBase.StorageMap");
+    codeBase.MapUtil = MapUtil;
+    __reflect(MapUtil.prototype, "codeBase.MapUtil");
 })(codeBase || (codeBase = {}));

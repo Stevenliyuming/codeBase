@@ -82,14 +82,33 @@ module codeBase{
 			s.group_play.verticalCenter = 0;
 			//s.group_play.showBg = true;
 
+			let group = new Group;
+			group.width = 300;
+			group.height = 200;
+			group.x = 600;
+			group.y = 600;
+			s.group_play.addChild(group);
+			group.showBg = true;
+			group.border = true;
+
+			// let label:Label = new Label;
+			// //label.setSize(800, 50);
+			// label.text = "这是一个具有布局约束的文本";
+			// s.group_play.addChild(label);
+			// label.left = 50;
+			// label.top = 500;
+			// label.showBg = true;
+
 			let label:Label = new Label;
-			label.setSize(100, 50);
+			//label.setSize(800, 50);
 			label.text = "这是一个具有布局约束的文本";
 			s.group_play.addChild(label);
 			label.left = 50;
 			label.top = 500;
 			label.showBg = true;
-			label.autoSize = true;
+			// label.autoSize = false;
+			// label.paddingLeft = 20;
+			// label.paddingRight = 20;
 
 			egret.setTimeout(()=>{
 				label.text = "一个具有布局约束的文本00000000000";
@@ -101,17 +120,18 @@ module codeBase{
 			hand.left = 0;
 			hand.top = 0;
 
-			// let textInput = new TextInput;
-			// textInput.width = 300;
-			// textInput.height = 100;
-			// s.group_play.addChild(textInput);
-			// textInput.x = 100;
-			// textInput.y = 100;
-			// textInput.showBg = true;
-			// textInput.paddingLeft = 10;
-			// textInput.paddingTop = 10;
-			// textInput.paddingRight = 10;
-			// textInput.paddingBottom = 20;
+			let textInput = new TextInput;
+			textInput.width = 100;
+			textInput.height = 60;
+			s.group_play.addChild(textInput);
+			textInput.x = 1000;
+			textInput.y = 650;
+			textInput.showBg = true;
+			textInput.paddingLeft = 10;
+			textInput.paddingTop = 5;
+			textInput.paddingRight = 10;
+			textInput.paddingBottom = 5;
+			textInput.vAlign = egret.VerticalAlign.MIDDLE;
 
 			let textArea = new TextArea;
 			textArea.width = 300;
@@ -132,6 +152,18 @@ module codeBase{
 			button.x = 300;
 			button.y = 800;
 			button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
+
+			EffectUtil.paopaoEffect(button);
+
+			let buttonSkins:any[] = [RES.getRes("A_png"), RES.getRes("A点击_png")];
+			for(let i=0; i<3; ++i) {
+				button = UICreator.createToggleButton(buttonSkins, "abc", (data:any)=>{
+					console.log(data);
+				}, s);
+				s.group_play.addChild(button);
+				button.x = 1000 + i * (button.width + 20);
+				button.y = 800;
+			}
 			//button.setSize(100, 60);
 
 			let listItemDataArr:any[] = [
@@ -187,6 +219,21 @@ module codeBase{
 			listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
 				console.log(ev.data);
 			}, s);
+
+			let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
+			// img.anchorX = 0.5;
+			// img.anchorY = 0.5;
+			// img.width = 300;
+			// img.height = 200;
+			// img.autoSize = false;
+			MoreTouch.start(img, true, 0.5, 5, true);
+
+			let btn:egret.Bitmap = UICreator.createBitmap("A_png");
+			s.group_play.addChild(btn);
+			btn.x = 0;
+			btn.y = 0;
+			//s.currentDragTarget = img;
+			curStage().addEventListener(egret.TouchEvent.TOUCH_MOVE, s.sceneTouchMoveCall, s);
 
 			//标题
 			// s.titleGroup = new BaseGroup;

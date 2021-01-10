@@ -1,5 +1,5 @@
 module codeBase{
-	export class StorageMap {
+	export class MapUtil {
     	private mapObj: Object = {};
 		public constructor() {
 		}

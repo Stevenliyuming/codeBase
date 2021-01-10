@@ -15,9 +15,8 @@ var codeBase;
      */
     var Button = (function (_super) {
         __extends(Button, _super);
-        function Button(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function Button() {
+            var _this = _super.call(this) || this;
             _this._textureLabel = null; //文字图片
             _this._textureIcon = null; //图标
             _this._label = null; //文本
@@ -39,14 +38,14 @@ var codeBase;
             //public _yOffsetSplit:number = 0;//切割y起始
             //文字部分的设定
             _this._labelMarginLeft = 0;
-            _this._labelMarginLeftEnable = false;
+            //private _labelMarginLeftEnable: boolean = false;
             _this._labelMarginTop = 0;
-            _this._labelMarginTopEnable = false;
+            //private _labelMarginTopEnable: boolean = false;
             //icon设定
             _this._iconMarginLeft = 0;
-            _this._iconMarginLeftEnable = false;
+            //private _iconMarginLeftEnable: boolean = false;
             _this._iconMarginTop = 0;
-            _this._iconMarginTopEnable = false;
+            //private _iconMarginTopEnable: boolean = false;
             /**
              * 适合材质的尺寸
              */
@@ -73,7 +72,7 @@ var codeBase;
         }
         Button.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            this.setSize(codeBase.Style.BUTTON_DEFAULT_WIDTH, codeBase.Style.BUTTON_DEFAULT_HEIGHT);
+            //this.setSize(Style.BUTTON_DEFAULT_WIDTH, Style.BUTTON_DEFAULT_HEIGHT);
             this.touchEnabled = true; //事件接收
             this.touchChildren = false;
             //背景图多态显示
@@ -84,7 +83,7 @@ var codeBase;
             this._imgDisplay.fillMode = this._fillMode;
             this._imgDisplay.touchEnabled = false;
             //文字显示
-            this._label = new codeBase.Label(this.drawDelay);
+            this._label = new codeBase.Label();
             this._label.autoSize = true;
             this._label.clip = false;
             this._label.hAlign = egret.HorizontalAlign.CENTER;
@@ -368,6 +367,7 @@ var codeBase;
          */
         Button.prototype.initDefaultTexture = function () {
             if (Button.DEFAULT_TEXTURE == null) {
+                this.setSize(codeBase.Style.BUTTON_DEFAULT_WIDTH, codeBase.Style.BUTTON_DEFAULT_HEIGHT);
                 var shape = new egret.Shape();
                 shape.width = this.width;
                 shape.height = this.height;

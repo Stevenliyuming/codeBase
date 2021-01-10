@@ -10,7 +10,7 @@ var codeBase;
          * 创建图片显示对象
          * scale9Rect 图片的九宫格数据[左边距,右边距,上边距,下边距]
          */
-        UICreator.prototype.createImage = function (pr, px, py, texture, scale9Rect) {
+        UICreator.createImage = function (pr, px, py, texture, scale9Rect) {
             if (px === void 0) { px = 0; }
             if (py === void 0) { py = 0; }
             if (texture === void 0) { texture = null; }
@@ -30,7 +30,7 @@ var codeBase;
          * imageAlias 数字散图名称前缀
          * sheetAlias 数字图集名称
          */
-        UICreator.prototype.createImageNumber = function (pr, px, py, imageAlias, sheetAlias, verticalAlign, horizontalAlign, defaultText) {
+        UICreator.createImageNumber = function (pr, px, py, imageAlias, sheetAlias, verticalAlign, horizontalAlign, defaultText) {
             if (sheetAlias === void 0) { sheetAlias = ""; }
             if (verticalAlign === void 0) { verticalAlign = "top"; }
             if (horizontalAlign === void 0) { horizontalAlign = "left"; }
@@ -48,7 +48,7 @@ var codeBase;
          * statusSkin设置按钮可用状态皮肤
          * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
          */
-        UICreator.prototype.createButton = function (statusSkin, clickFun, funObj, clickSound) {
+        UICreator.createButton = function (statusSkin, clickFun, funObj, clickSound) {
             if (clickFun === void 0) { clickFun = null; }
             if (funObj === void 0) { funObj = null; }
             if (clickSound === void 0) { clickSound = null; }
@@ -63,21 +63,21 @@ var codeBase;
          * statusSkin设置按钮可用状态皮肤
          * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
          */
-        UICreator.prototype.createToggleButton = function (statusSkin, toggleGroupName, clickFun, funObj, clickSound) {
+        UICreator.createToggleButton = function (statusSkin, toggleGroupName, clickFun, funObj, clickSound) {
             if (clickFun === void 0) { clickFun = null; }
             if (funObj === void 0) { funObj = null; }
             if (clickSound === void 0) { clickSound = null; }
             var button = new codeBase.Button;
             button.setStatus(statusSkin);
             button.setClickFunction(clickFun, funObj);
-            button.sound = clickSound;
             button.toggleGroup = toggleGroupName;
+            button.sound = clickSound;
             return button;
         };
         /**
          * 创建文本标签
          */
-        UICreator.prototype.createLabel = function (pr, px, py, fonsize, text) {
+        UICreator.createLabel = function (pr, px, py, fonsize, text) {
             if (fonsize === void 0) { fonsize = 26; }
             if (text === void 0) { text = ""; }
             var label = new codeBase.Label;
@@ -95,7 +95,7 @@ var codeBase;
         /**
          * 创建文本显示区域
          */
-        UICreator.prototype.createTextArea = function (pr, px, py, width, height, text) {
+        UICreator.createTextArea = function (pr, px, py, width, height, text) {
             if (text === void 0) { text = ""; }
             var textArea = new codeBase.TextArea;
             if (pr) {
@@ -112,7 +112,7 @@ var codeBase;
         /**
          * 创建文本输入框
          */
-        UICreator.prototype.createTextInput = function (pr, px, py, width, height) {
+        UICreator.createTextInput = function (pr, px, py, width, height) {
             var textInput = new codeBase.TextInput;
             if (pr) {
                 pr.addChild(textInput);
@@ -142,7 +142,7 @@ var codeBase;
          * line 列表显示项的列数
          * lineGap 显示项列间距
          */
-        UICreator.prototype.createList = function (pr, px, py, width, height, itemRenderer, listData, gap, line, lineGap, layout) {
+        UICreator.createList = function (pr, px, py, width, height, itemRenderer, listData, gap, line, lineGap, layout) {
             if (gap === void 0) { gap = 10; }
             if (line === void 0) { line = 1; }
             if (lineGap === void 0) { lineGap = 10; }
@@ -199,7 +199,7 @@ var codeBase;
          * @param x
          * @param y
          */
-        UICreator.prototype.getPixel32 = function (target, x, y) {
+        UICreator.getPixel32 = function (target, x, y) {
             if (target && target.texture) {
                 var locolPoint = target.globalToLocal(x, y);
                 return target.texture.getPixel32(locolPoint.x, locolPoint.y);
@@ -212,7 +212,7 @@ var codeBase;
          * @param y 舞台值
          * @return true:有像素值, false:无像素值
          */
-        UICreator.prototype.testPixel32 = function (target, x, y) {
+        UICreator.testPixel32 = function (target, x, y) {
             var datas = this.getPixel32(target, x, y);
             for (var i = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {

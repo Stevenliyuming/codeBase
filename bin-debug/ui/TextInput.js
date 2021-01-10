@@ -12,9 +12,8 @@ var codeBase;
 (function (codeBase) {
     var TextInput = (function (_super) {
         __extends(TextInput, _super);
-        function TextInput(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function TextInput() {
+            var _this = _super.call(this) || this;
             _this._textField = null;
             _this._text = "";
             _this._password = false;
@@ -26,7 +25,7 @@ var codeBase;
             _this._bold = false;
             _this._italic = false;
             _this._lineSpacing = 10; //行间距
-            _this._multiline = true; //多行显示
+            _this._multiline = false; //多行显示
             _this._stroke = 0;
             _this._strokeColor = 0;
             _this._wordWrap = true; //自动换行

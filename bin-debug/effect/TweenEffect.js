@@ -288,7 +288,7 @@ var codeBase;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
         /**
-         * 下侧淡入
+         * 下侧淡入-上
          * @param object 要做效果的对象
          * @param delay  延迟播放的时间
          * @param total  动画总时间
@@ -316,7 +316,7 @@ var codeBase;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
         /**
-         * 下侧淡入
+         * 下侧淡入-下
          * @param object 要做效果的对象
          * @param delay  延迟播放的时间
          * @param total  动画总时间
@@ -884,7 +884,7 @@ var codeBase;
             if (isLoop === void 0) { isLoop = false; }
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
-            if (easeFunName) {
+            if (codeBase.StringUtil.isUsage(easeFunName)) {
                 var easeFun = eval("egret.Ease." + easeFunName);
             }
             else {
@@ -908,7 +908,7 @@ var codeBase;
             if (isLoop === void 0) { isLoop = false; }
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
-            if (easeFunName) {
+            if (codeBase.StringUtil.isUsage(easeFunName)) {
                 var easeFun = eval("egret.Ease." + easeFunName);
             }
             else {
@@ -933,7 +933,7 @@ var codeBase;
             if (isLoop === void 0) { isLoop = false; }
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
-            if (easeFunName) {
+            if (codeBase.StringUtil.isUsage(easeFunName)) {
                 var easeFun = eval("egret.Ease." + easeFunName);
             }
             else {
@@ -958,7 +958,7 @@ var codeBase;
             if (isLoop === void 0) { isLoop = false; }
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
-            if (easeFunName) {
+            if (codeBase.StringUtil.isUsage(easeFunName)) {
                 var easeFun = eval("egret.Ease." + easeFunName);
             }
             else {
@@ -983,7 +983,7 @@ var codeBase;
             if (isLoop === void 0) { isLoop = false; }
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
-            if (easeFunName) {
+            if (codeBase.StringUtil.isUsage(easeFunName)) {
                 var easeFun = eval("egret.Ease." + easeFunName);
             }
             else {
@@ -1008,7 +1008,7 @@ var codeBase;
             if (isLoop === void 0) { isLoop = false; }
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
-            if (easeFunName) {
+            if (codeBase.StringUtil.isUsage(easeFunName)) {
                 var easeFun = eval("egret.Ease." + easeFunName);
             }
             else {
@@ -2211,7 +2211,7 @@ var codeBase;
             var attr = attr;
             var total = total;
             var tweenTime = 0;
-            if (easeFunName) {
+            if (codeBase.StringUtil.isUsage(easeFunName)) {
                 var easeFun = eval("egret.Ease." + easeFunName);
             }
             else {

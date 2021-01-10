@@ -36,14 +36,14 @@ module codeBase {
         //public _yOffsetSplit:number = 0;//切割y起始
         //文字部分的设定
         private _labelMarginLeft: number = 0;
-        private _labelMarginLeftEnable: boolean = false;
+        //private _labelMarginLeftEnable: boolean = false;
         private _labelMarginTop: number = 0;
-        private _labelMarginTopEnable: boolean = false;
+        //private _labelMarginTopEnable: boolean = false;
         //icon设定
         private _iconMarginLeft: number = 0;
-        private _iconMarginLeftEnable: boolean = false;
+        //private _iconMarginLeftEnable: boolean = false;
         private _iconMarginTop: number = 0;
-        private _iconMarginTopEnable: boolean = false;
+        //private _iconMarginTopEnable: boolean = false;
         /**
          * 适合材质的尺寸
          */
@@ -74,13 +74,13 @@ module codeBase {
         private clickFun:Function;
         private clickFunObj:any;
 
-        public constructor(drawDelay: boolean = false) {
-            super(drawDelay);
+        public constructor() {
+            super();
         }
 
         public createChildren(): void {
             super.createChildren();
-            this.setSize(Style.BUTTON_DEFAULT_WIDTH, Style.BUTTON_DEFAULT_HEIGHT);
+            //this.setSize(Style.BUTTON_DEFAULT_WIDTH, Style.BUTTON_DEFAULT_HEIGHT);
             this.touchEnabled = true;//事件接收
             this.touchChildren = false;
             //背景图多态显示
@@ -92,7 +92,7 @@ module codeBase {
             this._imgDisplay.touchEnabled = false;
 
             //文字显示
-            this._label = new Label(this.drawDelay);
+            this._label = new Label();
             this._label.autoSize = true;
             this._label.clip = false;
             this._label.hAlign = egret.HorizontalAlign.CENTER;
@@ -366,6 +366,7 @@ module codeBase {
          */
         private initDefaultTexture(): void {
             if (Button.DEFAULT_TEXTURE == null) {
+                this.setSize(Style.BUTTON_DEFAULT_WIDTH, Style.BUTTON_DEFAULT_HEIGHT);
                 var shape: egret.Shape = new egret.Shape();
                 shape.width = this.width;
                 shape.height = this.height;

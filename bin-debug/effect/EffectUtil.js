@@ -36,7 +36,7 @@ var codeBase;
                 effectData = this.effectDic[display.hashCode];
                 effectData.loop = true;
             }
-            //AnchorX改变后新的位置
+            //Anchor改变后新的位置
             display.anchorX = effectData.newAnchorX;
             display.anchorY = effectData.newAnchorY;
             display.x = effectData.newX;
@@ -97,7 +97,7 @@ var codeBase;
                 effectData = this.effectDic[display.hashCode];
                 effectData.loop = true;
             }
-            //AnchorX改变后新的位置
+            //Anchor改变后新的位置
             display.anchorX = effectData.newAnchorX;
             display.anchorY = effectData.newAnchorY;
             display.x = effectData.newX;

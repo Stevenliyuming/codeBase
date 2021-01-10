@@ -19,8 +19,8 @@ module codeBase {
 		public list: List = null;
 		public dataIndex:number;
 
-		public constructor(drawDelay: boolean = false) {
-			super(drawDelay);
+		public constructor() {
+			super();
 		}
 
 		public createChildren(): void {

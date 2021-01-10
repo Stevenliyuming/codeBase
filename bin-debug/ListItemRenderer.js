@@ -12,9 +12,8 @@ var codeBase;
 (function (codeBase) {
     var ListItemRenderer = (function (_super) {
         __extends(ListItemRenderer, _super);
-        function ListItemRenderer(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            return _super.call(this, drawDelay) || this;
+        function ListItemRenderer() {
+            return _super.call(this) || this;
         }
         /**
          * 初始化一些必要的逻辑数据

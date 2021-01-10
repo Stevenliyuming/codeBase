@@ -12,9 +12,8 @@ var codeBase;
 (function (codeBase) {
     var Label = (function (_super) {
         __extends(Label, _super);
-        function Label(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function Label() {
+            var _this = _super.call(this) || this;
             _this._text = ""; //文本内容
             _this._textField = null;
             _this._initFlow = null;
@@ -32,16 +31,16 @@ var codeBase;
             _this._stroke = 0;
             _this._strokeColor = 0x003350;
             _this._html = false;
-            _this._autoSize = true; //根据文字自动调整Label的尺寸
+            /**
+             * 根据文字自动调整Label的尺寸
+             */
+            _this._autoSize = true;
             _this._paddingLeft = 0;
             _this._paddingRight = 0;
             _this._paddingTop = 0;
             _this._paddingBottom = 0;
             return _this;
         }
-        Label.prototype.initData = function () {
-            _super.prototype.initData.call(this);
-        };
         /**
          * 初始化主场景的组件,加入场景时,主动调用一次
          * 子类覆写该方法,添加UI逻辑
@@ -52,7 +51,9 @@ var codeBase;
             this._textField = new egret.TextField();
             this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
             this.addChild(this._textField);
-            this.invalidate();
+        };
+        Label.prototype.initData = function () {
+            _super.prototype.initData.call(this);
         };
         /**
          * Called when the text in the text field is manually changed.
@@ -130,35 +131,17 @@ var codeBase;
             }
             if (this._autoSize) {
                 this.setSize(this._textField.measuredWidth, this._textField.measuredHeight);
-                //this.width = this._textField.width;
-                //this.height = this._textField.height;
-                // this._textField.textAlign = this._hAlign;
-                // this._textField.verticalAlign = this._vAlign;
             }
             else {
                 this._textField.width = this.width;
                 this._textField.height = this.height;
-                // if (this._hAlign == egret.HorizontalAlign.LEFT) {
-                // 	this._textField.x = 0;
-                // } else if (this._hAlign == egret.HorizontalAlign.RIGHT) {
-                // 	this._textField.x = this.width - this._textField.width;
-                // } else {
-                // 	this._textField.x = (this.width - this._textField.width)/2;
-                // }
-                // if (this._vAlign == egret.VerticalAlign.MIDDLE) {
-                // 	this._textField.y = (this.height - this._textField.height) / 2;
-                // } else if (this._vAlign == egret.VerticalAlign.BOTTOM) {
-                // 	this._textField.y = this.height - this._textField.height;
-                // } else {
-                // 	this._textField.y = 0;
-                // }
+                var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
+                var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
+                this._textField.width = newWidth;
+                this._textField.height = newHeight;
+                this._textField.x = this._paddingLeft;
+                this._textField.y = this._paddingTop;
             }
-            // var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
-            // var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
-            // this._textField.width = newWidth;
-            // this._textField.height = newHeight;
-            // this._textField.x = this._paddingLeft;
-            // this._textField.y = this._paddingTop;
             this._textField.textAlign = this._hAlign;
             this._textField.verticalAlign = this._vAlign;
             _super.prototype.draw.call(this);

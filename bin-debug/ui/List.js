@@ -12,9 +12,8 @@ var codeBase;
 (function (codeBase) {
     var List = (function (_super) {
         __extends(List, _super);
-        function List(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function List() {
+            var _this = _super.call(this) || this;
             /**
              * 消息和方法的映射关系表
              */
@@ -52,12 +51,12 @@ var codeBase;
         }
         List.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            this.setSize(100, 300);
+            //this.setSize(100, 300);
             this.touchEnabled = true;
             this._itemContainer = new codeBase.BaseGroup();
-            this.addChild(this._itemContainer);
             this._itemContainer.touchEnabled = true;
-            this._itemContainer.setSize(this.width, this.height);
+            // this._itemContainer.setSize(this.width, this.height);
+            this.addChild(this._itemContainer);
             this._itemContainer.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginEvent, this);
             this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMoveEvent, this);
@@ -481,9 +480,8 @@ var codeBase;
             }
             return indexAdd;
         };
-        Object.defineProperty(List.prototype, "data", {
-            set: function (value) {
-                this._data = value;
+        List.prototype.initList = function () {
+            if (this._data && this._data instanceof Array && this._data.length > 0 && !this._itemDatas) {
                 this._itemDatas = null;
                 this._dataIndexToRender = {};
                 this.setItemContainerSize();
@@ -495,24 +493,55 @@ var codeBase;
                         this.removeRender(displayItemUI);
                     }
                 }
-                if (this._data instanceof Array) {
-                    //进行首次填充
-                    this._itemDatas = this._data;
-                    //console.log("set data.length=" + this._itemDatas.length + ", data=" + this._itemDatas);
-                    if (this._itemDatas.length == 0)
-                        return;
-                    this._dataIndexBegin = 0;
-                    var placeValue = 0; //占据的位置
-                    var addNum = this.addUIItem(this._dataIndexBegin, false);
-                    this._dataIndexEnd = addNum;
-                    while (addNum != 0 && this._dataIndexEnd < this._itemDatas.length) {
-                        addNum = this.addUIItem(this._dataIndexEnd, false);
-                        this._dataIndexEnd += addNum;
-                        //console.log("dataIndexEnd=" + this._dataIndexEnd + ", addNum=" + addNum);
-                    }
-                    this._dataIndexEnd--; //起始是从0开始,减去一个下标
-                    //console.log("setData dataIndexBegin=" + this._dataIndexBegin + ", dataIndexEnd=" + this._dataIndexEnd)
+                //进行首次填充
+                this._itemDatas = this._data;
+                //console.log("set data.length=" + this._itemDatas.length + ", data=" + this._itemDatas);
+                if (this._itemDatas.length == 0)
+                    return;
+                this._dataIndexBegin = 0;
+                var placeValue = 0; //占据的位置
+                var addNum = this.addUIItem(this._dataIndexBegin, false);
+                this._dataIndexEnd = addNum;
+                while (addNum != 0 && this._dataIndexEnd < this._itemDatas.length) {
+                    addNum = this.addUIItem(this._dataIndexEnd, false);
+                    this._dataIndexEnd += addNum;
+                    //console.log("dataIndexEnd=" + this._dataIndexEnd + ", addNum=" + addNum);
                 }
+                this._dataIndexEnd--; //起始是从0开始,减去一个下标
+                //console.log("setData dataIndexBegin=" + this._dataIndexBegin + ", dataIndexEnd=" + this._dataIndexEnd)
+            }
+        };
+        Object.defineProperty(List.prototype, "data", {
+            set: function (value) {
+                this._data = value;
+                // this._itemDatas = null;
+                // this._dataIndexToRender = {};
+                // this.setItemContainerSize();
+                // //清空显示
+                // var displayItemUI: egret.DisplayObject = null;
+                // while (this._itemContainer.numChildren > 0) {
+                //     displayItemUI = this._itemContainer.removeChildAt(0);
+                //     if(displayItemUI instanceof this._itemRenderer) {
+                //         this.removeRender(displayItemUI);
+                //     }
+                // }
+                // if (this._data instanceof Array) {
+                //     //进行首次填充
+                //     this._itemDatas = <Array<any>>this._data;
+                //     //console.log("set data.length=" + this._itemDatas.length + ", data=" + this._itemDatas);
+                //     if (this._itemDatas.length == 0) return;
+                //     this._dataIndexBegin = 0;
+                //     var placeValue: number = 0;//占据的位置
+                //     var addNum: number = this.addUIItem(this._dataIndexBegin, false);
+                //     this._dataIndexEnd = addNum;
+                //     while (addNum != 0 && this._dataIndexEnd < this._itemDatas.length) {
+                //         addNum = this.addUIItem(this._dataIndexEnd, false);
+                //         this._dataIndexEnd += addNum;
+                //         //console.log("dataIndexEnd=" + this._dataIndexEnd + ", addNum=" + addNum);
+                //     }
+                //     this._dataIndexEnd--;//起始是从0开始,减去一个下标
+                //     //console.log("setData dataIndexBegin=" + this._dataIndexBegin + ", dataIndexEnd=" + this._dataIndexEnd)
+                // }
             },
             enumerable: true,
             configurable: true
@@ -531,13 +560,16 @@ var codeBase;
          */
         List.prototype.draw = function () {
             _super.prototype.draw.call(this);
+            if (this.width == 0 || this.height == 0)
+                return;
             this.setItemContainerSize();
+            this.initList();
         };
         List.prototype.setItemContainerSize = function () {
-            this._itemContainer.x = this._marginLeft;
-            this._itemContainer.y = this._marginTop;
             this._itemContainer.width = this.width - this._marginLeft - this._marginRight;
             this._itemContainer.height = this.height - this._marginTop - this._marginBottom;
+            this._itemContainer.x = this._marginLeft;
+            this._itemContainer.y = this._marginTop;
             this._itemContainer.scrollRect.width = this._itemContainer.width;
             this._itemContainer.scrollRect.height = this._itemContainer.height;
         };

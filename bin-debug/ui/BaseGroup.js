@@ -12,8 +12,7 @@ var codeBase;
 (function (codeBase) {
     var BaseGroup = (function (_super) {
         __extends(BaseGroup, _super);
-        function BaseGroup(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
+        function BaseGroup() {
             var _this = _super.call(this) || this;
             //是否已加入过显示列表中,可用来判断各组件是否已经具备显示赋值的作用
             _this._isAddedToStage = false;
@@ -37,19 +36,21 @@ var codeBase;
             _this._hasInvalidate = false;
             _this._data = null; //可携带的数据
             _this._enabled = true; //不可用状态
-            _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onFirstAddToStage, _this);
-            _this._drawDelay = drawDelay;
+            _this._drawDelay = false;
+            _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
             return _this;
             //console.log("this._drawDelay=" + this._drawDelay)
         }
         /**
          * 第一次加入场景的时候会运行该方法
          */
-        BaseGroup.prototype.onFirstAddToStage = function (event) {
+        BaseGroup.prototype.onAddToStage = function (event) {
             this._isAddedToStage = true;
-            this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onFirstAddToStage, this);
+            this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
             this.createChildren();
             this.initData();
+            this.onInvalidatePosition();
+            this.invalidate();
             //console.log("222222this._drawDelay=" + this._drawDelay)
         };
         /**
@@ -64,10 +65,7 @@ var codeBase;
          */
         BaseGroup.prototype.createChildren = function () {
             this.touchEnabled = false; //默认不接受事件
-            if (this.width == 0)
-                this.width = codeBase.Style.BASEGROUP_WIDTH;
-            if (this.height == 0)
-                this.height = codeBase.Style.BASEGROUP_HEIGHT;
+            //this.setSize(Style.BASEGROUP_WIDTH, Style.BASEGROUP_HEIGHT);
         };
         Object.defineProperty(BaseGroup.prototype, "width", {
             get: function () {

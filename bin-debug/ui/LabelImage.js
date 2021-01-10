@@ -15,9 +15,8 @@ var codeBase;
      */
     var LabelImage = (function (_super) {
         __extends(LabelImage, _super);
-        function LabelImage(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function LabelImage() {
+            var _this = _super.call(this) || this;
             _this._text = ""; //文本内容
             _this._textureDict = {}; //切割好的材质,对应的材质映射表
             _this._texture = null;

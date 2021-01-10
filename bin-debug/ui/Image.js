@@ -12,22 +12,27 @@ var codeBase;
 (function (codeBase) {
     var Image = (function (_super) {
         __extends(Image, _super);
-        function Image(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function Image() {
+            var _this = _super.call(this) || this;
             _this._bitmap = null;
             _this._texture = null;
+            /**
+             * 根据外部设定的大小改变实际bitmap大小
+             */
             _this._autoSize = true;
             _this._scale9GridEnable = false;
             _this._scale9GridRect = null; //九宫拉伸的尺寸
             _this.scale9RectData = [];
-            _this._fillMode = "scale"; //scale, repeat.
+            _this._fillMode = egret.BitmapFillMode.SCALE; //scale, repeat, clip
             _this._smoothing = false;
+            _this.explicitWidth = NaN;
+            _this.explicitHeight = NaN;
             return _this;
         }
         Image.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
             this._bitmap = new egret.Bitmap();
+            this._bitmap.fillMode = egret.BitmapFillMode.SCALE;
             this.addChild(this._bitmap);
         };
         Object.defineProperty(Image.prototype, "fillMode", {
@@ -56,10 +61,6 @@ var codeBase;
             set: function (value) {
                 if (this._autoSize != value) {
                     this._autoSize = value;
-                    //if (!this._autoSize) {
-                    //    this.scaleX = 1;
-                    //    this.scaleY = 1;
-                    //}
                     this.invalidate();
                 }
             },
@@ -124,14 +125,59 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Image.prototype, "width", {
+            get: function () {
+                return this.$getWidth();
+            },
+            /**
+             * 覆写width方法,在width改变的时候,做逻辑运算
+             * @param w
+             */
+            set: function (w) {
+                if (w < 0 || w == this.explicitWidth) {
+                    return;
+                }
+                this.explicitWidth = w;
+                _super.prototype.$setWidth.call(this, w);
+                this.onInvalidatePosition();
+                this.invalidate();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Image.prototype, "height", {
+            get: function () {
+                return this.$getHeight();
+            },
+            /**
+             * 覆写height方法,在height改变的时候,做逻辑运算
+             * @param h
+             */
+            set: function (h) {
+                if (h < 0 || h == this.explicitHeight) {
+                    return;
+                }
+                this.explicitHeight = h;
+                _super.prototype.$setHeight.call(this, h);
+                this.onInvalidatePosition();
+                this.invalidate();
+            },
+            enumerable: true,
+            configurable: true
+        });
         Image.prototype.draw = function () {
             if (!this._bitmap || this._texture == null)
                 return;
             if (this._bitmap.texture != this._texture) {
                 this._bitmap.texture = this._texture;
-                this.width = this._bitmap.texture.textureWidth;
-                this.height = this._bitmap.texture.textureHeight;
+                if (isNaN(this.explicitWidth)) {
+                    this.width = this._bitmap.texture.textureWidth;
+                }
+                if (isNaN(this.explicitHeight)) {
+                    this.height = this._bitmap.texture.textureHeight;
+                }
             }
+            this._bitmap.fillMode = this._fillMode;
             if (this.scale9RectData.length == 4) {
                 if (this._scale9GridRect == null)
                     this._scale9GridRect = this.scale9Rect();
@@ -140,37 +186,25 @@ var codeBase;
                 this._scale9GridRect.width = this._bitmap.texture.$getTextureWidth() - (this.scale9RectData[0] + this.scale9RectData[1]);
                 this._scale9GridRect.height = this._bitmap.texture.$getTextureHeight() - (this.scale9RectData[2] + this.scale9RectData[3]);
                 this._bitmap.scale9Grid = this._scale9GridRect;
+                this._bitmap.scaleX = 1;
+                this._bitmap.scaleY = 1;
+                // this._bitmap.width = this.width;
+                // this._bitmap.height = this.height;
+            }
+            else {
+                this._bitmap.scale9Grid = null;
+            }
+            if (this._fillMode != egret.BitmapFillMode.SCALE) {
                 this._bitmap.width = this.width;
                 this._bitmap.height = this.height;
             }
             else {
-                this._bitmap.scale9Grid = null;
-                if (this._autoSize) {
-                    if (this._fillMode != "scale") {
-                        this._bitmap.width = this.width;
-                        this._bitmap.height = this.height;
-                    }
-                    else {
-                        this._bitmap.scaleX = this.width / this._bitmap.texture.textureWidth;
-                        this._bitmap.scaleY = this.height / this._bitmap.texture.textureHeight;
-                    }
-                }
-                else if (this._texture) {
-                    this._bitmap.scaleX = 1;
-                    this._bitmap.scaleY = 1;
-                    this._bitmap.width = this._texture.textureWidth;
-                    this._bitmap.height = this._texture.textureHeight;
-                    this.$setWidth(this._texture.textureWidth);
-                    this.$setHeight(this._texture.textureHeight);
-                    if (this.anchorX != 0 || this.anchorY != 0) {
-                        this.anchorOffsetX = this.width * this.anchorX;
-                        this.anchorOffsetY = this.height * this.anchorY;
-                    }
-                }
+                this._bitmap.scaleX = this.width / this._bitmap.texture.textureWidth;
+                this._bitmap.scaleY = this.height / this._bitmap.texture.textureHeight;
             }
-            this._bitmap.fillMode = this._fillMode;
-            // if(this._bitmap.width != this.width) this._bitmap.width = this.width;
-            // if(this._bitmap.height != this.height) this._bitmap.height = this.height;
+            //this.setSize(this._bitmap.width, this._bitmap.height);
+            this.anchorOffsetX = this.anchorX * this.width;
+            this.anchorOffsetY = this.anchorY * this.height;
         };
         Image.prototype.getBitmap = function () {
             return this._bitmap;

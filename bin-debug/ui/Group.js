@@ -16,9 +16,8 @@ var codeBase;
      */
     var Group = (function (_super) {
         __extends(Group, _super);
-        function Group(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function Group() {
+            var _this = _super.call(this) || this;
             /**
              * 是否显示默认样式 ,
              * 默认为true,显示.

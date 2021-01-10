@@ -15,9 +15,8 @@ var codeBase;
      */
     var HGroup = (function (_super) {
         __extends(HGroup, _super);
-        function HGroup(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function HGroup() {
+            var _this = _super.call(this) || this;
             _this._gap = 0;
             _this._hAlign = egret.HorizontalAlign.LEFT;
             _this._vAlign = egret.VerticalAlign.MIDDLE;
@@ -84,9 +83,6 @@ var codeBase;
          * 更新显示组件的各项属性,重新绘制显示
          */
         HGroup.prototype.draw = function () {
-            if (this._bgImage && this._bgImage.parent) {
-                this._bgImage.parent.removeChild(this._bgImage);
-            }
             _super.prototype.draw.call(this);
             this.updateLayout();
             if (this._showBg) {

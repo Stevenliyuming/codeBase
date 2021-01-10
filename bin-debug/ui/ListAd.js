@@ -12,9 +12,8 @@ var codeBase;
 (function (codeBase) {
     var ListAd = (function (_super) {
         __extends(ListAd, _super);
-        function ListAd(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function ListAd() {
+            var _this = _super.call(this) || this;
             /**
              * 消息和方法的映射关系表
              */

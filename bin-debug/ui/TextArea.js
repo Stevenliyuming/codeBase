@@ -12,9 +12,8 @@ var codeBase;
 (function (codeBase) {
     var TextArea = (function (_super) {
         __extends(TextArea, _super);
-        function TextArea(drawDelay) {
-            if (drawDelay === void 0) { drawDelay = false; }
-            var _this = _super.call(this, drawDelay) || this;
+        function TextArea() {
+            var _this = _super.call(this) || this;
             _this._text = ""; //文本内容
             _this._initFlow = null;
             _this._htmlTextParser = null;
@@ -51,9 +50,6 @@ var codeBase;
             _this.moveDelta = 0;
             return _this;
         }
-        TextArea.prototype.initData = function () {
-            _super.prototype.initData.call(this);
-        };
         /**
          * 初始化主场景的组件,加入场景时,主动调用一次
          * 子类覆写该方法,添加UI逻辑
@@ -66,7 +62,9 @@ var codeBase;
             this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
             this.addChild(this._textField);
             this.touchChildren = false;
-            this.invalidate();
+        };
+        TextArea.prototype.initData = function () {
+            _super.prototype.initData.call(this);
         };
         /**
          * 文本滚动设置

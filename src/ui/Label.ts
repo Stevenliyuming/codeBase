@@ -18,19 +18,18 @@ module codeBase {
 		private _stroke: number = 0;
 		private _strokeColor: number = 0x003350;
 		private _html: boolean = false;
-		private _autoSize: boolean = true;//根据文字自动调整Label的尺寸
+		/**
+		 * 根据文字自动调整Label的尺寸
+		 */
+		private _autoSize: boolean = true;
 
 		private _paddingLeft:number = 0;
 		private _paddingRight:number = 0;
 		private _paddingTop:number = 0;
 		private _paddingBottom:number = 0;
 
-		public constructor(drawDelay: boolean = false) {
-			super(drawDelay);
-		}
-
-		public initData(): void {
-			super.initData();
+		public constructor() {
+			super();
 		}
 
         /**
@@ -43,7 +42,10 @@ module codeBase {
 			this._textField = new egret.TextField();
 			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
 			this.addChild(this._textField);
-			this.invalidate();
+		}
+
+		public initData(): void {
+			super.initData();
 		}
 
 		/**
@@ -116,37 +118,16 @@ module codeBase {
 
 			if (this._autoSize) {
 				this.setSize(this._textField.measuredWidth, this._textField.measuredHeight);
-				//this.width = this._textField.width;
-				//this.height = this._textField.height;
-
-				// this._textField.textAlign = this._hAlign;
-				// this._textField.verticalAlign = this._vAlign;
 			} else {
 				this._textField.width = this.width;
 				this._textField.height = this.height;
-
-				// if (this._hAlign == egret.HorizontalAlign.LEFT) {
-				// 	this._textField.x = 0;
-				// } else if (this._hAlign == egret.HorizontalAlign.RIGHT) {
-				// 	this._textField.x = this.width - this._textField.width;
-				// } else {
-				// 	this._textField.x = (this.width - this._textField.width)/2;
-				// }
-
-				// if (this._vAlign == egret.VerticalAlign.MIDDLE) {
-				// 	this._textField.y = (this.height - this._textField.height) / 2;
-				// } else if (this._vAlign == egret.VerticalAlign.BOTTOM) {
-				// 	this._textField.y = this.height - this._textField.height;
-				// } else {
-				// 	this._textField.y = 0;
-				// }
+				var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
+				var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
+				this._textField.width = newWidth;
+				this._textField.height = newHeight;
+				this._textField.x = this._paddingLeft;
+				this._textField.y = this._paddingTop;
 			}
-			// var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
-			// var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
-			// this._textField.width = newWidth;
-			// this._textField.height = newHeight;
-			// this._textField.x = this._paddingLeft;
-			// this._textField.y = this._paddingTop;
 			this._textField.textAlign = this._hAlign;
 			this._textField.verticalAlign = this._vAlign;
 			super.draw();

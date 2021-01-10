@@ -29,8 +29,8 @@ module codeBase {
         //自动播放
         private _autoplay: boolean = false;
 
-        public constructor(delay: boolean = false) {
-            super(delay);
+        public constructor() {
+            super();
         }
 
         /**
@@ -270,8 +270,8 @@ module codeBase {
          */
         private _clip: boolean = true;
 
-        public constructor(delay: boolean = false) {
-            super(delay);
+        public constructor() {
+            super();
         }
 
         /**

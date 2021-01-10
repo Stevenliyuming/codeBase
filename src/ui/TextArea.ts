@@ -35,12 +35,8 @@ module codeBase {
 		private _paddingTop:number = 0;
 		private _paddingBottom:number = 0;
 
-		public constructor(drawDelay: boolean = false) {
-			super(drawDelay);
-		}
-
-		public initData(): void {
-			super.initData();
+		public constructor() {
+			super();
 		}
 
         /**
@@ -55,7 +51,10 @@ module codeBase {
 			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
 			this.addChild(this._textField);
 			this.touchChildren = false;
-			this.invalidate();
+		}
+
+		public initData(): void {
+			super.initData();
 		}
 
         /**

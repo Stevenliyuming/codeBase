@@ -15,9 +15,8 @@ var codeBase;
      */
     var ScrollGroup = (function (_super) {
         __extends(ScrollGroup, _super);
-        function ScrollGroup(delay) {
-            if (delay === void 0) { delay = false; }
-            var _this = _super.call(this, delay) || this;
+        function ScrollGroup() {
+            var _this = _super.call(this) || this;
             _this._moveFunc = null;
             _this._moveFuncThis = null;
             _this._scrollItemArr = [];
@@ -275,9 +274,8 @@ var codeBase;
      */
     var ScrollItemGroup = (function (_super) {
         __extends(ScrollItemGroup, _super);
-        function ScrollItemGroup(delay) {
-            if (delay === void 0) { delay = false; }
-            var _this = _super.call(this, delay) || this;
+        function ScrollItemGroup() {
+            var _this = _super.call(this) || this;
             _this.speed = 0; //帧速度
             _this.gap = 0; //间隔
             _this.direction = ScrollGroup.SCROLL_DOWN; //卷轴的方向

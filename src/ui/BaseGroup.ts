@@ -25,21 +25,23 @@ module codeBase {
 		public _data: any = null;//可携带的数据
 		private _enabled: boolean = true;//不可用状态
 
-		public constructor(drawDelay: boolean = false) {
+		public constructor() {
 			super();
-			this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onFirstAddToStage, this);
-			this._drawDelay = drawDelay;
+			this._drawDelay = false;
+			this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
 			//console.log("this._drawDelay=" + this._drawDelay)
 		}
 
 		/**
 		 * 第一次加入场景的时候会运行该方法
 		 */
-		public onFirstAddToStage(event: Event): void {
+		public onAddToStage(event: Event): void {
 			this._isAddedToStage = true;
-			this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onFirstAddToStage, this);
+			this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
 			this.createChildren();
 			this.initData();
+			this.onInvalidatePosition();
+			this.invalidate();
 			//console.log("222222this._drawDelay=" + this._drawDelay)
 		}
 
@@ -56,10 +58,7 @@ module codeBase {
 		 */
 		public createChildren(): void {
 			this.touchEnabled = false;//默认不接受事件
-			if (this.width == 0)
-				this.width = Style.BASEGROUP_WIDTH;
-			if (this.height == 0)
-				this.height = Style.BASEGROUP_HEIGHT;
+			//this.setSize(Style.BASEGROUP_WIDTH, Style.BASEGROUP_HEIGHT);
 		}
 
 		/**

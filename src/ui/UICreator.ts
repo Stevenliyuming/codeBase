@@ -7,7 +7,7 @@ module codeBase{
          * 创建图片显示对象
          * scale9Rect 图片的九宫格数据[左边距,右边距,上边距,下边距]
          */
-        public createImage(pr:egret.DisplayObjectContainer, px:number=0, py:number=0, texture:egret.Texture=null, scale9Rect:number[] = []):Image {
+        public static createImage(pr:egret.DisplayObjectContainer, px:number=0, py:number=0, texture:egret.Texture=null, scale9Rect:number[] = []):Image {
             let img = new Image;
             if(pr) {
                 pr.addChild(img);
@@ -24,7 +24,7 @@ module codeBase{
          * imageAlias 数字散图名称前缀
          * sheetAlias 数字图集名称
          */
-        public createImageNumber(pr:egret.DisplayObjectContainer, px:number, py:number, imageAlias: string, sheetAlias: string = "", verticalAlign: string = "top", horizontalAlign: string = "left", defaultText:string=null):ImageNumber {
+        public static createImageNumber(pr:egret.DisplayObjectContainer, px:number, py:number, imageAlias: string, sheetAlias: string = "", verticalAlign: string = "top", horizontalAlign: string = "left", defaultText:string=null):ImageNumber {
             let imageNumber = new ImageNumber;
             imageNumber.init(imageAlias, sheetAlias, verticalAlign, horizontalAlign);
             imageNumber.text = defaultText;
@@ -39,7 +39,7 @@ module codeBase{
          * statusSkin设置按钮可用状态皮肤
 		 * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
          */
-        public createButton(statusSkin:egret.Texture[], clickFun:Function=null, funObj:any=null, clickSound:string=null):Button {
+        public static createButton(statusSkin:egret.Texture[], clickFun:Function=null, funObj:any=null, clickSound:string=null):Button {
             let button = new Button;
             button.setStatus(statusSkin);
             button.setClickFunction(clickFun, funObj);
@@ -52,19 +52,19 @@ module codeBase{
          * statusSkin设置按钮可用状态皮肤
 		 * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
          */
-        public createToggleButton(statusSkin:egret.Texture[], toggleGroupName:string, clickFun:Function=null, funObj:any=null, clickSound:string=null):Button {
+        public static createToggleButton(statusSkin:egret.Texture[], toggleGroupName:string, clickFun:Function=null, funObj:any=null, clickSound:string=null):Button {
             let button = new Button;
             button.setStatus(statusSkin);
             button.setClickFunction(clickFun, funObj);
-            button.sound = clickSound;
             button.toggleGroup = toggleGroupName;
+            button.sound = clickSound;
             return button;
         }
 
         /**
          * 创建文本标签
          */
-        public createLabel(pr:egret.DisplayObjectContainer, px:number, py:number, fonsize:number=26, text:string=""):Label {
+        public static createLabel(pr:egret.DisplayObjectContainer, px:number, py:number, fonsize:number=26, text:string=""):Label {
 			let label:Label = new Label;
             if(pr) {
                 pr.addChild(label);
@@ -81,7 +81,7 @@ module codeBase{
         /**
          * 创建文本显示区域
          */
-        public createTextArea(pr:egret.DisplayObjectContainer, px:number, py:number, width:number, height:number, text:string=""):TextArea {
+        public static createTextArea(pr:egret.DisplayObjectContainer, px:number, py:number, width:number, height:number, text:string=""):TextArea {
 			let textArea = new TextArea;
             if(pr) {
                 pr.addChild(textArea);
@@ -98,7 +98,7 @@ module codeBase{
         /**
          * 创建文本输入框
          */
-        public createTextInput(pr:egret.DisplayObjectContainer, px:number, py:number, width:number, height:number):TextInput {
+        public static createTextInput(pr:egret.DisplayObjectContainer, px:number, py:number, width:number, height:number):TextInput {
             let textInput = new TextInput;
             if(pr) {
                 pr.addChild(textInput);
@@ -129,7 +129,7 @@ module codeBase{
          * line 列表显示项的列数
          * lineGap 显示项列间距
          */
-        public createList(pr:egret.DisplayObjectContainer, px:number, py:number, width:number, height:number, itemRenderer:DefaultRenderer, listData:any[], gap:number=10, line:number=1, lineGap:number=10, layout:string=Style.VERTICAL):List {
+        public static createList(pr:egret.DisplayObjectContainer, px:number, py:number, width:number, height:number, itemRenderer:DefaultRenderer, listData:any[], gap:number=10, line:number=1, lineGap:number=10, layout:string=Style.VERTICAL):List {
             let list = new List;
             if(pr) {
                 pr.addChild(list);
@@ -184,7 +184,7 @@ module codeBase{
          * @param x
          * @param y
          */
-        public getPixel32(target:egret.Bitmap, x:number,y:number ):Array<number> {
+        public static getPixel32(target:egret.Bitmap, x:number,y:number ):Array<number> {
             if (target && target.texture){
                 var locolPoint:egret.Point = target.globalToLocal(x,y);
                 return target.texture.getPixel32(locolPoint.x, locolPoint.y);
@@ -198,7 +198,7 @@ module codeBase{
          * @param y 舞台值
          * @return true:有像素值, false:无像素值
          */
-        public testPixel32(target:egret.Bitmap, x:number,y:number):boolean {
+        public static testPixel32(target:egret.Bitmap, x:number,y:number):boolean {
             var datas:Array<number> = this.getPixel32(target, x, y);
             for(var i:number = 0; i < datas.length; i++){
                 if (datas[i] > 0 ) {

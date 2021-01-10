@@ -12,7 +12,7 @@ module codeBase {
 		private _bold: boolean = false;
 		private _italic: boolean = false;
 		private _lineSpacing: number = 10;//行间距
-		private _multiline: boolean = true;//多行显示
+		private _multiline: boolean = false;//多行显示
 		private _stroke: number = 0;
 		private _strokeColor: number = 0;
 		private _wordWrap: boolean = true;//自动换行
@@ -25,8 +25,8 @@ module codeBase {
 		private _paddingTop:number = 0;
 		private _paddingBottom:number = 0;
 
-		public constructor(drawDelay: boolean = false) {
-			super(drawDelay);
+		public constructor() {
+			super();
 		}
 
 		public createChildren(): void {

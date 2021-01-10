@@ -55,14 +55,14 @@ var codeBase;
             var channel = event.currentTarget;
             var channelConfig = null;
             for (var key in Sound._soundDict) {
-                channelConfig = Sound._soundDict[key];
-                var myEvent = codeBase.MyEvent.getEvent(codeBase.EventType.SOUND_COMPLETE);
-                myEvent.addItem("name", key);
-                myEvent.send();
                 if (channelConfig.channel == channel) {
                     if (!channelConfig.loops) {
                         channelConfig.num--;
                         if (channelConfig.num == 0 && channel.hasEventListener(egret.Event.SOUND_COMPLETE)) {
+                            channelConfig = Sound._soundDict[key];
+                            var myEvent = codeBase.MyEvent.getEvent(codeBase.EventType.SOUND_COMPLETE);
+                            myEvent.addItem("name", key);
+                            myEvent.send();
                             channel.removeEventListener(egret.Event.SOUND_COMPLETE, Sound.onSoundComplete, Sound);
                             delete Sound._soundDict[key];
                             if (channelConfig.func && channelConfig.thisObj) {
