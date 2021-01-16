@@ -233,7 +233,8 @@ var codeBase;
                 }
             };
             //开始
-            egret.Tween.get(display).to({ rotation: angle }, duration).to({ rotation: 0 }, duration).to({ rotation: -angle }, duration).to({ rotation: 0 }, duration).to({ rotation: angle }, duration).to({ rotation: 0 }, duration).to({ rotation: -angle }, duration).to({ rotation: 0 }, duration).wait(2000).call(onComplete, this);
+            egret.Tween.get(display).to({ rotation: angle }, duration).to({ rotation: 0 }, duration).to({ rotation: -angle }, duration).to({ rotation: 0 }, duration).to({ rotation: angle }, duration).to({ rotation: 0 }, duration).to({ rotation: -angle }, duration).to({ rotation: 0 }, duration)
+                .wait(2000).call(onComplete, this);
         };
         /**
          *  暂停摇摆 摇摆
@@ -395,44 +396,6 @@ var codeBase;
             }
         };
         /**
-         * 给显示对象增加特效
-         * obj           对象
-         * cartoonType   动画类型 1:【可爱】按下变小，放开弹大 2:按下变小，放开轻微弹大 3：按下变小，放开变大
-         */
-        EffectUtil.playEffect = function (obj, cartoonType) {
-            if (cartoonType === void 0) { cartoonType = 1; }
-            if (EffectUtil.isPlayEffectPlay) {
-                return;
-            }
-            EffectUtil.isPlayEffectPlay = true;
-            var onComplete2 = function () {
-                this.isPlayEffectPlay = false;
-            };
-            var onComplete1 = function () {
-                if (cartoonType == 1) {
-                    egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 500, egret.Ease.elasticOut).call(onComplete2, this);
-                }
-                else if (cartoonType == 2) {
-                    egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 500, egret.Ease.backOut).call(onComplete2, this);
-                }
-                else if (cartoonType == 3) {
-                    egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 100).call(onComplete2, this);
-                }
-            };
-            egret.Tween.get(obj).to({ scaleX: 0.5, scaleY: 0.5, x: obj.x + obj.width / 4, y: obj.y + obj.height / 4 }, 100, egret.Ease.sineIn).call(onComplete1, this);
-        };
-        EffectUtil.saveOldValue = function (display, effectData) {
-            //记录旧值
-            effectData.oldX = display.x;
-            effectData.oldY = display.y;
-            effectData.oldAnchorX = display.anchorX;
-            effectData.oldAnchorY = display.anchorY;
-            effectData.oldScaleX = display.scaleX;
-            effectData.oldScaleY = display.scaleY;
-            effectData.oldAlpha = display.alpha;
-            effectData.loop = true;
-        };
-        /**
          * 从大到小 或者从小到大
          * @param display 显示对象
          * @param duration 多久完成该动画
@@ -457,7 +420,7 @@ var codeBase;
             else {
                 effectData = this.effectDic[display.hashCode];
             }
-            //AnchorX改变后新的位置
+            //Anchor改变后新的位置
             display.anchorX = effectData.newAnchorX;
             display.anchorY = effectData.newAnchorY;
             display.x = effectData.newX;
@@ -473,7 +436,85 @@ var codeBase;
                 egret.Tween.get(display).to({ scaleX: 0, scaleY: 0 }, 300, egret.Ease.backOut);
             }
         };
-        EffectUtil.effectDic = {}; //存放当前动画的显示对象 key:display.hashCode  value:EffectData
+        /**
+         * 给显示对象增加特效
+         * obj           对象
+         * cartoonType   动画类型 1:【可爱】按下变小，放开弹大 2:按下变小，放开轻微弹大 3：按下变小，放开变大
+         */
+        // public static playEffect(obj, cartoonType: number = 1): void {
+        //     if (EffectUtil.isPlayEffectPlay) {
+        //         return;
+        //     }
+        //     EffectUtil.isPlayEffectPlay = true;
+        //     var onComplete2: Function = function () {
+        //         this.isPlayEffectPlay = false;
+        //     };
+        //     var onComplete1: Function = function () {
+        //         if (cartoonType == 1) {
+        //             egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 500, egret.Ease.elasticOut).call(onComplete2, this);
+        //         } else if (cartoonType == 2) {
+        //             egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 500, egret.Ease.backOut).call(onComplete2, this);
+        //         } else if (cartoonType == 3) {
+        //             egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 100).call(onComplete2, this);
+        //         }
+        //     };
+        //     egret.Tween.get(obj).to({ scaleX: 0.8, scaleY: 0.8, x: obj.x + obj.width / 4, y: obj.y + obj.height / 4 }, 100, egret.Ease.sineIn).call(onComplete1, this);
+        // }
+        EffectUtil.playEffect = function (display, cartoonType) {
+            if (cartoonType === void 0) { cartoonType = 1; }
+            if (display == null || display == undefined)
+                return;
+            var effectData = null;
+            if (this.effectDic[display.hashCode] == null || this.effectDic[display.hashCode] == undefined) {
+                effectData = new codeBase.EffectData();
+                EffectUtil.saveOldValue(display, effectData); //记录旧值
+                this.effectDic[display.hashCode] = effectData;
+            }
+            else {
+                return;
+            }
+            // if (EffectUtil.isPlayEffectPlay) {
+            //     return;
+            // }
+            // EffectUtil.isPlayEffectPlay = true;
+            var onComplete2 = function () {
+                //this.isPlayEffectPlay = false;
+                effectData = this.effectDic[display.hashCode];
+                display.x = effectData.oldX;
+                display.y = effectData.oldY;
+                display.scaleX = effectData.oldScaleX;
+                display.scaleY = effectData.oldScaleY;
+                //停止动画
+                egret.Tween.removeTweens(display);
+                //移除
+                this.effectDic[display.hashCode] = null;
+            };
+            var onComplete1 = function () {
+                if (cartoonType == 1) {
+                    egret.Tween.get(display).to({ scaleX: 1, scaleY: 1, x: display.x - display.width / 4, y: display.y - display.height / 4 }, 500, egret.Ease.elasticOut).call(onComplete2, this);
+                }
+                else if (cartoonType == 2) {
+                    egret.Tween.get(display).to({ scaleX: 1, scaleY: 1, x: display.x - display.width / 4, y: display.y - display.height / 4 }, 500, egret.Ease.backOut).call(onComplete2, this);
+                }
+                else if (cartoonType == 3) {
+                    egret.Tween.get(display).to({ scaleX: 1, scaleY: 1, x: display.x - display.width / 4, y: display.y - display.height / 4 }, 100).call(onComplete2, this);
+                }
+            };
+            egret.Tween.get(display).to({ scaleX: 0.8, scaleY: 0.8, x: display.x + display.width / 4, y: display.y + display.height / 4 }, 100, egret.Ease.sineIn).call(onComplete1, this);
+        };
+        EffectUtil.saveOldValue = function (display, effectData) {
+            //记录旧值
+            effectData.oldX = display.x;
+            effectData.oldY = display.y;
+            effectData.oldAnchorX = display.anchorX;
+            effectData.oldAnchorY = display.anchorY;
+            effectData.oldScaleX = display.scaleX;
+            effectData.oldScaleY = display.scaleY;
+            effectData.oldAlpha = display.alpha;
+            effectData.loop = true;
+        };
+        //存放当前动画的显示对象 key:display.hashCode  value:EffectData
+        EffectUtil.effectDic = {};
         EffectUtil.isPlayEffectPlay = false;
         return EffectUtil;
     }());

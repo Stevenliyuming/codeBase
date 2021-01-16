@@ -133,7 +133,10 @@ var codeBase;
             button.x = 300;
             button.y = 800;
             button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
-            codeBase.EffectUtil.paopaoEffect(button);
+            button.setClickFunction(function () {
+                codeBase.EffectUtil.playEffect(button, 1);
+            }, s);
+            //EffectUtil.rockEffect(button);
             var buttonSkins = [RES.getRes("A_png"), RES.getRes("A点击_png")];
             for (var i = 0; i < 3; ++i) {
                 button = codeBase.UICreator.createToggleButton(buttonSkins, "abc", function (data) {

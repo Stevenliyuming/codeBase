@@ -152,8 +152,11 @@ module codeBase{
 			button.x = 300;
 			button.y = 800;
 			button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
+			button.setClickFunction(()=>{
+				EffectUtil.playEffect(button, 1);
+			}, s);
 
-			EffectUtil.paopaoEffect(button);
+			//EffectUtil.rockEffect(button);
 
 			let buttonSkins:any[] = [RES.getRes("A_png"), RES.getRes("A点击_png")];
 			for(let i=0; i<3; ++i) {

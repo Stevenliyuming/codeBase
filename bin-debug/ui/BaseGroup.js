@@ -315,10 +315,8 @@ var codeBase;
                     s.x = s._registryOffsetX;
                     s.y = s._registryOffsetY;
                 }
-                if (s._anchorX != 0 || s._anchorY != 0) {
-                    s.anchorOffsetX = s._anchorX * s.width;
-                    s.anchorOffsetY = s._anchorY * s.height;
-                }
+                s.anchorOffsetX = s._anchorX * s.width;
+                s.anchorOffsetY = s._anchorY * s.height;
                 //改变子级布局
                 if (widthChanged || heightChanged) {
                     var child = void 0;
