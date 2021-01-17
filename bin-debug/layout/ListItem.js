@@ -20,7 +20,7 @@ var codeBase;
         */
         ListItem.prototype.init = function (data) {
             this.touchEnabled = true;
-            this.icon = codeBase.UICreator.createBitmap(data.iconRes);
+            this.icon = codeBase.UICreator.createBitmap(data.res);
             this.addChild(this.icon);
         };
         ListItem.prototype.setSelected = function (value) {

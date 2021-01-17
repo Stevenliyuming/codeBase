@@ -30,6 +30,10 @@ module codeBase {
 
 		public constructor() {
 			super();
+			//if (!this._autoSize) this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
+			this._textField = new egret.TextField();
+			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
+			this.addChild(this._textField);
 		}
 
         /**
@@ -38,10 +42,6 @@ module codeBase {
          */
 		public createChildren(): void {
 			super.createChildren();
-			//if (!this._autoSize) this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
-			this._textField = new egret.TextField();
-			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
-			this.addChild(this._textField);
 		}
 
 		public initData(): void {
@@ -78,7 +78,7 @@ module codeBase {
 						this._text = "";
 					}
 				}
-				this.invalidate();
+				this.draw();
 			}
 		}
 

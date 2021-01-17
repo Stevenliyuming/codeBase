@@ -37,8 +37,14 @@ var codeBase;
                 effectData.loop = true;
             }
             //Anchor改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.scaleX = (1 - range); //0.97
@@ -62,8 +68,15 @@ var codeBase;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.scaleX = effectData.oldScaleX;
@@ -98,8 +111,14 @@ var codeBase;
                 effectData.loop = true;
             }
             //Anchor改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.scaleX = 0.9;
@@ -123,8 +142,15 @@ var codeBase;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.scaleX = effectData.oldScaleX;
@@ -159,8 +185,14 @@ var codeBase;
                 effectData.loop = true;
             }
             //AnchorX改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.scaleX = 0.95;
@@ -184,8 +216,15 @@ var codeBase;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.scaleX = effectData.oldScaleX;
@@ -221,8 +260,14 @@ var codeBase;
                 effectData.loop = true;
             }
             //AnchorX改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.rotation = 0;
@@ -246,8 +291,15 @@ var codeBase;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.rotation = 0;
@@ -284,8 +336,14 @@ var codeBase;
                 effectData.loop = true;
             }
             //AnchorX改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             //开始动态
@@ -318,8 +376,15 @@ var codeBase;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.rotation = 0;
@@ -421,8 +486,14 @@ var codeBase;
                 effectData = this.effectDic[display.hashCode];
             }
             //Anchor改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             if (type == 1) {
@@ -436,30 +507,6 @@ var codeBase;
                 egret.Tween.get(display).to({ scaleX: 0, scaleY: 0 }, 300, egret.Ease.backOut);
             }
         };
-        /**
-         * 给显示对象增加特效
-         * obj           对象
-         * cartoonType   动画类型 1:【可爱】按下变小，放开弹大 2:按下变小，放开轻微弹大 3：按下变小，放开变大
-         */
-        // public static playEffect(obj, cartoonType: number = 1): void {
-        //     if (EffectUtil.isPlayEffectPlay) {
-        //         return;
-        //     }
-        //     EffectUtil.isPlayEffectPlay = true;
-        //     var onComplete2: Function = function () {
-        //         this.isPlayEffectPlay = false;
-        //     };
-        //     var onComplete1: Function = function () {
-        //         if (cartoonType == 1) {
-        //             egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 500, egret.Ease.elasticOut).call(onComplete2, this);
-        //         } else if (cartoonType == 2) {
-        //             egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 500, egret.Ease.backOut).call(onComplete2, this);
-        //         } else if (cartoonType == 3) {
-        //             egret.Tween.get(obj).to({ scaleX: 1, scaleY: 1, x: obj.x - obj.width / 4, y: obj.y - obj.height / 4 }, 100).call(onComplete2, this);
-        //         }
-        //     };
-        //     egret.Tween.get(obj).to({ scaleX: 0.8, scaleY: 0.8, x: obj.x + obj.width / 4, y: obj.y + obj.height / 4 }, 100, egret.Ease.sineIn).call(onComplete1, this);
-        // }
         EffectUtil.playEffect = function (display, cartoonType) {
             if (cartoonType === void 0) { cartoonType = 1; }
             if (display == null || display == undefined)
@@ -473,12 +520,7 @@ var codeBase;
             else {
                 return;
             }
-            // if (EffectUtil.isPlayEffectPlay) {
-            //     return;
-            // }
-            // EffectUtil.isPlayEffectPlay = true;
             var onComplete2 = function () {
-                //this.isPlayEffectPlay = false;
                 effectData = this.effectDic[display.hashCode];
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
@@ -506,8 +548,15 @@ var codeBase;
             //记录旧值
             effectData.oldX = display.x;
             effectData.oldY = display.y;
-            effectData.oldAnchorX = display.anchorX;
-            effectData.oldAnchorY = display.anchorY;
+            // if(display instanceof BaseGroup) {
+            //     effectData.oldAnchorX = display.anchorX;
+            //     effectData.oldAnchorY = display.anchorY;
+            // } 
+            // else 
+            {
+                effectData.oldAnchorX = display.anchorOffsetX;
+                effectData.oldAnchorY = display.anchorOffsetY;
+            }
             effectData.oldScaleX = display.scaleX;
             effectData.oldScaleY = display.scaleY;
             effectData.oldAlpha = display.alpha;
@@ -515,7 +564,6 @@ var codeBase;
         };
         //存放当前动画的显示对象 key:display.hashCode  value:EffectData
         EffectUtil.effectDic = {};
-        EffectUtil.isPlayEffectPlay = false;
         return EffectUtil;
     }());
     codeBase.EffectUtil = EffectUtil;

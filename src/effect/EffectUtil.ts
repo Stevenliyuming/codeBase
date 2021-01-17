@@ -10,7 +10,7 @@ module codeBase {
          * @param alphaEnd 1
          * @param range 幅度  0.03
          */
-        public static breatheEffect(display: BaseGroup, duration: number = 200, alphaStart: number = 1, alphaEnd: number = 1, range: number = 0.03): void {
+        public static breatheEffect(display: egret.DisplayObject, duration: number = 200, alphaStart: number = 1, alphaEnd: number = 1, range: number = 0.03): void {
             if (display == null || display == undefined) return;
 
             var effectData: EffectData = null;
@@ -28,8 +28,14 @@ module codeBase {
                 effectData.loop = true;
             }
             //Anchor改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.scaleX = (1 - range);//0.97
@@ -47,13 +53,20 @@ module codeBase {
          *  暂停呼吸效果
          * @param display
          */
-        public static pauseBreatheEffect(display: BaseGroup): void {
+        public static pauseBreatheEffect(display: egret.DisplayObject): void {
             if (display == null || display == undefined) return;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData: EffectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.scaleX = effectData.oldScaleX;
@@ -69,7 +82,7 @@ module codeBase {
          * 上下弹 很Q的动态 急促
          * @param display
          */
-        public static upDownEffect(display: BaseGroup, duration: number = 500): void {
+        public static upDownEffect(display: egret.DisplayObject, duration: number = 500): void {
             if (display == null || display == undefined) return;
             var effectData: EffectData = null;
             if (this.effectDic[display.hashCode] == null || this.effectDic[display.hashCode] == undefined) {
@@ -86,8 +99,14 @@ module codeBase {
                 effectData.loop = true;
             }
             //Anchor改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.scaleX = 0.9;
@@ -105,13 +124,20 @@ module codeBase {
          *  暂停上下弹 很Q的动态 急促
          * @param display
          */
-        public static pauseUpDownEffect(display: BaseGroup): void {
+        public static pauseUpDownEffect(display: egret.DisplayObject): void {
             if (display == null || display == undefined) return;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData: EffectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.scaleX = effectData.oldScaleX;
@@ -127,7 +153,7 @@ module codeBase {
          * 气泡的感觉 很Q的动态 缓缓
          * @param display
          */
-        public static paopaoEffect(display: BaseGroup, duration: number = 1500): void {
+        public static paopaoEffect(display: egret.DisplayObject, duration: number = 1500): void {
             if (display == null || display == undefined) return;
             var effectData: EffectData = null;
             if (this.effectDic[display.hashCode] == null || this.effectDic[display.hashCode] == undefined) {
@@ -144,8 +170,14 @@ module codeBase {
                 effectData.loop = true;
             }
             //AnchorX改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.scaleX = 0.95;
@@ -163,13 +195,20 @@ module codeBase {
          *  暂停泡泡效果
          * @param display
          */
-        public static pausePaopaoEffect(display: BaseGroup): void {
+        public static pausePaopaoEffect(display: egret.DisplayObject): void {
             if (display == null || display == undefined) return;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData: EffectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.scaleX = effectData.oldScaleX;
@@ -185,7 +224,7 @@ module codeBase {
          * 摇摆 摇摆
          * @param display
          */
-        public static rockEffect(display: BaseGroup, angle: number = 25, duration: number = 200): void {
+        public static rockEffect(display: egret.DisplayObject, angle: number = 25, duration: number = 200): void {
             if (display == null || display == undefined) return;
 
             var effectData: EffectData = null;
@@ -203,8 +242,14 @@ module codeBase {
                 effectData.loop = true;
             }
             //AnchorX改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             display.rotation = 0;
@@ -222,13 +267,20 @@ module codeBase {
          *  暂停摇摆 摇摆
          * @param display
          */
-        public static pauseRockEffect(display: BaseGroup): void {
+        public static pauseRockEffect(display: egret.DisplayObject): void {
             if (display == null || display == undefined) return;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData: EffectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.rotation = 0;
@@ -245,9 +297,8 @@ module codeBase {
          * @param direction
          * @param duration
          */
-        public static rotationEffect(display: BaseGroup, direction: number = 1, duration: number = 5000): void {
+        public static rotationEffect(display: egret.DisplayObject, direction: number = 1, duration: number = 5000): void {
             if (display == null || display == undefined) return;
-
             var effectData: EffectData = null;
             if (this.effectDic[display.hashCode] == null || this.effectDic[display.hashCode] == undefined) {
                 effectData = new EffectData();
@@ -263,8 +314,14 @@ module codeBase {
                 effectData.loop = true;
             }
             //AnchorX改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             //开始动态
@@ -292,13 +349,20 @@ module codeBase {
             }
 
         }
-        public static pauseRotationEffect(display: BaseGroup): void {
+        public static pauseRotationEffect(display: egret.DisplayObject): void {
             if (display == null || display == undefined) return;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData: EffectData = this.effectDic[display.hashCode];
                 //回复旧数值
-                display.anchorX = effectData.oldAnchorX;
-                display.anchorY = effectData.oldAnchorY;
+                // if(display instanceof BaseGroup) {
+                //     display.anchorX = effectData.oldAnchorX;
+                //     display.anchorY = effectData.oldAnchorY;
+                // } 
+                // else 
+                {
+                    display.anchorOffsetX = effectData.oldAnchorX;
+                    display.anchorOffsetY = effectData.oldAnchorY;
+                }
                 display.x = effectData.oldX;
                 display.y = effectData.oldY;
                 display.rotation = 0;
@@ -317,7 +381,7 @@ module codeBase {
          * space         浮动高度
          * todo          多个对象跳动
          */
-        public static flyObjEffect(display: BaseGroup, duration: number = 200, space: number = 50, direction: number = 1, alphaStart: number = 1, alphaEnd: number = 1): void {
+        public static flyObjEffect(display: egret.DisplayObject, duration: number = 200, space: number = 50, direction: number = 1, alphaStart: number = 1, alphaEnd: number = 1): void {
             var effectData: EffectData = null;
             if (this.effectDic[display.hashCode] == null || this.effectDic[display.hashCode] == undefined) {
                 effectData = new EffectData();
@@ -355,7 +419,7 @@ module codeBase {
             }
 
         }
-        public static pauseFlyObjEffect(display: BaseGroup): void {
+        public static pauseFlyObjEffect(display: egret.DisplayObject): void {
             if (display == null || display == undefined) return;
             if (this.effectDic[display.hashCode] != null && this.effectDic[display.hashCode] != undefined) {
                 var effectData: EffectData = this.effectDic[display.hashCode];
@@ -376,7 +440,7 @@ module codeBase {
          * @param duration 多久完成该动画
          * @param type 1 从小到大  2 从大到小
          */
-        public static smallTobig(display: BaseGroup, duration: number = 200, type: number = 1): void {
+        public static smallTobig(display: egret.DisplayObject, duration: number = 200, type: number = 1): void {
             if (display == null || display == undefined) return;
             var effectData: EffectData = null;
             if (this.effectDic[display.hashCode] == null || this.effectDic[display.hashCode] == undefined) {
@@ -392,8 +456,14 @@ module codeBase {
                 effectData = this.effectDic[display.hashCode];
             }
             //Anchor改变后新的位置
-            display.anchorX = effectData.newAnchorX;
-            display.anchorY = effectData.newAnchorY;
+            // if(display instanceof BaseGroup) {
+            //     display.anchorX = effectData.newAnchorX;
+            //     display.anchorY = effectData.newAnchorY;
+            // } else 
+            {
+                display.anchorOffsetX = effectData.newAnchorX * display.width;
+                display.anchorOffsetY = effectData.newAnchorY * display.height;
+            }
             display.x = effectData.newX;
             display.y = effectData.newY;
             if (type == 1) {
@@ -407,7 +477,7 @@ module codeBase {
             }
         }
 
-        public static playEffect(display:BaseGroup, cartoonType: number = 1): void {
+        public static playEffect(display:egret.DisplayObject, cartoonType: number = 1): void {
             if (display == null || display == undefined) return;
             var effectData: EffectData = null;
             if (this.effectDic[display.hashCode] == null || this.effectDic[display.hashCode] == undefined) {
@@ -441,12 +511,19 @@ module codeBase {
             egret.Tween.get(display).to({ scaleX: 0.8, scaleY: 0.8, x: display.x + display.width / 4, y: display.y + display.height / 4 }, 100, egret.Ease.sineIn).call(onComplete1, this);
         }
 
-        private static saveOldValue(display: BaseGroup, effectData: EffectData): void {
+        private static saveOldValue(display: egret.DisplayObject, effectData: EffectData): void {
             //记录旧值
             effectData.oldX = display.x;
             effectData.oldY = display.y;
-            effectData.oldAnchorX = display.anchorX;
-            effectData.oldAnchorY = display.anchorY;
+            // if(display instanceof BaseGroup) {
+            //     effectData.oldAnchorX = display.anchorX;
+            //     effectData.oldAnchorY = display.anchorY;
+            // } 
+            // else 
+            {
+                effectData.oldAnchorX = display.anchorOffsetX;
+                effectData.oldAnchorY = display.anchorOffsetY;
+            }
             effectData.oldScaleX = display.scaleX;
             effectData.oldScaleY = display.scaleY;
             effectData.oldAlpha = display.alpha;

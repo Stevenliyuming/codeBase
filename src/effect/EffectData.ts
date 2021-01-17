@@ -1,7 +1,5 @@
 module codeBase{
-
     export class EffectData {
-
         public oldX:number = 0;
         public oldY:number = 0;
         public newX:number = 0;
@@ -22,12 +20,8 @@ module codeBase{
         public newAnchorX:number = 0;
         public oldAnchorY:number = 0;
         public newAnchorY:number = 0;
-        public anchorEnabled:boolean = false;
 
         public isPlay:boolean = false;//当前是否播放
         public loop:boolean = false;//是否循环
-
-
-
     }
 }

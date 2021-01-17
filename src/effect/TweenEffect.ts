@@ -1,16 +1,27 @@
 module codeBase {
     export class TweenEffect {
         /**
-         * 设置对象注册点
+         * 设置对象锚点
          * @param object
          * @param anchorX
          * @param anchorY
          */
-        public static setAnchorXY(object: BaseGroup, anchorX: number = 0.5, anchorY: number = 0.5): void {
-            object.x += (anchorX - object.anchorX) * object.scaleX * object.width;
-            object.y += (anchorY - object.anchorY) * object.scaleY * object.height;
-            object.anchorX = anchorX;
-            object.anchorY = anchorY;
+        public static setAnchorXY(object: egret.DisplayObject, anchorX: number = 0.5, anchorY: number = 0.5): void {
+            // if(object instanceof BaseGroup) {
+            //     object.x += (anchorX - object.anchorX) * object.scaleX * object.width;
+            //     object.y += (anchorY - object.anchorY) * object.scaleY * object.height;
+            //     object.anchorX = anchorX;
+            //     object.anchorY = anchorY;
+            // } 
+            // else 
+            {
+                let deltaWidth = anchorX * object.scaleX * object.width;
+                let deltaHeight = anchorY * object.scaleY * object.height;
+                object.anchorOffsetX = deltaWidth;
+                object.anchorOffsetY = deltaHeight
+                object.x += deltaWidth;
+                object.y += deltaHeight;
+            }
         }
         /**
          * 从小到大
@@ -20,7 +31,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static magnifyEffect(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static magnifyEffect(object: DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -44,7 +55,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static restoreEffect(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static restoreEffect(object: DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -70,7 +81,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static shrinkEffect(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static shrinkEffect(object: DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -94,39 +105,39 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static flutterEffect(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static flutterEffect(object: DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.25,
                     "attr": {
                         "alpha": 0,
-                        "anchorX": 1
+                        "anchorOffsetX": 1 * object.width
                     }
                 },
                 {
                     "percent": 0.5,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 },
                 {
                     "percent": 0.75,
                     "attr": {
                         "alpha": 0,
-                        "anchorX": 1
+                        "anchorOffsetX": 1 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
-            object.anchorX = object.alpha = 0;
+            object.anchorOffsetX = object.alpha = 0;
             var total: number = total ? total : 6000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -138,14 +149,14 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static flutterPositionEffect(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static flutterPositionEffect(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.4,
                     "attr": {
-                        "anchorX": -0.3,
-                        "anchorY": -0.2,
+                        "anchorOffsetX": -0.3 * object.width,
+                        "anchorOffsetY": -0.2 * object.height,
                         "scaleX": 0.9,
                         "scaleY": 0.9,
                         "alpha": 0.7
@@ -154,8 +165,8 @@ module codeBase {
                 {
                     "percent": 0.8,
                     "attr": {
-                        "anchorX": -0.2,
-                        "anchorY": -0.1,
+                        "anchorOffsetX": -0.2 * object.width,
+                        "anchorOffsetY": -0.1 * object.height,
                         "scaleX": 0.95,
                         "scaleY": 0.95,
                         "alpha": 0.9
@@ -164,15 +175,15 @@ module codeBase {
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorX": 0,
-                        "anchorY": 0,
+                        "anchorOffsetX": 0,
+                        "anchorOffsetY": 0,
                         "scaleX": 1,
                         "scaleY": 1,
                         "alpha": 1
                     }
                 }
             ];
-            object.anchorX = object.anchorY = 0;
+            object.anchorOffsetX = object.anchorOffsetY = 0;
             object.scaleX = object.scaleY = object.alpha = 1;
             var total: number = total ? total : 6000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
@@ -185,7 +196,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeInEffect(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeInEffect(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -208,7 +219,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeInLeft(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeInLeft(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -233,7 +244,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeInRight(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeInRight(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -245,7 +256,7 @@ module codeBase {
                 }
             ];
             object.alpha = 0;
-            object.anchorOffsetX = - 50;
+            object.anchorOffsetX = -50;
             var total: number = total ? total : 800;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -257,7 +268,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeInUp(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeInUp(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -269,7 +280,7 @@ module codeBase {
                 }
             ];
             object.alpha = 0;
-            object.anchorOffsetY = - 50;
+            object.anchorOffsetY = -50;
             var total: number = total ? total : 800;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -282,7 +293,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeInDown(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeInDown(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -306,7 +317,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeOut(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeOut(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -328,7 +339,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeOutLeft(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeOutLeft(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -351,14 +362,14 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeOutRight(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeOutRight(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 0,
-                        "anchorOffsetX": - 50
+                        "anchorOffsetX": -50
                     }
                 }
             ];
@@ -375,14 +386,14 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeOutDown(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeOutDown(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 0,
-                        "anchorOffsetY": - 50
+                        "anchorOffsetY": -50
                     }
                 }
             ];
@@ -399,7 +410,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static fadeOutUp(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static fadeOutUp(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -423,37 +434,37 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static shake(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static shake(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.22,
                     "attr": {
-                        "anchorX": 0.1
+                        "anchorOffsetX": 0.1 * object.width
                     }
                 },
                 {
                     "percent": 0.44,
                     "attr": {
-                        "anchorX": -0.1
+                        "anchorOffsetX": -0.1 * object.width
                     }
                 },
                 {
                     "percent": 0.66,
                     "attr": {
-                        "anchorX": 0.1
+                        "anchorOffsetX": 0.1 * object.width
                     }
                 },
                 {
                     "percent": 0.88,
                     "attr": {
-                        "anchorX": -0.1
+                        "anchorOffsetX": -0.1 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
@@ -468,7 +479,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static skip(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static skip(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -508,26 +519,26 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static arrowDown(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static arrowDown(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.5,
                     "attr": {
                         "alpha": 1,
-                        "anchorY": -0.5
+                        "anchorOffsetY": -0.5 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -539,26 +550,26 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static arrowUp(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static arrowUp(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.5,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorY": 0.5
+                        "anchorOffsetY": 0.5 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 1,
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -570,26 +581,26 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static arrowRight(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static arrowRight(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.5,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorX": -0.5
+                        "anchorOffsetX": -0.5 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorX = 0;
+            object.anchorOffsetX = 0;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -601,26 +612,26 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static arrowLeft(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static arrowLeft(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.5,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0.5
+                        "anchorOffsetX": 0.5 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorX = 0;
+            object.anchorOffsetX = 0;
             easeFunName = "backIn";
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
@@ -633,7 +644,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static flash(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static flash(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -673,7 +684,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static flashIn(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static flashIn(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -713,7 +724,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static flashOut(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static flashOut(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -753,7 +764,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotation(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotation(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             total = total ? total : 1000;
             if (easeFunName) {
@@ -771,7 +782,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotationIn(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotationIn(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
             if (StringUtil.isUsage(easeFunName)) {
@@ -790,7 +801,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotationOut(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotationOut(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
             if (StringUtil.isUsage(easeFunName)) {
@@ -810,7 +821,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotationInLeft(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotationInLeft(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
             if (StringUtil.isUsage(easeFunName)) {
@@ -830,7 +841,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotationInRight(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotationInRight(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
             if (StringUtil.isUsage(easeFunName)) {
@@ -850,7 +861,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotationOutLeft(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotationOutLeft(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
             if (StringUtil.isUsage(easeFunName)) {
@@ -870,7 +881,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotationOutRight(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotationOutRight(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             total = total ? total : 500;
             if (StringUtil.isUsage(easeFunName)) {
@@ -890,7 +901,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static scaleOutRock(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static scaleOutRock(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -978,7 +989,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rubberBand(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rubberBand(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1036,47 +1047,47 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounce(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounce(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.4,
                     "attr": {
-                        "anchorY": 0.1
+                        "anchorOffsetY": 0.1 * object.height
                     }
                 },
                 {
                     "percent": 0.43,
                     "attr": {
-                        "anchorY": 0.2
+                        "anchorOffsetY": 0.2 * object.height
                     }
                 },
                 {
                     "percent": 0.7,
                     "attr": {
-                        "anchorY": 0.1
+                        "anchorOffsetY": 0.1 * object.height
                     }
                 },
                 {
                     "percent": 0.8,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 },
                 {
                     "percent": 0.9,
                     "attr": {
-                        "anchorY": 0.04
+                        "anchorOffsetY": 0.04 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0 * object.height
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total: number = total ? total : 500;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -1088,7 +1099,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceIn(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceIn(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1142,7 +1153,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceInDown(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceInDown(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1175,7 +1186,7 @@ module codeBase {
                 }
             ];
             object.alpha = 0;
-            object.anchorOffsetY = - 3000;
+            object.anchorOffsetY = -3000;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -1187,7 +1198,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceInUp(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceInUp(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1232,7 +1243,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceInLeft(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceInLeft(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1265,7 +1276,7 @@ module codeBase {
                 }
             ];
             object.alpha = 0;
-            object.anchorOffsetX = - 3000;
+            object.anchorOffsetX = -3000;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -1277,7 +1288,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceInRight(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceInRight(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1322,7 +1333,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceOut(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceOut(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1367,7 +1378,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceOutUp(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceOutUp(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1412,7 +1423,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceOutDown(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceOutDown(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1457,7 +1468,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceOutLeft(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceOutLeft(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1488,7 +1499,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static bounceOutRight(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static bounceOutRight(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1519,7 +1530,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static swing(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static swing(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1565,7 +1576,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static scaleIn(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static scaleIn(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1590,7 +1601,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static scaleOut(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static scaleOut(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1615,7 +1626,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static scaleInBig(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static scaleInBig(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1641,7 +1652,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static scaleOutBig(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static scaleOutBig(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1667,7 +1678,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rightSpeedIn(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rightSpeedIn(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1675,7 +1686,7 @@ module codeBase {
                     "attr": {
                         "skewX": 20,
                         "alpha": 1,
-                        "anchorX": -0.4
+                        "anchorOffsetX": -0.4 * object.width
                     }
                 },
                 {
@@ -1683,7 +1694,7 @@ module codeBase {
                     "attr": {
                         "skewX": -5,
                         "alpha": 1,
-                        "anchorX": -0.2
+                        "anchorOffsetX": -0.2 * object.width
                     }
                 },
                 {
@@ -1691,12 +1702,12 @@ module codeBase {
                     "attr": {
                         "skewX": 0,
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
             object.skewX = object.alpha = 0;
-            object.anchorX = - 1;
+            object.anchorOffsetX = - 1;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -1708,7 +1719,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static pluse(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static pluse(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1738,7 +1749,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static rotationFlash(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static rotationFlash(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1772,7 +1783,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static breath(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static breath(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1820,23 +1831,23 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static shiftUp(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static shiftUp(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.5,
                     "attr": {
-                        "anchorY": 1
+                        "anchorOffsetY": 1 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -1848,23 +1859,23 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static shiftDown(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static shiftDown(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
                     "percent": 0.5,
                     "attr": {
-                        "anchorY": - 1
+                        "anchorOffsetY": -1 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total: number = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         }
@@ -1876,7 +1887,7 @@ module codeBase {
          * @param easeFunName 缓动方程
          * @param isLoop 是否循环
          */
-        public static jump(object: BaseGroup, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
+        public static jump(object: egret.DisplayObject, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false): void {
             egret.Tween.removeTweens(object);
             var attr: Array<any> = [
                 {
@@ -1884,7 +1895,7 @@ module codeBase {
                     "attr": {
                         "scaleX": 1.1,
                         "scaleY": 0.9,
-                        "anchorY": 0.8
+                        "anchorOffsetY": 0.8 * object.height
                     }
                 },
                 {
@@ -1892,7 +1903,7 @@ module codeBase {
                     "attr": {
                         "scaleX": 1.8,
                         "scaleY": 0.2,
-                        "anchorY": 0.9
+                        "anchorOffsetY": 0.9 * object.height
                     }
                 },
                 {
@@ -1900,7 +1911,7 @@ module codeBase {
                     "attr": {
                         "scaleX": 0.6,
                         "scaleY": 1.4,
-                        "anchorY": 0.3
+                        "anchorOffsetY": 0.3 * object.height
                     }
                 },
                 {
@@ -1908,11 +1919,11 @@ module codeBase {
                     "attr": {
                         "scaleX": 1,
                         "scaleY": 1,
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             object.scaleX = object.scaleY = 1;
             var total: number = total ? total : 2000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
@@ -1925,7 +1936,7 @@ module codeBase {
          * @param dutation
          * @param isLoop
          */
-        public static rock(object: BaseGroup, angle: number = 25, dutation: number = 200, isLoop: boolean = false): void {
+        public static rock(object: egret.DisplayObject, angle: number = 25, dutation: number = 200, isLoop: boolean = false): void {
             var _beginRotation: number = object.rotation;
             egret.Tween.get(object, { loop: isLoop }).to({ rotation: angle + _beginRotation }, dutation).to({ rotation: _beginRotation }, dutation).to({ rotation: _beginRotation - angle }, dutation)
                 .to({ rotation: _beginRotation }, dutation).to({ rotation: angle + _beginRotation }, dutation).to({ rotation: _beginRotation }, dutation).to({ rotation: _beginRotation - angle }, dutation)
@@ -1939,7 +1950,7 @@ module codeBase {
          * @param isLoop
          * @param direction 1上下浮动 其他
          */
-        public static fly(object: BaseGroup, duration: number = 500, space: number = 3, isLoop: boolean = true, direction: number = 1): void {
+        public static fly(object: egret.DisplayObject, duration: number = 500, space: number = 3, isLoop: boolean = true, direction: number = 1): void {
             var _oldX, _oldY;
             _oldX = object.x;
             _oldY = object.y;
@@ -1959,7 +1970,7 @@ module codeBase {
          * @param easeFunName
          * @param isLoop
          */
-        private static start(object: BaseGroup, attr: Array<any>, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false) {
+        private static start(object: egret.DisplayObject, attr: Array<any>, delay: number = 0, total: number = 0, easeFunName: string = "", isLoop: boolean = false) {
             egret.Tween.removeTweens(object);
             var index: number = 0;
             var attr: Array<any> = attr;

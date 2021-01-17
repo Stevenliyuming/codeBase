@@ -22,7 +22,7 @@ module codeBase{
 		*/
 		init(data:any) {
 			this.touchEnabled = true;
-			this.icon = UICreator.createBitmap(data.iconRes);
+			this.icon = UICreator.createBitmap(data.res);
 			this.addChild(this.icon);
 		}
 

@@ -7,7 +7,7 @@ var codeBase;
         function TweenEffect() {
         }
         /**
-         * 设置对象注册点
+         * 设置对象锚点
          * @param object
          * @param anchorX
          * @param anchorY
@@ -15,10 +15,21 @@ var codeBase;
         TweenEffect.setAnchorXY = function (object, anchorX, anchorY) {
             if (anchorX === void 0) { anchorX = 0.5; }
             if (anchorY === void 0) { anchorY = 0.5; }
-            object.x += (anchorX - object.anchorX) * object.scaleX * object.width;
-            object.y += (anchorY - object.anchorY) * object.scaleY * object.height;
-            object.anchorX = anchorX;
-            object.anchorY = anchorY;
+            // if(object instanceof BaseGroup) {
+            //     object.x += (anchorX - object.anchorX) * object.scaleX * object.width;
+            //     object.y += (anchorY - object.anchorY) * object.scaleY * object.height;
+            //     object.anchorX = anchorX;
+            //     object.anchorY = anchorY;
+            // } 
+            // else 
+            {
+                var deltaWidth = anchorX * object.scaleX * object.width;
+                var deltaHeight = anchorY * object.scaleY * object.height;
+                object.anchorOffsetX = deltaWidth;
+                object.anchorOffsetY = deltaHeight;
+                object.x += deltaWidth;
+                object.y += deltaHeight;
+            }
         };
         /**
          * 从小到大
@@ -125,32 +136,32 @@ var codeBase;
                     "percent": 0.25,
                     "attr": {
                         "alpha": 0,
-                        "anchorX": 1
+                        "anchorOffsetX": 1 * object.width
                     }
                 },
                 {
                     "percent": 0.5,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 },
                 {
                     "percent": 0.75,
                     "attr": {
                         "alpha": 0,
-                        "anchorX": 1
+                        "anchorOffsetX": 1 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
-            object.anchorX = object.alpha = 0;
+            object.anchorOffsetX = object.alpha = 0;
             var total = total ? total : 6000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -172,8 +183,8 @@ var codeBase;
                 {
                     "percent": 0.4,
                     "attr": {
-                        "anchorX": -0.3,
-                        "anchorY": -0.2,
+                        "anchorOffsetX": -0.3 * object.width,
+                        "anchorOffsetY": -0.2 * object.height,
                         "scaleX": 0.9,
                         "scaleY": 0.9,
                         "alpha": 0.7
@@ -182,8 +193,8 @@ var codeBase;
                 {
                     "percent": 0.8,
                     "attr": {
-                        "anchorX": -0.2,
-                        "anchorY": -0.1,
+                        "anchorOffsetX": -0.2 * object.width,
+                        "anchorOffsetY": -0.1 * object.height,
                         "scaleX": 0.95,
                         "scaleY": 0.95,
                         "alpha": 0.9
@@ -192,15 +203,15 @@ var codeBase;
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorX": 0,
-                        "anchorY": 0,
+                        "anchorOffsetX": 0,
+                        "anchorOffsetY": 0,
                         "scaleX": 1,
                         "scaleY": 1,
                         "alpha": 1
                     }
                 }
             ];
-            object.anchorX = object.anchorY = 0;
+            object.anchorOffsetX = object.anchorOffsetY = 0;
             object.scaleX = object.scaleY = object.alpha = 1;
             var total = total ? total : 6000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
@@ -498,31 +509,31 @@ var codeBase;
                 {
                     "percent": 0.22,
                     "attr": {
-                        "anchorX": 0.1
+                        "anchorOffsetX": 0.1 * object.width
                     }
                 },
                 {
                     "percent": 0.44,
                     "attr": {
-                        "anchorX": -0.1
+                        "anchorOffsetX": -0.1 * object.width
                     }
                 },
                 {
                     "percent": 0.66,
                     "attr": {
-                        "anchorX": 0.1
+                        "anchorOffsetX": 0.1 * object.width
                     }
                 },
                 {
                     "percent": 0.88,
                     "attr": {
-                        "anchorX": -0.1
+                        "anchorOffsetX": -0.1 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
@@ -592,19 +603,19 @@ var codeBase;
                     "percent": 0.5,
                     "attr": {
                         "alpha": 1,
-                        "anchorY": -0.5
+                        "anchorOffsetY": -0.5 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -627,19 +638,19 @@ var codeBase;
                     "percent": 0.5,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorY": 0.5
+                        "anchorOffsetY": 0.5 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 1,
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -662,19 +673,19 @@ var codeBase;
                     "percent": 0.5,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorX": -0.5
+                        "anchorOffsetX": -0.5 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorX = 0;
+            object.anchorOffsetX = 0;
             var total = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -697,19 +708,19 @@ var codeBase;
                     "percent": 0.5,
                     "attr": {
                         "alpha": 1,
-                        "anchorX": 0.5
+                        "anchorOffsetX": 0.5 * object.width
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
                         "alpha": 0.3,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
             object.alpha = 1;
-            object.anchorX = 0;
+            object.anchorOffsetX = 0;
             easeFunName = "backIn";
             var total = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
@@ -1190,41 +1201,41 @@ var codeBase;
                 {
                     "percent": 0.4,
                     "attr": {
-                        "anchorY": 0.1
+                        "anchorOffsetY": 0.1 * object.height
                     }
                 },
                 {
                     "percent": 0.43,
                     "attr": {
-                        "anchorY": 0.2
+                        "anchorOffsetY": 0.2 * object.height
                     }
                 },
                 {
                     "percent": 0.7,
                     "attr": {
-                        "anchorY": 0.1
+                        "anchorOffsetY": 0.1 * object.height
                     }
                 },
                 {
                     "percent": 0.8,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 },
                 {
                     "percent": 0.9,
                     "attr": {
-                        "anchorY": 0.04
+                        "anchorOffsetY": 0.04 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0 * object.height
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total = total ? total : 500;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -1887,7 +1898,7 @@ var codeBase;
                     "attr": {
                         "skewX": 20,
                         "alpha": 1,
-                        "anchorX": -0.4
+                        "anchorOffsetX": -0.4 * object.width
                     }
                 },
                 {
@@ -1895,7 +1906,7 @@ var codeBase;
                     "attr": {
                         "skewX": -5,
                         "alpha": 1,
-                        "anchorX": -0.2
+                        "anchorOffsetX": -0.2 * object.width
                     }
                 },
                 {
@@ -1903,12 +1914,12 @@ var codeBase;
                     "attr": {
                         "skewX": 0,
                         "alpha": 1,
-                        "anchorX": 0
+                        "anchorOffsetX": 0
                     }
                 }
             ];
             object.skewX = object.alpha = 0;
-            object.anchorX = -1;
+            object.anchorOffsetX = -1;
             var total = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -2054,17 +2065,17 @@ var codeBase;
                 {
                     "percent": 0.5,
                     "attr": {
-                        "anchorY": 1
+                        "anchorOffsetY": 1 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -2086,17 +2097,17 @@ var codeBase;
                 {
                     "percent": 0.5,
                     "attr": {
-                        "anchorY": -1
+                        "anchorOffsetY": -1 * object.height
                     }
                 },
                 {
                     "percent": 1,
                     "attr": {
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             var total = total ? total : 1000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);
         };
@@ -2120,7 +2131,7 @@ var codeBase;
                     "attr": {
                         "scaleX": 1.1,
                         "scaleY": 0.9,
-                        "anchorY": 0.8
+                        "anchorOffsetY": 0.8 * object.height
                     }
                 },
                 {
@@ -2128,7 +2139,7 @@ var codeBase;
                     "attr": {
                         "scaleX": 1.8,
                         "scaleY": 0.2,
-                        "anchorY": 0.9
+                        "anchorOffsetY": 0.9 * object.height
                     }
                 },
                 {
@@ -2136,7 +2147,7 @@ var codeBase;
                     "attr": {
                         "scaleX": 0.6,
                         "scaleY": 1.4,
-                        "anchorY": 0.3
+                        "anchorOffsetY": 0.3 * object.height
                     }
                 },
                 {
@@ -2144,11 +2155,11 @@ var codeBase;
                     "attr": {
                         "scaleX": 1,
                         "scaleY": 1,
-                        "anchorY": 0
+                        "anchorOffsetY": 0
                     }
                 }
             ];
-            object.anchorY = 0;
+            object.anchorOffsetY = 0;
             object.scaleX = object.scaleY = 1;
             var total = total ? total : 2000;
             TweenEffect.start(object, attr, delay, total, easeFunName, isLoop);

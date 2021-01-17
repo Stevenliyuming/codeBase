@@ -21,7 +21,6 @@ var codeBase;
             this.newAnchorX = 0;
             this.oldAnchorY = 0;
             this.newAnchorY = 0;
-            this.anchorEnabled = false;
             this.isPlay = false; //当前是否播放
             this.loop = false; //是否循环
         }

@@ -21,63 +21,63 @@ var codeBase;
          * bar:滚动容器侧边或者底部滚动条
          * barVisible:是否显示滚动条
          */
-        function ScrollBar(w, h, content, align, bar, barVisible) {
-            if (align === void 0) { align = codeBase.LayoutConst.VERTICAL; }
-            if (bar === void 0) { bar = null; }
+        function ScrollBar(w, h, content, align, sliderSKin, barVisible) {
+            if (align === void 0) { align = codeBase.Style.VERTICAL; }
+            if (sliderSKin === void 0) { sliderSKin = null; }
             if (barVisible === void 0) { barVisible = true; }
             var _this = _super.call(this) || this;
-            _this._contentPos = new egret.Point;
             _this.mouseEnable = false;
             _this.mouseOver = false;
             _this.mouseWheelMoveStep = 5;
-            _this.skinBar = bar || codeBase.Skin.scrollBar;
-            _this.skinBar.alpha = 0;
-            _this.barVisible = barVisible;
-            _this.addChild(_this.skinBar);
-            _this.width = w;
-            _this.height = h;
-            if (!barVisible)
-                _this.skinBar.visible = false;
-            _this.touchEnabled = true;
-            _this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, _this.onTouch, _this);
-            _this.startPos = new codeBase.Point;
-            _this.stPos = new codeBase.Point;
-            _this.content = content;
-            _this.alignType = align;
-            _this.setSize(w, h);
-            _this.layout(align);
+            var s = _this;
+            s.width = w;
+            s.height = h;
+            s.touchEnabled = true;
+            s.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouch, s);
+            s.startPos = new codeBase.Point;
+            s.stPos = new codeBase.Point;
+            s._contentPos = new egret.Point;
+            s.content = content;
+            s.alignType = align;
+            s.sliderBarV = sliderSKin || codeBase.Skin.scrollBar;
+            s.sliderBarV.alpha = 0;
+            s.barVisible = barVisible;
+            s.addChild(s.sliderBarV);
+            s.sliderBarV.visible = barVisible;
+            s.setSize(w, h);
+            s.layout(align);
             return _this;
         }
         ScrollBar.prototype.onTouch = function (e) {
+            var s = this;
             switch (e.type) {
                 case egret.TouchEvent.TOUCH_BEGIN:
-                    this.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
-                    this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
-                    this.stPos.x = e.stageX;
-                    this.stPos.y = e.stageY;
-                    // let rect:egret.Rectangle = this._content.scrollRect;
-                    // this.startPos.x = e.stageX - rect.x;
-                    // this.startPos.y = e.stageY - rect.y;
-                    this.startPos.x = e.stageX - this._contentPos.x;
-                    this.startPos.y = e.stageY - this._contentPos.y;
-                    this.hideShow(1);
-                    this.startTime = egret.getTimer();
+                    s.stage.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouch, s);
+                    s.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouch, s);
+                    s.stPos.x = e.stageX;
+                    s.stPos.y = e.stageY;
+                    s.startPos.x = e.stageX - s._contentPos.x;
+                    s.startPos.y = e.stageY - s._contentPos.y;
+                    s.hideShow(1);
+                    s.startTime = egret.getTimer();
                     break;
                 case egret.TouchEvent.TOUCH_MOVE:
-                    this.moveDo(e.stageX, e.stageY);
+                    s.moveDo(e.stageX, e.stageY);
                     break;
                 case egret.TouchEvent.TOUCH_END:
-                    this.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
-                    this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
-                    this.hideShow(0, 100);
-                    this.timeMove(e.stageX, e.stageY);
+                    s.stage.removeEventListener(egret.TouchEvent.TOUCH_END, s.onTouch, s);
+                    s.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouch, s);
+                    s.hideShow(0, 100);
+                    s.timeMove(e.stageX, e.stageY);
                     break;
             }
         };
         /**是否可以鼠标控制滚动 在滚动容器为垂直滚动的条件下才生效*/
         ScrollBar.prototype.setMouseWheelEnable = function (value) {
             var s = this;
-            if (s.alignType == codeBase.LayoutConst.VERTICAL) {
+            if (s.alignType == codeBase.Style.VERTICAL) {
+                if (s.mouseEnable == value)
+                    return;
                 s.mouseEnable = value;
                 if (s.mouseEnable) {
                     s.addMouseEvent();
@@ -116,9 +116,8 @@ var codeBase;
             if (!s.canvas) {
                 s.canvas = document.getElementsByTagName("CANVAS")[0];
             }
-            var bindFun = fun.bind(funObj);
-            s.mouseWheelFun = bindFun;
-            s.canvas.addEventListener(type, bindFun);
+            s.mouseWheelFun = fun.bind(funObj);
+            s.canvas.addEventListener(type, s.mouseWheelFun);
         };
         ScrollBar.prototype.onMouseMoveEvent = function (ev) {
             var s = this;
@@ -134,7 +133,7 @@ var codeBase;
         ScrollBar.prototype.onMouseWheel = function (evt) {
             var s = this;
             var pos = s.globalToLocal(evt.x, evt.y);
-            if (pos.x >= s.maskRect.x && pos.x <= s.maskRect.x + s.maskRect.width && pos.y >= s.maskRect.y && pos.y <= s.maskRect.y + s.maskRect.height) {
+            if (pos.x >= s.viewPort.x && pos.x <= s.viewPort.x + s.viewPort.width && pos.y >= s.viewPort.y && pos.y <= s.viewPort.y + s.viewPort.height) {
                 s.mouseWheelMoveY(evt.deltaY);
                 s.hideShow(1);
             }
@@ -144,31 +143,31 @@ var codeBase;
         };
         //缓动动画
         ScrollBar.prototype.timeMove = function (x, y) {
-            var _this = this;
-            var time = egret.getTimer() - this.startTime;
+            var s = this;
+            var time = egret.getTimer() - s.startTime;
             if (time < 500) {
-                var target = this._contentPos; //this._content;
-                var maskRect = this.maskRect;
+                var target = s._contentPos; //this._content;
+                var maskRect = s.viewPort;
                 codeBase.Tween.removeTweens(target);
-                var dx = x - this.stPos.x;
-                var dy = y - this.stPos.y;
+                var dx = x - s.stPos.x;
+                var dy = y - s.stPos.y;
                 var distance = Math.sqrt(dx * dx + dy * dy);
                 var value = (distance / time) * 100;
                 var tw = codeBase.Tween.get(target, { loop: false, onChange: function () {
-                        var rect = _this._content.scrollRect;
-                        rect.x = -_this._contentPos.x;
-                        rect.y = -_this._contentPos.y;
-                        _this._content.scrollRect = rect;
-                    }, onChangeObj: this });
-                if (this.alignType == codeBase.LayoutConst.VERTICAL) {
+                        var rect = s._content.scrollRect;
+                        rect.x = -s._contentPos.x;
+                        rect.y = -s._contentPos.y;
+                        s._content.scrollRect = rect;
+                    }, onChangeObj: s });
+                if (this.alignType == codeBase.Style.VERTICAL) {
                     var sign = dy > 0 ? 1 : -1;
                     value *= sign;
                     var h = target.y + value;
                     if (h > 0 && target.y + value > 0)
                         h = 0; //向下滑动
-                    if (h < 0 && target.y + value < (maskRect.height - this._content.height))
-                        h = maskRect.height - this._content.height; //向上滑动
-                    tw.to({ y: h }, 400, codeBase.Ease.sineOut).call(this.setBarPos, this);
+                    if (h < 0 && target.y + value < (maskRect.height - s._content.height))
+                        h = maskRect.height - s._content.height; //向上滑动
+                    tw.to({ y: h }, 400, codeBase.Ease.sineOut).call(s.setBarPos, s);
                 }
                 else {
                     var sign = dx > 0 ? 1 : -1;
@@ -176,9 +175,9 @@ var codeBase;
                     var w = target.x + value;
                     if (w > 0 && target.x + value > 0)
                         w = 0; //向右滑动
-                    if (w < 0 && target.x + value < (maskRect.width - this._content.width))
-                        w = maskRect.width - this._content.width; //向左滑动
-                    tw.to({ x: w }, 400, codeBase.Ease.sineOut).call(this.setBarPos, this);
+                    if (w < 0 && target.x + value < (maskRect.width - s._content.width))
+                        w = maskRect.width - s._content.width; //向左滑动
+                    tw.to({ x: w }, 400, codeBase.Ease.sineOut).call(s.setBarPos, s);
                 }
             }
         };
@@ -191,73 +190,66 @@ var codeBase;
         });
         ScrollBar.prototype.setBarPos = function () {
             var s = this;
-            if (s.alignType == codeBase.LayoutConst.VERTICAL)
-                s.skinBar.y = -s._content.y / (s._content.height - s.maskRect.height) * (s.maskRect.height - s.skinBar.height);
+            if (!s.barVisible)
+                return;
+            if (s.alignType == codeBase.Style.VERTICAL)
+                s.sliderBarV.y = -s._content.y / (s._content.height - s.viewPort.height) * (s.viewPort.height - s.sliderBarV.height);
             else
-                s.skinBar.x = -s._content.x / (s._content.width - s.maskRect.width) * (s.maskRect.width - s.skinBar.width);
+                s.sliderBarV.x = -s._content.x / (s._content.width - s.viewPort.width) * (s.viewPort.width - s.sliderBarV.width);
         };
         ScrollBar.prototype.hideShow = function (alpha, time) {
             if (time === void 0) { time = 1000; }
-            if (!this.barVisible)
+            var s = this;
+            if (!s.barVisible)
                 return;
-            if (this.skinBar.alpha == alpha)
+            if (s.sliderBarV.alpha == alpha)
                 return;
-            codeBase.Tween.removeTweens(this.skinBar);
+            codeBase.Tween.removeTweens(s.sliderBarV);
             if (alpha == 1) {
-                this.skinBar.alpha = 1;
+                s.sliderBarV.alpha = 1;
             }
             else {
-                var tw = codeBase.Tween.get(this.skinBar);
+                var tw = codeBase.Tween.get(s.sliderBarV);
                 tw.to({ alpha: alpha }, time);
             }
         };
         ScrollBar.prototype.moveDo = function (x, y) {
             var s = this;
-            if (s.alignType == codeBase.LayoutConst.VERTICAL) {
+            if (s.alignType == codeBase.Style.VERTICAL) {
                 s.canMoveY(y);
             }
-            else if (s.alignType == codeBase.LayoutConst.HORIZONTAL) {
+            else if (s.alignType == codeBase.Style.HORIZONTAL) {
                 s.canMoveX(x);
             }
         };
         ScrollBar.prototype.canMoveX = function (x) {
             var s = this;
-            var deltaWidth = s.maskRect.width - s._content.width;
+            var deltaWidth = s.viewPort.width - s._content.width;
             var xx = x - s.startPos.x;
             if (xx > deltaWidth && xx < 0) {
                 s._contentPos.x = xx;
                 var rect = s._content.scrollRect;
-                rect.y = -xx;
+                rect.x = -xx;
                 s._content.scrollRect = rect;
-                s.skinBar.x = -xx / (s._content.width - s.maskRect.width) * (s.maskRect.width - s.skinBar.width);
+                s.sliderBarV.x = -xx / (s._content.width - s.viewPort.width) * (s.viewPort.width - s.sliderBarV.width);
             }
         };
         ScrollBar.prototype.canMoveY = function (y) {
             var s = this;
-            var deltaHeight = s.maskRect.height - s._content.height;
+            var deltaHeight = s.viewPort.height - s._content.height;
             var yy = y - s.startPos.y;
             if (yy > deltaHeight && yy < 0) {
                 s._contentPos.y = yy;
                 var rect = s._content.scrollRect;
                 rect.y = -yy;
                 s._content.scrollRect = rect;
-                s.skinBar.y = -yy / (s._content.height - s.maskRect.height) * (s.maskRect.height - s.skinBar.height);
+                s.sliderBarV.y = -yy / (s._content.height - s.viewPort.height) * (s.viewPort.height - s.sliderBarV.height);
             }
         };
         ScrollBar.prototype.mouseWheelMoveY = function (deltaY) {
             var s = this;
-            var deltaHeight = s.maskRect.height - s._content.height;
+            var deltaHeight = s.viewPort.height - s._content.height;
             if (deltaHeight < 0) {
-                // let rect:egret.Rectangle = s._content.scrollRect;
-                // let yy = rect.y;
-                // yy += deltaY;
-                // if(yy > Math.abs(deltaHeight)) {
-                // 	yy = deltaHeight;
-                // } else if(yy < 0) {
-                // 	yy = 0;
-                // }
-                // rect.y = yy;
-                // s._content.scrollRect = rect;
                 var yy = s._contentPos.y;
                 yy -= deltaY;
                 if (yy < deltaHeight) {
@@ -270,35 +262,34 @@ var codeBase;
                 var rect = s._content.scrollRect;
                 rect.y = -yy;
                 s._content.scrollRect = rect;
-                s.skinBar.y = -yy / (s._content.height - s.maskRect.height) * (s.maskRect.height - s.skinBar.height);
+                s.sliderBarV.y = -yy / (s._content.height - s.viewPort.height) * (s.viewPort.height - s.sliderBarV.height);
             }
         };
-        ScrollBar.prototype.setMask = function () {
-            // if (this.maskRect != null && this._content != null) {
-            // 	this._content.mask = this.maskRect;
-            // }
-            if (this._content) {
-                this._content.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
+        ScrollBar.prototype.setScrollRect = function () {
+            var s = this;
+            if (s._content) {
+                s._content.scrollRect = new egret.Rectangle(0, 0, s.width, s.height);
             }
         };
-        ScrollBar.prototype.setSkinBarPos = function () {
-            this.skinBar.x = this.skinBar.y = 0;
-            if (this.alignType == codeBase.LayoutConst.VERTICAL) {
-                this.skinBar.x = this.maskRect.width - this.skinBar.width;
+        ScrollBar.prototype.setSliderBarPos = function () {
+            var s = this;
+            s.sliderBarV.x = s.sliderBarV.y = 0;
+            if (s.alignType == codeBase.Style.VERTICAL) {
+                s.sliderBarV.x = s.viewPort.width; // + s.sliderBar.width;
             }
-            else if (this.alignType == codeBase.LayoutConst.HORIZONTAL) {
-                this.skinBar.y = this.maskRect.height - this.skinBar.height;
+            else if (s.alignType == codeBase.Style.HORIZONTAL) {
+                s.sliderBarV.y = s.viewPort.height; // - s.sliderBar.height;
             }
         };
         ScrollBar.prototype.layout = function (type, interval) {
-            if (type === void 0) { type = codeBase.LayoutConst.VERTICAL; }
+            if (type === void 0) { type = codeBase.Style.VERTICAL; }
             if (interval === void 0) { interval = 0; }
             var s = this;
             s.alignType = type;
-            if (s.alignType == codeBase.LayoutConst.HORIZONTAL) {
+            if (s.alignType == codeBase.Style.HORIZONTAL) {
                 s.setMouseWheelEnable(false);
             }
-            s.setSkinBarPos();
+            s.setSliderBarPos();
             if (s.content) {
                 s.content.x = s.content.y = 0;
             }
@@ -309,23 +300,59 @@ var codeBase;
             s.layout(s.alignType);
         };
         ScrollBar.prototype.setSize = function (w, h) {
-            this.maskRect = codeBase.LayoutUI.getRect(w, h, codeBase.Color.white);
-            this.addChildAt(this.maskRect, 0);
-            this.maskRect.visible = false;
-            this.setMask();
-            this.setSkinBarPos();
+            var s = this;
+            s.viewPort = codeBase.LayoutUI.getRect(w, h, codeBase.Color.white);
+            s.addChildAt(s.viewPort, 0);
+            s.viewPort.visible = false;
+            s.setScrollRect();
+            s.setSliderBarPos();
         };
         Object.defineProperty(ScrollBar.prototype, "content", {
             set: function (value) {
-                this._content = value;
-                this.addChild(this._content);
-                this.setMask();
+                var s = this;
+                if (s._content == value)
+                    return;
+                if (s._content && s == s._content.parent) {
+                    if (s._content instanceof codeBase.LayoutComponent)
+                        s._content.removeFromParent(true);
+                    else
+                        s.removeChild(s._content);
+                }
+                s._content = value;
+                s.addChild(s._content);
+                s.setScrollRect();
             },
             enumerable: true,
             configurable: true
         });
+        ScrollBar.prototype.sliderBarSkins = function (barV, barH) {
+            if (barV === void 0) { barV = null; }
+            if (barH === void 0) { barH = null; }
+            var s = this;
+            if (s.alignType == codeBase.Style.VERTICAL) {
+                if (s.sliderBarV && s.sliderBarV != barV) {
+                    if (s.contains(s.sliderBarV))
+                        s.removeChild(s.sliderBarV);
+                }
+                s.sliderBarV = barV;
+                if (s.sliderBarV) {
+                    s.addChild(s.sliderBarV);
+                }
+            }
+            else if (s.alignType == codeBase.Style.HORIZONTAL) {
+                if (s.sliderBarH && s.sliderBarH != barH) {
+                    if (s.contains(s.sliderBarV))
+                        s.removeChild(s.sliderBarH);
+                }
+                s.sliderBarH = barH;
+                if (s.sliderBarH) {
+                    s.addChild(s.sliderBarH);
+                }
+            }
+            s.setSliderBarPos();
+        };
         return ScrollBar;
-    }(codeBase.LayoutContainer));
+    }(codeBase.LayoutComponent));
     codeBase.ScrollBar = ScrollBar;
     __reflect(ScrollBar.prototype, "codeBase.ScrollBar", ["codeBase.ILayout"]);
 })(codeBase || (codeBase = {}));

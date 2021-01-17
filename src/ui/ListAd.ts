@@ -124,8 +124,8 @@ module codeBase{
             var item:DefaultRenderer = ObjectPool.getByClass(this._itemRenderer,"listad_" + this.name);
             //var item:Group = ObjectPool.getByClass(Group);
             item.setSize(200,200);
-            item.anchorX = 0.5;
-            item.anchorY = 0.5;
+            item.anchorOffsetX = item.width * 0.5;
+            item.anchorOffsetY = item.height * 0.5;
             this._itemContainer.addChild(item);
             this._itemContainer.removeChild(item);
             if (item && item["validateNow"]) item["validateNow"]();
@@ -158,7 +158,7 @@ module codeBase{
                 }
                 item.scaleY = (1 - Math.abs(index - this._middleIndex) * this._scaleFactor);
                 item.alpha = (1 - Math.abs(index - this._middleIndex) * this._scaleFactor);
-                item.y = Math.abs(index - this._middleIndex) * this._scaleFactor * item.height * item.anchorY * this._gapFactor + this._middleItemY;
+                item.y = Math.abs(index - this._middleIndex) * this._scaleFactor * item.height * item.anchorOffsetY * this._gapFactor + this._middleItemY;
             }
             item.data = this._dataItems[index];
 

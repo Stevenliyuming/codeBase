@@ -643,10 +643,10 @@ var codeBase;
                 codeBase.HeartBeat.removeListener(this, this.onChangeText);
                 if (this._isZoom) {
                     var paramObj = { scaleX: this._zoomXOld, scaleY: this._zoomYOld };
-                    if (this._labelImg.anchorX == 0 && this._labelImg.anchorOffsetX == 0) {
+                    if (this._labelImg.anchorOffsetX == 0) {
                         paramObj["x"] = this._xOld;
                     }
-                    if (this._labelImg.anchorY == 0 && this._labelImg.anchorOffsetY == 0) {
+                    if (this._labelImg.anchorOffsetY == 0) {
                         paramObj["y"] = this._yOld;
                     }
                     egret.Tween.get(this._labelImg).to(paramObj, 200);

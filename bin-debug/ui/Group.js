@@ -45,7 +45,7 @@ var codeBase;
              * 是否将子代剪切到视区的边界,
              * 默认为true,剪切.
              */
-            _this._clip = false;
+            _this._clip = true;
             //没有像素点时是否能触发事件
             _this._touchNonePixel = false;
             return _this;

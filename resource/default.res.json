@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_png,comRes_1_json,A_png,A点击_png",
+			"keys": "bg_png,comRes_1_json,A_png,A点击_png,slider_bar_h_png,slider_bar_v_png",
 			"name": "preload"
 		}
 	],
@@ -26,6 +26,16 @@
 			"name": "A点击_png",
 			"type": "image",
 			"url": "assets/A点击.png"
+		},
+		{
+			"name": "slider_bar_h_png",
+			"type": "image",
+			"url": "assets/slider_bar_h.png"
+		},
+		{
+			"name": "slider_bar_v_png",
+			"type": "image",
+			"url": "assets/slider_bar_v.png"
 		}
 	]
 }

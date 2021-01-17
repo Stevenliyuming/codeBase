@@ -6,7 +6,6 @@ module codeBase {
          * 根据外部设定的大小改变实际bitmap大小
          */ 
         private _autoSize: boolean = true;
-        private _scale9GridEnable: boolean = false;
         private _scale9GridRect: egret.Rectangle = null;//九宫拉伸的尺寸
         private scale9RectData: number[] = [];
         private _fillMode: string = egret.BitmapFillMode.SCALE;//scale, repeat, clip
@@ -16,13 +15,13 @@ module codeBase {
 
         public constructor() {
             super();
+            this._bitmap = new egret.Bitmap();
+            this._bitmap.fillMode = egret.BitmapFillMode.SCALE;
+            this.addChild(this._bitmap);
         }
 
         public createChildren(): void {
             super.createChildren();
-            this._bitmap = new egret.Bitmap();
-            this._bitmap.fillMode = egret.BitmapFillMode.SCALE;
-            this.addChild(this._bitmap);
         }
 
         /**
@@ -58,10 +57,12 @@ module codeBase {
             return this._texture;
         }
         public set texture(value: egret.Texture) {
-            if (this._texture != value) {
-                this._texture = value;
-                this.invalidate();
-                this.onInvalidatePosition();
+            let s = this;
+            if (s._texture != value) {
+                s._texture = value;
+                s.draw();
+                //s.invalidate();
+                s.onInvalidatePosition();
             }
         }
 
@@ -78,7 +79,6 @@ module codeBase {
             }
             this.invalidate();
         }
-
         private scale9Rect() {
             let rect = new egret.Rectangle();
             rect.x = 1;
@@ -140,42 +140,41 @@ module codeBase {
 		}
         
         public draw(): void {
-            if (!this._bitmap || this._texture == null) return;
-            if (this._bitmap.texture != this._texture) {
-                this._bitmap.texture = this._texture;
-                if (isNaN(this.explicitWidth)) {
-                    this.width = this._bitmap.texture.textureWidth;
+            let s = this;
+            if (!s._bitmap || s._texture == null) return;
+            if (s._bitmap.texture != s._texture) {
+                s._bitmap.texture = s._texture;
+                if (isNaN(s.explicitWidth)) {
+                    s.width = s._bitmap.texture.textureWidth;
                 }                
-                if (isNaN(this.explicitHeight)) {
-                    this.height = this._bitmap.texture.textureHeight;
+                if (isNaN(s.explicitHeight)) {
+                    s.height = s._bitmap.texture.textureHeight;
                 }
             }
 
-            this._bitmap.fillMode = this._fillMode;
-            if (this.scale9RectData.length == 4) {
-                if (this._scale9GridRect == null) this._scale9GridRect = this.scale9Rect();
-                this._scale9GridRect.x = this.scale9RectData[0];
-                this._scale9GridRect.y = this.scale9RectData[2];
-                this._scale9GridRect.width = this._bitmap.texture.$getTextureWidth() - (this.scale9RectData[0] + this.scale9RectData[1]);
-                this._scale9GridRect.height = this._bitmap.texture.$getTextureHeight() - (this.scale9RectData[2] + this.scale9RectData[3]);
-                this._bitmap.scale9Grid = this._scale9GridRect;
-                this._bitmap.scaleX = 1;
-                this._bitmap.scaleY = 1;
-                // this._bitmap.width = this.width;
-                // this._bitmap.height = this.height;
+            s._bitmap.fillMode = s._fillMode;
+            if (s.scale9RectData.length == 4) {
+                if (s._scale9GridRect == null) s._scale9GridRect = s.scale9Rect();
+                s._scale9GridRect.x = s.scale9RectData[0];
+                s._scale9GridRect.y = s.scale9RectData[2];
+                s._scale9GridRect.width = s._bitmap.texture.$getTextureWidth() - (s.scale9RectData[0] + s.scale9RectData[1]);
+                s._scale9GridRect.height = s._bitmap.texture.$getTextureHeight() - (s.scale9RectData[2] + s.scale9RectData[3]);
+                s._bitmap.scale9Grid = s._scale9GridRect;
+                s._bitmap.scaleX = 1;
+                s._bitmap.scaleY = 1;
             } else {
-                this._bitmap.scale9Grid = null;
+                s._bitmap.scale9Grid = null;
             }
-            if (this._fillMode != egret.BitmapFillMode.SCALE) {
-                this._bitmap.width = this.width;
-                this._bitmap.height = this.height;
+            if (s._fillMode != egret.BitmapFillMode.SCALE) {
+                s._bitmap.width = s.width;
+                s._bitmap.height = s.height;
             } else {
-                this._bitmap.scaleX = this.width / this._bitmap.texture.textureWidth;
-                this._bitmap.scaleY = this.height / this._bitmap.texture.textureHeight;
+                s._bitmap.scaleX = s.width / s._bitmap.texture.textureWidth;
+                this._bitmap.scaleY = s.height / s._bitmap.texture.textureHeight;
             }
             //this.setSize(this._bitmap.width, this._bitmap.height);
-            this.anchorOffsetX = this.anchorX * this.width;
-            this.anchorOffsetY = this.anchorY * this.height;
+            // s.anchorOffsetX = s.anchorX * s.width;
+            // s.anchorOffsetY = s.anchorY * s.height;
         }
 
         public getBitmap(): egret.Bitmap {

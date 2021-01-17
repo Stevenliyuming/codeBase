@@ -1,6 +1,6 @@
 module codeBase{
 	/***滑动器 */
-	export class SliderBar extends ProgressBar implements ILayout {
+	export class Slider extends Progress implements ILayout {
 		protected skinBar: DisplayObject;
 		protected type: string;
 		/**
@@ -45,7 +45,7 @@ module codeBase{
 		protected moveDo(x: number, y: number): void {
 			var p: Point = this.globalToLocal(x, y);
 			var v: number;
-			if (this.type == LayoutConst.HORIZONTAL) v = p.x / this.skinValue.width;
+			if (this.type == Style.HORIZONTAL) v = p.x / this.skinValue.width;
 			else v = p.y / this.skinValue.width;
 			this.value = v;
 		}
@@ -55,7 +55,7 @@ module codeBase{
 			v = v < 0 ? 0 : v > 1 ? 1 : v;
 			this._value = v;
 			this.skinValue.scaleX = v;
-			if (this.type == LayoutConst.HORIZONTAL) this.skinBar.x = this.skinValue.width * v;
+			if (this.type == Style.HORIZONTAL) this.skinBar.x = this.skinValue.width * v;
 			else this.skinBar.y = this.skinValue.width * v;
 		}
 
@@ -65,9 +65,9 @@ module codeBase{
 		}
 
 		/**横竖版布局，默认是横版布局 */
-		public layout(type: string = LayoutConst.HORIZONTAL, interval: number = 0): void {
+		public layout(type: string = Style.HORIZONTAL, interval: number = 0): void {
 			this.type = type
-			if (type == LayoutConst.VERTICAL) {
+			if (type == Style.VERTICAL) {
 				var angle = 90;
 				this.skinBar.x = -this.skinValue.height >> 1;
 			} else {

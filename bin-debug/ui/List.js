@@ -562,7 +562,7 @@ var codeBase;
             _super.prototype.draw.call(this);
             if (this.width == 0 || this.height == 0)
                 return;
-            this.setItemContainerSize();
+            //this.setItemContainerSize();
             this.initList();
         };
         List.prototype.setItemContainerSize = function () {

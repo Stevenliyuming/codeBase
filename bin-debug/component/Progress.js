@@ -11,14 +11,14 @@ r.prototype = e.prototype, t.prototype = new r();
 var codeBase;
 (function (codeBase) {
     /***进度条 */
-    var ProgressBar = (function (_super) {
-        __extends(ProgressBar, _super);
+    var Progress = (function (_super) {
+        __extends(Progress, _super);
         /**
          * bg:进度条背景显示对象
          *
          * value:进度条进度显示对象
          */
-        function ProgressBar(bg, value) {
+        function Progress(bg, value) {
             if (bg === void 0) { bg = null; }
             if (value === void 0) { value = null; }
             var _this = _super.call(this) || this;
@@ -26,17 +26,17 @@ var codeBase;
             _this.setSkin(bg, value);
             _this.addChild(_this.skinBg);
             _this.addChild(_this.skinValue);
-            _this.text = (new codeBase.TextLabel).textField;
+            _this.text = new codeBase.Label;
             _this.addChild(_this.text);
             return _this;
         }
-        ProgressBar.prototype.setSkin = function (bg, value) {
+        Progress.prototype.setSkin = function (bg, value) {
             if (bg === void 0) { bg = null; }
             if (value === void 0) { value = null; }
             this.skinBg = bg || codeBase.Skin.progressBackground;
             this.skinValue = value || codeBase.Skin.progressValue;
         };
-        Object.defineProperty(ProgressBar.prototype, "value", {
+        Object.defineProperty(Progress.prototype, "value", {
             get: function () {
                 return this._value;
             },
@@ -52,10 +52,10 @@ var codeBase;
         /**
          * 显示进度文本
          */
-        ProgressBar.prototype.showText = function (v, x, y) {
+        Progress.prototype.showText = function (text, x, y) {
             if (x === void 0) { x = -1; }
             if (y === void 0) { y = -1; }
-            this.text.text = v;
+            this.text.text = text;
             if (x == -1)
                 this.text.x = (this.skinBg.width - this.text.width) >> 1;
             else
@@ -65,8 +65,8 @@ var codeBase;
             else
                 this.text.y = y;
         };
-        return ProgressBar;
-    }(codeBase.LayoutContainer));
-    codeBase.ProgressBar = ProgressBar;
-    __reflect(ProgressBar.prototype, "codeBase.ProgressBar");
+        return Progress;
+    }(codeBase.LayoutComponent));
+    codeBase.Progress = Progress;
+    __reflect(Progress.prototype, "codeBase.Progress");
 })(codeBase || (codeBase = {}));

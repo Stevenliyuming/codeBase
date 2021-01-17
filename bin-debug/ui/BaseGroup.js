@@ -22,12 +22,9 @@ var codeBase;
             _this._right = NaN;
             _this._horizontalCenter = NaN;
             _this._verticalCenter = NaN;
-            //相对父级的注册点
-            _this._registryOffsetX = 0;
-            _this._registryOffsetY = 0;
             //xy自身原点偏移比例
-            _this._anchorX = 0;
-            _this._anchorY = 0;
+            // private _anchorX: number = 0;
+            // private _anchorY: number = 0;
             //是否重新计算位置布局
             _this._hasInvalidatePosition = false;
             //延迟绘制
@@ -78,8 +75,7 @@ var codeBase;
             set: function (w) {
                 if (w >= 0) {
                     _super.prototype.$setWidth.call(this, w);
-                    if (this._anchorX != 0)
-                        this.anchorOffsetX = w * this._anchorX;
+                    //if (this._anchorX != 0) this.anchorOffsetX = w * this._anchorX;
                     this.onInvalidatePosition();
                     this.invalidate();
                 }
@@ -98,8 +94,7 @@ var codeBase;
             set: function (h) {
                 if (h >= 0) {
                     _super.prototype.$setHeight.call(this, h);
-                    if (this._anchorY != 0)
-                        this.anchorOffsetY = h * this._anchorY;
+                    //if (this._anchorY != 0) this.anchorOffsetY = h * this._anchorY;
                     this.onInvalidatePosition();
                     this.invalidate();
                 }
@@ -107,15 +102,6 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        /**
-         * Moves the component to the specified position.
-         * @param xpos the x position to move the component
-         * @param ypos the y position to move the component
-         */
-        BaseGroup.prototype.move = function (xpos, ypos) {
-            this.x = xpos;
-            this.y = ypos;
-        };
         /**
          * Sets the size of the component.
          * @param w The width of the component.
@@ -311,12 +297,9 @@ var codeBase;
                     s.y = (parentHeight - thisHeight) / 2 + s._verticalCenter;
                     //console.log("this._verticalEnabled=" + this._verticalEnabled + ", y=" + this._y);
                 }
-                if (s._registryOffsetX != 0 || s._registryOffsetY != 0) {
-                    s.x = s._registryOffsetX;
-                    s.y = s._registryOffsetY;
-                }
-                s.anchorOffsetX = s._anchorX * s.width;
-                s.anchorOffsetY = s._anchorY * s.height;
+                //设置锚点
+                // s.anchorOffsetX = s._anchorX * s.width;
+                // s.anchorOffsetY = s._anchorY * s.height;
                 //改变子级布局
                 if (widthChanged || heightChanged) {
                     var child = void 0;
@@ -439,19 +422,21 @@ var codeBase;
         };
         BaseGroup.prototype.invalidate = function () {
             //当前无效标识状态_hasInvalidate为flase(即还没有进行延时绘制)并且没有设置延迟绘制标识_drawDelay
-            if (!this._hasInvalidate && !this._drawDelay) {
+            var s = this;
+            if (!s._hasInvalidate && !s._drawDelay) {
                 //console.log("add invalidate draw")
-                this.addEventListener(egret.Event.ENTER_FRAME, this.onInvalidate, this);
-                this._hasInvalidate = true;
+                s.addEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+                s._hasInvalidate = true;
             }
         };
         /**
          * 重绘通知
          */
         BaseGroup.prototype.onInvalidate = function (event) {
-            this.draw();
-            this.removeEventListener(egret.Event.ENTER_FRAME, this.onInvalidate, this);
-            this._hasInvalidate = false;
+            var s = this;
+            s.draw();
+            s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+            s._hasInvalidate = false;
         };
         BaseGroup.prototype.draw = function () {
             //console.log("draw name=" + this.name);
@@ -486,74 +471,6 @@ var codeBase;
              */
             get: function () {
                 return this._isAddedToStage;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(BaseGroup.prototype, "anchorX", {
-            get: function () {
-                return this._anchorX;
-            },
-            /**
-             * 设置x原点偏移比例
-             * @param value
-             */
-            set: function (value) {
-                if (this._anchorX != value) {
-                    this._anchorX = value;
-                    this.onInvalidatePosition();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(BaseGroup.prototype, "anchorY", {
-            get: function () {
-                return this._anchorY;
-            },
-            /**
-             * 设置y原点偏移比例
-             * @param value
-             */
-            set: function (value) {
-                if (this._anchorY != value) {
-                    this._anchorY = value;
-                    this.onInvalidatePosition();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(BaseGroup.prototype, "registryOffsetX", {
-            get: function () {
-                return this._registryOffsetX;
-            },
-            /**
-             * 设置注册点x偏移值
-             * @param value
-             */
-            set: function (value) {
-                if (this._registryOffsetX != value) {
-                    this._registryOffsetX = value;
-                    this.onInvalidatePosition();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(BaseGroup.prototype, "registryOffsetY", {
-            get: function () {
-                return this._registryOffsetY;
-            },
-            /**
-             * 设置注册点y偏移值
-             * @param value
-             */
-            set: function (value) {
-                if (this._registryOffsetY != value) {
-                    this._registryOffsetY = value;
-                    this.onInvalidatePosition();
-                }
             },
             enumerable: true,
             configurable: true

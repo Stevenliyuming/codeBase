@@ -477,7 +477,6 @@ module codeBase{
 
         private initList () {
             if (this._data && this._data instanceof Array && this._data.length > 0 && !this._itemDatas) {
-
                 this._itemDatas = null;
                 this._dataIndexToRender = {};
                 this.setItemContainerSize();
@@ -557,7 +556,7 @@ module codeBase{
         public draw(): void {
             super.draw();
             if (this.width == 0 || this.height == 0) return;
-            this.setItemContainerSize();
+            //this.setItemContainerSize();
             this.initList();
         }
 

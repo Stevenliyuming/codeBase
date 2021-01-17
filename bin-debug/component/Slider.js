@@ -11,14 +11,14 @@ r.prototype = e.prototype, t.prototype = new r();
 var codeBase;
 (function (codeBase) {
     /***滑动器 */
-    var SliderBar = (function (_super) {
-        __extends(SliderBar, _super);
+    var Slider = (function (_super) {
+        __extends(Slider, _super);
         /**
          * bg:滑动器背景
          * value:滑动器填充的滑动条
          * bar:滑动器滑动按钮
          */
-        function SliderBar(bg, value, bar) {
+        function Slider(bg, value, bar) {
             if (bg === void 0) { bg = null; }
             if (value === void 0) { value = null; }
             if (bar === void 0) { bar = null; }
@@ -31,13 +31,13 @@ var codeBase;
             _this.value = 0;
             return _this;
         }
-        SliderBar.prototype.setSkin = function (bg, value) {
+        Slider.prototype.setSkin = function (bg, value) {
             if (bg === void 0) { bg = null; }
             if (value === void 0) { value = null; }
             this.skinBg = bg || codeBase.Skin.sliderBackground;
             this.skinValue = value || codeBase.Skin.sliderValue;
         };
-        SliderBar.prototype.onTouch = function (e) {
+        Slider.prototype.onTouch = function (e) {
             switch (e.type) {
                 case egret.TouchEvent.TOUCH_BEGIN:
                     this.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
@@ -55,16 +55,16 @@ var codeBase;
                     break;
             }
         };
-        SliderBar.prototype.moveDo = function (x, y) {
+        Slider.prototype.moveDo = function (x, y) {
             var p = this.globalToLocal(x, y);
             var v;
-            if (this.type == codeBase.LayoutConst.HORIZONTAL)
+            if (this.type == codeBase.Style.HORIZONTAL)
                 v = p.x / this.skinValue.width;
             else
                 v = p.y / this.skinValue.width;
             this.value = v;
         };
-        Object.defineProperty(SliderBar.prototype, "value", {
+        Object.defineProperty(Slider.prototype, "value", {
             /**获取进度值 */
             get: function () {
                 return this._value;
@@ -74,7 +74,7 @@ var codeBase;
                 v = v < 0 ? 0 : v > 1 ? 1 : v;
                 this._value = v;
                 this.skinValue.scaleX = v;
-                if (this.type == codeBase.LayoutConst.HORIZONTAL)
+                if (this.type == codeBase.Style.HORIZONTAL)
                     this.skinBar.x = this.skinValue.width * v;
                 else
                     this.skinBar.y = this.skinValue.width * v;
@@ -83,11 +83,11 @@ var codeBase;
             configurable: true
         });
         /**横竖版布局，默认是横版布局 */
-        SliderBar.prototype.layout = function (type, interval) {
-            if (type === void 0) { type = codeBase.LayoutConst.HORIZONTAL; }
+        Slider.prototype.layout = function (type, interval) {
+            if (type === void 0) { type = codeBase.Style.HORIZONTAL; }
             if (interval === void 0) { interval = 0; }
             this.type = type;
-            if (type == codeBase.LayoutConst.VERTICAL) {
+            if (type == codeBase.Style.VERTICAL) {
                 var angle = 90;
                 this.skinBar.x = -this.skinValue.height >> 1;
             }
@@ -99,8 +99,8 @@ var codeBase;
             this.skinValue.rotation = angle;
             this.value = this._value;
         };
-        return SliderBar;
-    }(codeBase.ProgressBar));
-    codeBase.SliderBar = SliderBar;
-    __reflect(SliderBar.prototype, "codeBase.SliderBar", ["codeBase.ILayout"]);
+        return Slider;
+    }(codeBase.Progress));
+    codeBase.Slider = Slider;
+    __reflect(Slider.prototype, "codeBase.Slider", ["codeBase.ILayout"]);
 })(codeBase || (codeBase = {}));

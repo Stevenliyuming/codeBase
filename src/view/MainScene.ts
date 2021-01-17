@@ -106,6 +106,7 @@ module codeBase{
 			label.left = 50;
 			label.top = 500;
 			label.showBg = true;
+			console.log("label.width:" + label.width + "  label.height:" + label.height);
 			// label.autoSize = false;
 			// label.paddingLeft = 20;
 			// label.paddingRight = 20;
@@ -119,6 +120,7 @@ module codeBase{
 			s.group_play.addChild(hand);
 			hand.left = 0;
 			hand.top = 0;
+			console.log("hand.width:" + hand.width + "  hand.height:" + hand.height);
 
 			let textInput = new TextInput;
 			textInput.width = 100;
@@ -149,25 +151,43 @@ module codeBase{
 
 			let button = new Button;
 			s.group_play.addChild(button);
-			button.x = 300;
-			button.y = 800;
 			button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
 			button.setClickFunction(()=>{
 				EffectUtil.playEffect(button, 1);
 			}, s);
+			button.x = 0;
+			button.y = s.group_play.height - button.height;
+			console.log("button.width:" + button.width + "  button.height:" + button.height);
 
-			//EffectUtil.rockEffect(button);
+			EffectUtil.breatheEffect(button);
 
+			let bitmap2 = UICreator.createBitmap("A点击_png");
+			s.group_play.addChild(bitmap2);
+			bitmap2.x = 500;
+			bitmap2.y = s.group_play.height - bitmap2.height;
+			EffectUtil.breatheEffect(bitmap2);
+
+			let buttonGroup = new BaseGroup;
 			let buttonSkins:any[] = [RES.getRes("A_png"), RES.getRes("A点击_png")];
 			for(let i=0; i<3; ++i) {
 				button = UICreator.createToggleButton(buttonSkins, "abc", (data:any)=>{
+					console.log(i);
 					console.log(data);
 				}, s);
-				s.group_play.addChild(button);
-				button.x = 1000 + i * (button.width + 20);
-				button.y = 800;
+				buttonGroup.addChild(button);
+				button.x = 0;// + i * (button.width + 20);
+				button.y = 0 + i * (button.height + 20);
 			}
-			//button.setSize(100, 60);
+			// buttonGroup.width = button.width;
+			// buttonGroup.height = button.y + button.height + 50;
+
+			let slider = new Image;
+			slider.texture = RES.getRes("slider_bar_v_png");
+			let scrollBar = new ScrollBar(buttonGroup.width, 500, buttonGroup, Style.VERTICAL, slider, true);
+			scrollBar.x = 1300;
+			scrollBar.y = 300;
+			s.group_play.addChild(scrollBar);
+			scrollBar.setMouseWheelEnable(true);
 
 			let listItemDataArr:any[] = [
 				{
@@ -207,21 +227,28 @@ module codeBase{
 					res: "A点击_png"
 				},
 			];
-			let listGroup = new List;
-			s.group_play.addChild(listGroup);
-			listGroup.x = 800;
-			listGroup.y = 0;
-			listGroup.width = 700;
-			listGroup.height = 600;
-			listGroup.itemRenderer = ListItemRenderer;
-			listGroup.gap = 100;
-			listGroup.line = 2;
-			listGroup.lineGap = 20;
-			//listGroup.layout = Style.HORIZONTAL;
-			listGroup.data = listItemDataArr;
-			listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
-				console.log(ev.data);
-			}, s);
+			// let listGroup = new List;
+			// s.group_play.addChild(listGroup);
+			// listGroup.x = 800;
+			// listGroup.y = 0;
+			// listGroup.width = 700;
+			// listGroup.height = 600;
+			// listGroup.itemRenderer = ListItemRenderer;
+			// listGroup.gap = 100;
+			// listGroup.line = 2;
+			// listGroup.lineGap = 20;
+			// //listGroup.layout = Style.HORIZONTAL;
+			// listGroup.data = listItemDataArr;
+			// listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
+			// 	console.log(ev.data);
+			// }, s);
+
+			let listGroup2 = new ListGroup(322, 600, Style.VERTICAL, 20);
+			listGroup2.renderList(ListItem, listItemDataArr, true);
+			s.group_play.addChild(listGroup2);
+			listGroup2.x = 800;
+			listGroup2.y = 0;
+			listGroup2.scrollBar.sliderBarSkins(UICreator.createBitmap("slider_bar_v_png"), UICreator.createBitmap("slider_bar_h_png"));
 
 			let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
 			// img.anchorX = 0.5;
@@ -229,7 +256,7 @@ module codeBase{
 			// img.width = 300;
 			// img.height = 200;
 			// img.autoSize = false;
-			MoreTouch.start(img, true, 0.5, 5, true);
+			//MoreTouch.start(img, true, 0.5, 5, true);
 
 			let btn:egret.Bitmap = UICreator.createBitmap("A_png");
 			s.group_play.addChild(btn);

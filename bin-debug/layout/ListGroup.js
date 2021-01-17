@@ -15,21 +15,18 @@ var codeBase;
         __extends(ListGroup, _super);
         /**设置宽与高 */
         function ListGroup(w, h, type, interval, itemList) {
-            if (type === void 0) { type = codeBase.LayoutConst.VERTICAL; }
+            if (type === void 0) { type = codeBase.Style.VERTICAL; }
             if (interval === void 0) { interval = 10; }
             if (itemList === void 0) { itemList = []; }
             var _this = _super.call(this) || this;
             _this.itemInterval = 0;
+            _this.items = [];
             var s = _this;
             s.alignType = type;
             s.itemInterval = interval;
-            var contenView = new codeBase.BasicView();
-            s.contentView = contenView;
-            var scrollBar = new codeBase.ScrollBar(w, h, contenView, type);
-            s.addChild(scrollBar);
-            s.scrollBar = scrollBar;
-            // s.addChild(this.contentView);
-            // s.contentView.scrollRect = new egret.Rectangle(0, 0, w, h);
+            s.contentView = new codeBase.BaseGroup();
+            s.scrollBar = new codeBase.ScrollBar(w, h, s.contentView, type);
+            s.addChild(s.scrollBar);
             s.width = w;
             s.height = h;
             s.initItem(itemList);
@@ -40,31 +37,43 @@ var codeBase;
             items.forEach(function (element) {
                 s.addItem(element);
             });
+            s.layout(s.alignType, s.itemInterval);
         };
         ListGroup.prototype.addItem = function (item) {
             var s = this;
-            if (s.getIndexByItem(item) >= 0)
-                return;
-            _super.prototype.addItem.call(this, item);
             s.contentView.addChild(item);
             item.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouch, s);
             item.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouch, s);
-            s.layout(s.alignType, s.itemInterval);
+            s.items.push(item);
         };
         ListGroup.prototype.removeItem = function (item) {
             var s = this;
-            _super.prototype.removeItem.call(this, item);
             if (s.contentView.contains(item)) {
                 s.contentView.removeChild(item);
                 item.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouch, s);
                 item.removeEventListener(egret.TouchEvent.TOUCH_END, s.onTouch, s);
-                if (item instanceof codeBase.LayoutContainer && item["dispose"] && item["dispose"] instanceof Function) {
+                if (item instanceof codeBase.LayoutComponent && item["dispose"] && item["dispose"] instanceof Function) {
                     item.dispose();
                 }
                 s.layout(s.alignType, s.itemInterval);
             }
         };
-        /**设置配置化渲染列表
+        ListGroup.prototype.layout = function (type, interval) {
+            var s = this;
+            if (type == codeBase.Style.VERTICAL) {
+                s.items.forEach(function (element, index) {
+                    element.x = 0;
+                    element.y = 0 + index * (element.height + interval);
+                });
+            }
+            else if (type == codeBase.Style.HORIZONTAL) {
+                s.items.forEach(function (element, index) {
+                    element.x = 0 + index * (element.width + interval);
+                    element.y = 0;
+                });
+            }
+        };
+        /**设置可配置渲染列表
          * renderer 渲染项实现,继承DisplayObjectContainer类，实现IListItemrenderer接口
          * data 渲染数据
          */
@@ -85,6 +94,7 @@ var codeBase;
                     item.init(data[i]);
                     s.addItem(item);
                 }
+                s.layout(s.alignType, s.itemInterval);
             }
         };
         /**设置实例化渲染列表 */
@@ -105,8 +115,7 @@ var codeBase;
             s.items.forEach(function (element) {
                 s.removeItem(element);
             });
-            s.index = 0;
-            //s.scrollBar.reset();
+            s.items.length = 0;
         };
         /**设置是否可以鼠标滚动列表 */
         ListGroup.prototype.setMouseWheelEnable = function (value) {
@@ -143,11 +152,11 @@ var codeBase;
             else {
                 s.itemSelected = item;
             }
-            var param = { item: item, index: s.getIndexByItem(item) };
+            var param = { item: item, index: s.items.indexOf(item) };
             s.dispEvent(codeBase.LayoutEvent.CLICK, param);
         };
         return ListGroup;
-    }(codeBase.BasicComponent));
+    }(codeBase.LayoutComponent));
     codeBase.ListGroup = ListGroup;
-    __reflect(ListGroup.prototype, "codeBase.ListGroup");
+    __reflect(ListGroup.prototype, "codeBase.ListGroup", ["codeBase.ILayout"]);
 })(codeBase || (codeBase = {}));

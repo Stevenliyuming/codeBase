@@ -31,7 +31,7 @@ module codeBase {
 		 * 是否将子代剪切到视区的边界,
 		 * 默认为true,剪切.
 		 */
-		private _clip: boolean = false;
+		private _clip: boolean = true;
 
 		//没有像素点时是否能触发事件
 		private _touchNonePixel: boolean = false;

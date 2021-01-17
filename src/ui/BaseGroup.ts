@@ -8,12 +8,9 @@ module codeBase {
 		private _right: number = NaN;
 		private _horizontalCenter: number = NaN;
 		private _verticalCenter: number = NaN;
-		//相对父级的注册点
-		protected _registryOffsetX: number = 0;
-		protected _registryOffsetY: number = 0;
 		//xy自身原点偏移比例
-		private _anchorX: number = 0;
-		private _anchorY: number = 0;
+		// private _anchorX: number = 0;
+		// private _anchorY: number = 0;
 
 		//是否重新计算位置布局
 		protected _hasInvalidatePosition: boolean = false;
@@ -68,7 +65,7 @@ module codeBase {
 		public set width(w: number) {
 			if (w >= 0) {
 				super.$setWidth(w);
-				if (this._anchorX != 0) this.anchorOffsetX = w * this._anchorX;
+				//if (this._anchorX != 0) this.anchorOffsetX = w * this._anchorX;
 				this.onInvalidatePosition();
 				this.invalidate();
 			}
@@ -85,7 +82,7 @@ module codeBase {
 		public set height(h: number) {
 			if (h >= 0) {
 				super.$setHeight(h);
-				if (this._anchorY != 0) this.anchorOffsetY = h * this._anchorY;
+				//if (this._anchorY != 0) this.anchorOffsetY = h * this._anchorY;
 				this.onInvalidatePosition();
 				this.invalidate();
 			}
@@ -93,16 +90,6 @@ module codeBase {
 
 		public get height(): number {
 			return this.$getHeight();
-		}
-
-		/**
-		 * Moves the component to the specified position.
-		 * @param xpos the x position to move the component
-		 * @param ypos the y position to move the component
-		 */
-		public move(xpos: number, ypos: number): void {
-			this.x = xpos;
-			this.y = ypos;
 		}
 
 		/**
@@ -285,13 +272,9 @@ module codeBase {
 					//console.log("this._verticalEnabled=" + this._verticalEnabled + ", y=" + this._y);
 				}
 
-				if (s._registryOffsetX != 0 || s._registryOffsetY != 0) {
-					s.x = s._registryOffsetX;
-					s.y = s._registryOffsetY;
-				}
-				
-				s.anchorOffsetX = s._anchorX * s.width;
-				s.anchorOffsetY = s._anchorY * s.height;
+				//设置锚点
+				// s.anchorOffsetX = s._anchorX * s.width;
+				// s.anchorOffsetY = s._anchorY * s.height;
 
 				//改变子级布局
 				if (widthChanged || heightChanged) {
@@ -401,10 +384,11 @@ module codeBase {
 
 		public invalidate(): void {
 			//当前无效标识状态_hasInvalidate为flase(即还没有进行延时绘制)并且没有设置延迟绘制标识_drawDelay
-			if (!this._hasInvalidate && !this._drawDelay) {
+			let s = this;
+			if (!s._hasInvalidate && !s._drawDelay) {
 				//console.log("add invalidate draw")
-				this.addEventListener(egret.Event.ENTER_FRAME, this.onInvalidate, this);
-				this._hasInvalidate = true;
+				s.addEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+				s._hasInvalidate = true;
 			}
 		}
 
@@ -412,9 +396,10 @@ module codeBase {
 		 * 重绘通知
 		 */
 		public onInvalidate(event: egret.Event): void {
-			this.draw();
-			this.removeEventListener(egret.Event.ENTER_FRAME, this.onInvalidate, this);
-			this._hasInvalidate = false;
+			let s = this;
+			s.draw();
+			s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+			s._hasInvalidate = false;
 		}
 
 		public draw(): void {
@@ -454,58 +439,30 @@ module codeBase {
 		 * 设置x原点偏移比例
 		 * @param value
 		 */
-		public set anchorX(value: number) {
-			if (this._anchorX != value) {
-				this._anchorX = value;
-				this.onInvalidatePosition();
-			}
-		}
+		// public set anchorX(value: number) {
+		// 	if (this._anchorX != value) {
+		// 		this._anchorX = value;
+		// 		this.onInvalidatePosition();
+		// 	}
+		// }
 
-		public get anchorX(): number {
-			return this._anchorX;
-		}
+		// public get anchorX(): number {
+		// 	return this._anchorX;
+		// }
 
 		/**
 		 * 设置y原点偏移比例
 		 * @param value
 		 */
-		public set anchorY(value: number) {
-			if (this._anchorY != value) {
-				this._anchorY = value;
-				this.onInvalidatePosition();
-			}
-		}
+		// public set anchorY(value: number) {
+		// 	if (this._anchorY != value) {
+		// 		this._anchorY = value;
+		// 		this.onInvalidatePosition();
+		// 	}
+		// }
 
-		public get anchorY(): number {
-			return this._anchorY;
-		}
-
-		/**
-		 * 设置注册点x偏移值
-		 * @param value
-		 */
-		public set registryOffsetX(value: number) {
-			if (this._registryOffsetX != value) {
-				this._registryOffsetX = value;
-				this.onInvalidatePosition();
-			}
-		}
-		public get registryOffsetX(): number {
-			return this._registryOffsetX;
-		}
-
-		/**
-		 * 设置注册点y偏移值
-		 * @param value
-		 */
-		public set registryOffsetY(value: number) {
-			if (this._registryOffsetY != value) {
-				this._registryOffsetY = value;
-				this.onInvalidatePosition();
-			}
-		}
-		public get registryOffsetY(): number {
-			return this._registryOffsetY;
-		}
+		// public get anchorY(): number {
+		// 	return this._anchorY;
+		// }
 	}
 }

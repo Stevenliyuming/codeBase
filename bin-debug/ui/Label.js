@@ -39,6 +39,10 @@ var codeBase;
             _this._paddingRight = 0;
             _this._paddingTop = 0;
             _this._paddingBottom = 0;
+            //if (!this._autoSize) this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
+            _this._textField = new egret.TextField();
+            _this._textField.addEventListener(egret.Event.CHANGE, _this.onTextChange, _this);
+            _this.addChild(_this._textField);
             return _this;
         }
         /**
@@ -47,10 +51,6 @@ var codeBase;
          */
         Label.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
-            //if (!this._autoSize) this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
-            this._textField = new egret.TextField();
-            this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
-            this.addChild(this._textField);
         };
         Label.prototype.initData = function () {
             _super.prototype.initData.call(this);
@@ -87,7 +87,7 @@ var codeBase;
                             this._text = "";
                         }
                     }
-                    this.invalidate();
+                    this.draw();
                 }
             },
             enumerable: true,

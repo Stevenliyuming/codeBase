@@ -1,9 +1,9 @@
 module codeBase{
 	/***进度条 */
-	export class ProgressBar extends LayoutContainer {
+	export class Progress extends LayoutComponent {
 		protected skinBg: DisplayObject;
 		protected skinValue: DisplayObject;
-		protected text: TextField;
+		protected text: Label;
 		protected _value: number = 0;
 		/**
 		 * bg:进度条背景显示对象
@@ -15,7 +15,7 @@ module codeBase{
 			this.setSkin(bg, value);
 			this.addChild(this.skinBg);
 			this.addChild(this.skinValue);
-			this.text = (new TextLabel).textField;
+			this.text = new Label;
 			this.addChild(this.text);
 		}
 
@@ -38,8 +38,8 @@ module codeBase{
 		/**
 		 * 显示进度文本
 		 */
-		public showText(v: string, x: number = -1, y: number = -1): void {
-			this.text.text = v;
+		public showText(text: string, x: number = -1, y: number = -1): void {
+			this.text.text = text;
 			if (x == -1) this.text.x = (this.skinBg.width - this.text.width) >> 1
 			else this.text.x = x;
 			if (y == -1) this.text.y = this.skinBg.height + 5;
