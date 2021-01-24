@@ -13,3 +13,4 @@ var codeBase;
     codeBase.DefaultHeader = DefaultHeader;
     __reflect(DefaultHeader.prototype, "codeBase.DefaultHeader", ["codeBase.IHeader"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=DefaultHeader.js.map

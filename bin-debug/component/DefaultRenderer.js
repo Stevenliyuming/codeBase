@@ -15,31 +15,20 @@ var codeBase;
         function DefaultRenderer() {
             var _this = _super.call(this) || this;
             /**
-             * 对应的ui展现
-             */
-            _this._ui = null;
-            /**
-             * ui资源已准备好
-             * @type {boolean}
-             * @private
-             */
-            _this._uiResReady = false;
-            /**
              * item render所在的list
              * @type {null}
              */
             _this.list = null;
             return _this;
         }
-        DefaultRenderer.prototype.createChildren = function () {
-            _super.prototype.createChildren.call(this);
-            //this.setSize(100, 65);
-        };
         /**
          * 初始化一些必要的逻辑数据
          * 这个方法是在第一次加入stage的时候,做调用
          */
         DefaultRenderer.prototype.initData = function () {
+        };
+        DefaultRenderer.prototype.createChildren = function () {
+            _super.prototype.createChildren.call(this);
         };
         DefaultRenderer.prototype.draw = function () {
             _super.prototype.draw.call(this);
@@ -84,35 +73,10 @@ var codeBase;
             }
         };
         /**
-         * 获取ui层的显示对象
-         * @returns {egret.Sprite}
-         */
-        DefaultRenderer.prototype.getUI = function () {
-            return this._ui;
-        };
-        /**
-         * 设置ui层的显示对象
-         * @param myui
-         */
-        DefaultRenderer.prototype.setUI = function (myui) {
-            this._ui = myui;
-            //console.log("!!!view set ui!! 000 this._ui=" + egret.getQualifiedClassName(this._ui));
-            if (this._ui) {
-                this.addChild(this._ui);
-                this.setSize(this._ui.width, this._ui.height);
-                //console.log("!!!view set ui!! 1111 this._ui=" + egret.getQualifiedClassName(this._ui));
-            }
-            this.showBg = false;
-        };
-        /**
          * 做ui的销毁
          * 一般情况下,需要手动调用销毁
          */
         DefaultRenderer.prototype.destroy = function () {
-            if (this._ui) {
-                //if (this._ui.hasOwnProperty("destroy"))this._ui.destroy();
-                this._ui = null;
-            }
         };
         /**
          * 首次材质下载完成会调用加载一次,刷新UI皮肤显示
@@ -120,15 +84,10 @@ var codeBase;
          * 若view中有逻辑使用到ui的素材,应该在这里做素材的赋值
          */
         DefaultRenderer.prototype.validateNow = function () {
-            //console.log("clz=" + egret.getQualifiedClassName(this)  + ", validateNow!!")
-            if (this._ui && this._ui["validateNow"])
-                this._ui["validateNow"]();
-            this.drawDelay = false;
-            if (this._ui)
-                this._ui.drawDelay = false;
         };
         return DefaultRenderer;
     }(codeBase.Group));
     codeBase.DefaultRenderer = DefaultRenderer;
     __reflect(DefaultRenderer.prototype, "codeBase.DefaultRenderer");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=DefaultRenderer.js.map

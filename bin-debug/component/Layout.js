@@ -238,7 +238,7 @@ var codeBase;
             configurable: true
         });
         ;
-        Object.defineProperty(Color, "bule", {
+        Object.defineProperty(Color, "blue", {
             get: function () { return 0X0000FF; },
             enumerable: true,
             configurable: true
@@ -262,7 +262,7 @@ var codeBase;
             configurable: true
         });
         ;
-        Color.getRandomArray = function (count) {
+        Color.getRandomColors = function (count) {
             var colors = [];
             for (var i = 0; i < count; i++)
                 colors.push(Math.random() * 0XFFFFFF);
@@ -309,7 +309,7 @@ var codeBase;
             configurable: true
         });
         ;
-        Object.defineProperty(Skin, "switchOff", {
+        Object.defineProperty(Skin, "progressBackground", {
             // /**默认点 */
             // public static get pointNormal(): Sprite { return LayoutUI.getCircle(6, Color.black) };
             // public static get pointDown(): Sprite { return LayoutUI.getCircle(6, Color.gray) };
@@ -323,18 +323,8 @@ var codeBase;
             // public static get checkBoxOff(): Sprite { return LayoutUI.getCheckBoxRect(Color.white, Color.white) };
             // public static get checkBoxOn(): Sprite { return LayoutUI.getCheckBoxRect(Color.white, Color.black, 1) };
             /**默认开关 */
-            get: function () { return LayoutUI.getSwitch(Color.skinNormal, Color.white); },
-            enumerable: true,
-            configurable: true
-        });
-        ;
-        Object.defineProperty(Skin, "switchOn", {
-            get: function () { return LayoutUI.getSwitch(Color.skinNormal, Color.white, 1); },
-            enumerable: true,
-            configurable: true
-        });
-        ;
-        Object.defineProperty(Skin, "progressBackground", {
+            // public static get switchOff(): Sprite { return LayoutUI.getSwitch(Color.skinNormal, Color.white) };
+            // public static get switchOn(): Sprite { return LayoutUI.getSwitch(Color.skinNormal, Color.white, 1) };
             /**默认进度条 */
             get: function () { return LayoutUI.getRect(300, 20, Color.skinNormal); },
             enumerable: true,
@@ -675,3 +665,4 @@ var codeBase;
     codeBase.LayoutUI = LayoutUI;
     __reflect(LayoutUI.prototype, "codeBase.LayoutUI");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Layout.js.map

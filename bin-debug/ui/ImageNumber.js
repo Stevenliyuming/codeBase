@@ -132,3 +132,4 @@ var codeBase;
     codeBase.ImageNumber = ImageNumber;
     __reflect(ImageNumber.prototype, "codeBase.ImageNumber");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=ImageNumber.js.map

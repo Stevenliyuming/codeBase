@@ -15,3 +15,4 @@ var codeBase;
     codeBase.Link = Link;
     __reflect(Link.prototype, "codeBase.Link");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Link.js.map

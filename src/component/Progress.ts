@@ -1,6 +1,6 @@
 module codeBase{
 	/***进度条 */
-	export class Progress extends LayoutComponent {
+	export class Progress extends BasicLayout {
 		protected skinBg: DisplayObject;
 		protected skinValue: DisplayObject;
 		protected text: Label;

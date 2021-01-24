@@ -66,7 +66,8 @@ var codeBase;
                 this.text.y = y;
         };
         return Progress;
-    }(codeBase.LayoutComponent));
+    }(codeBase.BasicLayout));
     codeBase.Progress = Progress;
     __reflect(Progress.prototype, "codeBase.Progress");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Progress.js.map

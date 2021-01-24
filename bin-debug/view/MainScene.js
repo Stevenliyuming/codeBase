@@ -78,13 +78,6 @@ var codeBase;
             s.group_play.addChild(group);
             group.showBg = true;
             group.border = true;
-            // let label:Label = new Label;
-            // //label.setSize(800, 50);
-            // label.text = "这是一个具有布局约束的文本";
-            // s.group_play.addChild(label);
-            // label.left = 50;
-            // label.top = 500;
-            // label.showBg = true;
             var label = new codeBase.Label;
             //label.setSize(800, 50);
             label.text = "这是一个具有布局约束的文本";
@@ -103,7 +96,7 @@ var codeBase;
             hand.texture = RES.getRes("comRes_1_json.hand");
             s.group_play.addChild(hand);
             hand.left = 0;
-            hand.top = 0;
+            hand.top = 300;
             console.log("hand.width:" + hand.width + "  hand.height:" + hand.height);
             var textInput = new codeBase.TextInput;
             textInput.width = 100;
@@ -121,7 +114,7 @@ var codeBase;
             textArea.width = 300;
             textArea.height = 300;
             s.group_play.addChild(textArea);
-            textArea.x = 200;
+            textArea.x = 50;
             textArea.y = 100;
             textArea.showBg = true;
             textArea.text = "1月1日";
@@ -134,7 +127,7 @@ var codeBase;
             s.group_play.addChild(button);
             button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
             button.setClickFunction(function () {
-                codeBase.EffectUtil.playEffect(button, 1);
+                codeBase.EffectUtil.playEffect(hand, 1);
             }, s);
             button.x = 0;
             button.y = s.group_play.height - button.height;
@@ -159,13 +152,13 @@ var codeBase;
             for (var i = 0; i < 3; ++i) {
                 _loop_1(i);
             }
-            // buttonGroup.width = button.width;
-            // buttonGroup.height = button.y + button.height + 50;
+            buttonGroup.width = button.width;
+            buttonGroup.height = button.y + button.height + 50;
             var slider = new codeBase.Image;
             slider.texture = RES.getRes("slider_bar_v_png");
-            var scrollBar = new codeBase.ScrollBar(buttonGroup.width, 500, buttonGroup, codeBase.Style.VERTICAL, slider, true);
-            scrollBar.x = 1300;
-            scrollBar.y = 300;
+            var scrollBar = new codeBase.Scroller(buttonGroup.width, 500, buttonGroup, codeBase.Style.VERTICAL, slider, true);
+            scrollBar.x = 1000;
+            scrollBar.y = 600;
             s.group_play.addChild(scrollBar);
             scrollBar.setMouseWheelEnable(true);
             var listItemDataArr = [
@@ -206,28 +199,28 @@ var codeBase;
                     res: "A点击_png"
                 },
             ];
-            // let listGroup = new List;
-            // s.group_play.addChild(listGroup);
-            // listGroup.x = 800;
-            // listGroup.y = 0;
-            // listGroup.width = 700;
-            // listGroup.height = 600;
-            // listGroup.itemRenderer = ListItemRenderer;
-            // listGroup.gap = 100;
-            // listGroup.line = 2;
-            // listGroup.lineGap = 20;
-            // //listGroup.layout = Style.HORIZONTAL;
-            // listGroup.data = listItemDataArr;
-            // listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
-            // 	console.log(ev.data);
-            // }, s);
+            var listGroup = new codeBase.List;
+            s.group_play.addChild(listGroup);
+            listGroup.x = 1300;
+            listGroup.y = 0;
+            listGroup.width = 700;
+            listGroup.height = 600;
+            listGroup.itemRenderer = codeBase.ListItemRenderer;
+            listGroup.gap = 100;
+            listGroup.line = 2;
+            listGroup.lineGap = 20;
+            //listGroup.layout = Style.HORIZONTAL;
+            listGroup.data = listItemDataArr;
+            listGroup.addEventListener(codeBase.List.ITEM_SELECTED, function (ev) {
+                console.log(ev.data);
+            }, s);
             var listGroup2 = new codeBase.ListGroup(322, 600, codeBase.Style.VERTICAL, 20);
-            listGroup2.renderList(codeBase.ListItem, listItemDataArr, true);
+            listGroup2.renderList(codeBase.ListItemRenderer, listItemDataArr, true);
             s.group_play.addChild(listGroup2);
-            listGroup2.x = 800;
+            listGroup2.x = 600;
             listGroup2.y = 0;
             listGroup2.scrollBar.sliderBarSkins(codeBase.UICreator.createBitmap("slider_bar_v_png"), codeBase.UICreator.createBitmap("slider_bar_h_png"));
-            var img = codeBase.UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
+            //let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
             // img.anchorX = 0.5;
             // img.anchorY = 0.5;
             // img.width = 300;
@@ -238,8 +231,9 @@ var codeBase;
             s.group_play.addChild(btn);
             btn.x = 0;
             btn.y = 0;
-            //s.currentDragTarget = img;
-            codeBase.curStage().addEventListener(egret.TouchEvent.TOUCH_MOVE, s.sceneTouchMoveCall, s);
+            for (var i = 0; i < 100; ++i) {
+                console.log(codeBase.MathUtil.random(0, 2));
+            }
             //标题
             // s.titleGroup = new BaseGroup;
             // s.titleGroup.touchEnabled = true;
@@ -450,3 +444,4 @@ var codeBase;
     codeBase.MainScene = MainScene;
     __reflect(MainScene.prototype, "codeBase.MainScene");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=MainScene.js.map

@@ -239,3 +239,4 @@ var codeBase;
     codeBase.DefaultEncoder = DefaultEncoder;
     __reflect(DefaultEncoder.prototype, "codeBase.DefaultEncoder", ["codeBase.IEncoder"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=DefaultEncoder.js.map

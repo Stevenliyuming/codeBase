@@ -8,10 +8,6 @@ module codeBase {
 		private _right: number = NaN;
 		private _horizontalCenter: number = NaN;
 		private _verticalCenter: number = NaN;
-		//xy自身原点偏移比例
-		// private _anchorX: number = 0;
-		// private _anchorY: number = 0;
-
 		//是否重新计算位置布局
 		protected _hasInvalidatePosition: boolean = false;
 		//延迟绘制
@@ -24,8 +20,9 @@ module codeBase {
 
 		public constructor() {
 			super();
-			this._drawDelay = false;
-			this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+			let s = this;
+			s._drawDelay = false;
+			s.addEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
 			//console.log("this._drawDelay=" + this._drawDelay)
 		}
 
@@ -33,12 +30,13 @@ module codeBase {
 		 * 第一次加入场景的时候会运行该方法
 		 */
 		public onAddToStage(event: Event): void {
-			this._isAddedToStage = true;
-			this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
-			this.createChildren();
-			this.initData();
-			this.onInvalidatePosition();
-			this.invalidate();
+			let s = this;
+			s._isAddedToStage = true;
+			s.removeEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
+			s.createChildren();
+			s.initData();
+			s.onInvalidatePosition();
+			s.invalidate();
 			//console.log("222222this._drawDelay=" + this._drawDelay)
 		}
 
@@ -54,7 +52,8 @@ module codeBase {
 		 * 子类覆写该方法,添加UI逻辑
 		 */
 		public createChildren(): void {
-			this.touchEnabled = false;//默认不接受事件
+			let s = this;
+			s.touchEnabled = false;//默认不接受事件
 			//this.setSize(Style.BASEGROUP_WIDTH, Style.BASEGROUP_HEIGHT);
 		}
 
@@ -98,11 +97,12 @@ module codeBase {
 		 * @param h The height of the component.
 		 */
 		public setSize(w: number, h: number): void {
-			if (this.width != w || this.height != h) {
-				this.width = w;
-				this.height = h;
-				this.onInvalidatePosition();
-				this.invalidate();
+			let s = this;
+			if (s.width != w || s.height != h) {
+				s.width = w;
+				s.height = h;
+				s.onInvalidatePosition();
+				s.invalidate();
 			}
 		}
 
@@ -116,9 +116,10 @@ module codeBase {
 		 * 设置顶距
 		 */
 		public set top(value: number) {
-			if (this._top != value) {
-				this._top = value;
-				this.onInvalidatePosition();
+			let s = this;
+			if (s._top != value) {
+				s._top = value;
+				s.onInvalidatePosition();
 			}
 		}
 
@@ -130,9 +131,10 @@ module codeBase {
 		}
 
 		public set left(value: number) {
-			if (this._left != value) {
-				this._left = value;
-				this.onInvalidatePosition();
+			let s = this;
+			if (s._left != value) {
+				s._left = value;
+				s.onInvalidatePosition();
 			}
 		}
 
@@ -143,9 +145,10 @@ module codeBase {
 		 * 设置底距
 		 */
 		public set bottom(value: number) {
-			if (this._bottom != value) {
-				this._bottom = value;
-				this.onInvalidatePosition();
+			let s = this;
+			if (s._bottom != value) {
+				s._bottom = value;
+				s.onInvalidatePosition();
 			}
 		}
 
@@ -156,9 +159,10 @@ module codeBase {
 		 * 设置右距
 		 */
 		public set right(value: number) {
-			if (this._right != value) {
-				this._right = value;
-				this.onInvalidatePosition();
+			let s = this;
+			if (s._right != value) {
+				s._right = value;
+				s.onInvalidatePosition();
 			}
 		}
 
@@ -169,9 +173,10 @@ module codeBase {
 		 * 设置水平居中相对位置
 		 */
 		public set horizontalCenter(value: number) {
-			if (this._horizontalCenter != value) {
-				this._horizontalCenter = value;
-				this.onInvalidatePosition();
+			let s = this;
+			if (s._horizontalCenter != value) {
+				s._horizontalCenter = value;
+				s.onInvalidatePosition();
 			}
 		}
 
@@ -182,9 +187,10 @@ module codeBase {
 		 * 设置竖直居中相对位置
 		 */
 		public set verticalCenter(value: number) {
-			if (this._verticalCenter != value) {
-				this._verticalCenter = value;
-				this.onInvalidatePosition();
+			let s = this;
+			if (s._verticalCenter != value) {
+				s._verticalCenter = value;
+				s.onInvalidatePosition();
 			}
 		}
 
@@ -412,12 +418,13 @@ module codeBase {
 		 */
 		public set drawDelay(delay: boolean) {
 			//console.log("drawDelay=" + delay)
-			this._drawDelay = delay;
-			if (this._drawDelay) {
-				this.removeEventListener(egret.Event.ENTER_FRAME, this.onInvalidate, this);
-				this._hasInvalidate = false;
+			let s = this;
+			s._drawDelay = delay;
+			if (s._drawDelay) {
+				s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+				s._hasInvalidate = false;
 			} else {
-				this.invalidate();
+				s.invalidate();
 			}
 		}
 
@@ -433,36 +440,5 @@ module codeBase {
 		public get isAddedToStage(): boolean {
 			return this._isAddedToStage;
 		}
-
-
-		/**
-		 * 设置x原点偏移比例
-		 * @param value
-		 */
-		// public set anchorX(value: number) {
-		// 	if (this._anchorX != value) {
-		// 		this._anchorX = value;
-		// 		this.onInvalidatePosition();
-		// 	}
-		// }
-
-		// public get anchorX(): number {
-		// 	return this._anchorX;
-		// }
-
-		/**
-		 * 设置y原点偏移比例
-		 * @param value
-		 */
-		// public set anchorY(value: number) {
-		// 	if (this._anchorY != value) {
-		// 		this._anchorY = value;
-		// 		this.onInvalidatePosition();
-		// 	}
-		// }
-
-		// public get anchorY(): number {
-		// 	return this._anchorY;
-		// }
 	}
 }

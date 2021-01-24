@@ -27,10 +27,10 @@ module codeBase{
 		}
 
 		//初始骨骼动画数据
-		public initDragonBonesData(filePath:string, skeName:string) {
-			let skejson:string = filePath + skeName + "_ske.json"; 
-			let texjson:string = filePath + skeName + "_tex.json";
-			let texpng:string =  filePath + skeName + "_tex.png";
+		public initDragonBonesData(skeName:string, filePath:string="") {
+			let skejson:string = filePath + skeName + "_ske_json"; 
+			let texjson:string = filePath + skeName + "_tex_json";
+			let texpng:string =  filePath + skeName + "_tex_png";
 			let skeData = RES.getRes(skejson);
 			//console.log(skeData);
 			let textureData = RES.getRes(texjson);
@@ -51,7 +51,7 @@ module codeBase{
 			let data1 = dragonBones.EgretFactory.factory.getDragonBonesData(skeName);
 			let data2 = dragonBones.EgretFactory.factory.getTextureAtlasData(skeName);
 			if(!data1 ||!data2) {
-				s.initDragonBonesData(filePath, skeName);
+				s.initDragonBonesData(skeName, filePath);
 			}
 			//不需要世界时钟驱动
 			let displayObj = dragonBones.EgretFactory.factory.buildArmatureDisplay(armatureName, dragonBonesName);

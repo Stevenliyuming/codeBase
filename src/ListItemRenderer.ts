@@ -10,8 +10,6 @@ module codeBase {
 		 * 这个方法是在第一次加入stage的时候,做调用
 		 */
 		public initData(): void {
-			let s = this;
-
 		}
 
 		public draw(): void {

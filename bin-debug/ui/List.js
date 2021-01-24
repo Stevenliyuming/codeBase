@@ -63,13 +63,12 @@ var codeBase;
             this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndEvent, this);
             this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchReleaseOutsideEvent, this);
             this._dragBeginPoint = new egret.Point();
-            this.addHandleEvent(codeBase.EventType.RESOURCE_DOWNLOADED, "onMyEventResDownloaded");
             this.touchNonePixel = true;
         };
         /**
          * 添加事件的处理
          * 注意:必须调用MessageControler.addEvent()注册事件名称,否者不会转发到这里
-         * 如果没有对应的的类型在此出现,则改Handle对Event事件到此为止,不再派发,防止造成事件死循环
+         * 如果没有对应的的类型在此出现,则该Handle对Event事件到此为止,不再派发,防止造成事件死循环
          * @param type MyEvent事件的类型
          * @param func  对应的call back function,不包含onEvent前缀
          */
@@ -153,20 +152,21 @@ var codeBase;
          * @param event
          */
         List.prototype.onTouchEndEvent = function (event) {
-            console.log("onTouchEndEvent this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd);
+            var s = this;
+            console.log("onTouchEndEvent this._dataIndexBegin=" + s._dataIndexBegin + ", this._dataIndexEnd=" + s._dataIndexEnd);
             //单击处理
-            if (this._isDragBegin && (!this._isMoveBegin || (this._moveCount < 4 && Math.abs(event.stageX - this._dragBeginPoint.x) < 5 && Math.abs(event.stageY - this._dragBeginPoint.y) < 5))) {
+            if (s._isDragBegin && (!s._isMoveBegin || (s._moveCount < 4 && Math.abs(event.stageX - s._dragBeginPoint.x) < 5 && Math.abs(event.stageY - s._dragBeginPoint.y) < 5))) {
                 //console.log("onTouchEndEvent tap!!");
                 var sp = null;
-                var spPoint = this._itemContainer.globalToLocal(event.stageX, event.stageY);
-                for (var i = 0; i < this._itemContainer.numChildren; i++) {
-                    sp = this._itemContainer.getChildAt(i);
+                var spPoint = s._itemContainer.globalToLocal(event.stageX, event.stageY);
+                for (var i = 0; i < s._itemContainer.numChildren; i++) {
+                    sp = s._itemContainer.getChildAt(i);
                     //spPoint = sp.localToGlobal(0, 0);
                     //if (spPoint.x < event.stageX && spPoint.y < event.stageY && (spPoint.x + sp.width) > event.stageX && (spPoint.y + sp.height) > event.stageY) 
                     //if(sp.hitTestPoint(event.stageX, event.stageY))
                     if (sp.x < spPoint.x && sp.y < spPoint.y && (sp.x + sp.width) > spPoint.x && (sp.y + sp.height) > spPoint.y) {
                         try {
-                            this.selected = sp["_data"];
+                            s.selected = sp["_data"];
                             console.log(sp["dataIndex"]);
                             //console.log("list.selected=" + JSON.stringify(sp["_data"]));
                             break;
@@ -175,25 +175,25 @@ var codeBase;
                         }
                     }
                 }
-                this._isDragBegin = false;
-                this._isMoveBegin = false;
+                s._isDragBegin = false;
+                s._isMoveBegin = false;
                 return;
             }
-            this._isDragBegin = false;
-            this._isMoveBegin = false;
+            s._isDragBegin = false;
+            s._isMoveBegin = false;
             //console.log("000timer=" + this._lastTimeNum + ", gap.value=" + this._autoScrollGap);
             //Debug.log = "timer=" + this._lastTimeNum;
-            if (this._lastTimeNum < 40 && ((this._dataIndexBegin > 0 && this._autoScrollGap > 0) || (this._itemDatas && this._dataIndexEnd < this._itemDatas.length - 1 && this._autoScrollGap < 0))) {
+            if (s._lastTimeNum < 40 && ((s._dataIndexBegin > 0 && s._autoScrollGap > 0) || (s._itemDatas && s._dataIndexEnd < s._itemDatas.length - 1 && s._autoScrollGap < 0))) {
                 //console.log("111timer=" + timer);
                 //时间越短,倍数越大
                 //Debug.log = "_autoScrollGap=" + this._autoScrollGap + ", caculte=" + (this._autoScrollGap / this._lastTimeNum);
-                this._autoScrollGap = (this._autoScrollGap / this._lastTimeNum) * 10;
+                s._autoScrollGap = (s._autoScrollGap / s._lastTimeNum) * 10;
                 //启用加速滑动的方式
-                codeBase.HeartBeat.addListener(this, this.onAutoScroll);
+                codeBase.HeartBeat.addListener(s, s.onAutoScroll);
                 return;
             }
             //this.checkUIFreeback();
-            this.checkBounceBack();
+            s.checkBounceBack();
         };
         List.prototype.onAutoScroll = function () {
             if (this._direction == codeBase.Style.VERTICAL) {
@@ -385,8 +385,9 @@ var codeBase;
          * @param topPlace true:添加在最前面,添加在最后面
          */
         List.prototype.addUIItem = function (dataIndex, topPlace) {
+            var s = this;
             //console.log("addUIItem dataIndex=" + dataIndex + ", topPlace=" + topPlace + ", _dataIndexEnd=" + this._dataIndexEnd + ", _dataIndexBegin=" + this._dataIndexBegin);
-            if (!this._itemDatas || dataIndex < 0 || dataIndex >= this._itemDatas.length) {
+            if (!s._itemDatas || dataIndex < 0 || dataIndex >= s._itemDatas.length) {
                 return 0;
             }
             var indexAdd = 0;
@@ -395,66 +396,65 @@ var codeBase;
             //console.log("addUIItem 1111");
             var yPos = 0;
             var xPos = 0;
-            while (indexAdd < this._line) {
-                if (!this._itemDatas || dataIndex < 0 || dataIndex >= this._itemDatas.length)
+            while (indexAdd < s._line) {
+                if (!s._itemDatas || dataIndex < 0 || dataIndex >= s._itemDatas.length)
                     break;
-                var displayItemUI = codeBase.ObjectPool.getByClass(this._itemRenderer, "list_" + this.name);
+                var displayItemUI = codeBase.ObjectPool.getByClass(s._itemRenderer, "list_" + s.name);
                 //初始化显示项
                 try {
-                    displayItemUI["data"] = this._itemDatas[dataIndex]; //给显示项绑定数据
-                    displayItemUI["list"] = this; //给显示项绑定所属列表
-                    displayItemUI["dataIndex"] = dataIndex;
-                    if (displayItemUI && displayItemUI["validateNow"])
-                        displayItemUI["validateNow"]();
+                    displayItemUI.data = s._itemDatas[dataIndex]; //给显示项绑定数据
+                    displayItemUI.dataIndex = dataIndex; //数据项下标
+                    displayItemUI.list = s; //给显示项绑定所属列表
+                    displayItemUI.validateNow();
                 }
                 catch (e) {
                 }
-                if (this._autoSize) {
-                    if (this._direction == codeBase.Style.VERTICAL) {
-                        displayItemUI.width = (this._itemContainer.width - (this._line - 1) * this._gap) / this._line;
+                if (s._autoSize) {
+                    if (s._direction == codeBase.Style.VERTICAL) {
+                        displayItemUI.width = (s._itemContainer.width - (s._line - 1) * s._gap) / s._line;
                     }
                     else {
-                        displayItemUI.height = (this._itemContainer.height - (this._line - 1) * this._gap) / this._line;
+                        displayItemUI.height = (s._itemContainer.height - (s._line - 1) * s._gap) / s._line;
                     }
                 }
-                if (this._direction == codeBase.Style.VERTICAL) {
-                    xPos = (displayItemUI.width + this._lineGap) * indexAdd;
-                    if (this._itemContainer.numChildren > 0 && indexAdd == 0) {
+                if (s._direction == codeBase.Style.VERTICAL) {
+                    xPos = (displayItemUI.width + s._lineGap) * indexAdd;
+                    if (s._itemContainer.numChildren > 0 && indexAdd == 0) {
                         if (topPlace) {
-                            yPos = this._itemContainer.getChildAt(0).y;
-                            yPos -= (this._gap + displayItemUI.height);
+                            yPos = s._itemContainer.getChildAt(0).y;
+                            yPos -= (s._gap + displayItemUI.height);
                             //console.log("000=" + yPos + ", indexAdd=" + indexAdd);
                         }
                         else {
-                            yPos = this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).y;
-                            yPos += (this._gap + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).height) * (indexAdd + 1);
+                            yPos = s._itemContainer.getChildAt(s._itemContainer.numChildren - 1).y;
+                            yPos += (s._gap + s._itemContainer.getChildAt(s._itemContainer.numChildren - 1).height) * (indexAdd + 1);
                             //console.log("111=" + yPos + ", indexAdd=" + indexAdd);
                         }
                     }
-                    if (yPos > this._itemContainer.height || yPos < -displayItemUI.height) {
-                        this.removeRender(displayItemUI);
+                    if (yPos > s._itemContainer.height || yPos < -displayItemUI.height) {
+                        s.removeRender(displayItemUI);
                         return indexAdd;
                     }
                     displayItemUI.x = xPos;
                     displayItemUI.y = yPos;
                 }
                 else {
-                    yPos = (displayItemUI.height + this._lineGap) * indexAdd;
+                    yPos = (displayItemUI.height + s._lineGap) * indexAdd;
                     //console.log("yPos=" + yPos + ", indexAdd=" + indexAdd);
-                    if (this._itemContainer.numChildren > 0 && indexAdd == 0) {
+                    if (s._itemContainer.numChildren > 0 && indexAdd == 0) {
                         if (topPlace) {
-                            xPos = this._itemContainer.getChildAt(0).x;
-                            xPos = xPos - (this._gap + displayItemUI.width);
+                            xPos = s._itemContainer.getChildAt(0).x;
+                            xPos = xPos - (s._gap + displayItemUI.width);
                             //console.log("000=" + xPos + ", indexAdd=" + indexAdd);
                         }
                         else {
-                            xPos = this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).x;
-                            xPos += (this._gap + this._itemContainer.getChildAt(this._itemContainer.numChildren - 1).width) * (indexAdd + 1);
+                            xPos = s._itemContainer.getChildAt(s._itemContainer.numChildren - 1).x;
+                            xPos += (s._gap + s._itemContainer.getChildAt(s._itemContainer.numChildren - 1).width) * (indexAdd + 1);
                             //console.log("111=" + xPos + ", indexAdd=" + indexAdd);
                         }
                     }
-                    if (xPos > this._itemContainer.width || xPos < -displayItemUI.width) {
-                        this.removeRender(displayItemUI);
+                    if (xPos > s._itemContainer.width || xPos < -displayItemUI.width) {
+                        s.removeRender(displayItemUI);
                         return indexAdd;
                     }
                     displayItemUI.x = xPos;
@@ -462,21 +462,21 @@ var codeBase;
                 }
                 //往容器中添加显示项
                 if (topPlace) {
-                    this._itemContainer.addChildAt(displayItemUI, 0);
+                    s._itemContainer.addChildAt(displayItemUI, 0);
                 }
                 else {
-                    this._itemContainer.addChild(displayItemUI);
+                    s._itemContainer.addChild(displayItemUI);
                 }
-                this._dataIndexToRender["" + dataIndex] = displayItemUI;
+                s._dataIndexToRender["" + dataIndex] = displayItemUI;
                 indexAdd++;
                 //console.log("addUIItem indexAdd=" + indexAdd + ", dataIndex=" + dataIndex + ", x=" + xPos + ", y=" + yPos + ", _dataIndexEnd=" + this._dataIndexEnd + ", _dataIndexBegin=" + this._dataIndexBegin);
                 dataIndex++;
             }
             //已经到底,没有数据了
-            if (dataIndex >= this._itemDatas.length && indexAdd > 0) {
+            if (dataIndex >= s._itemDatas.length && indexAdd > 0) {
                 //console.log("list.data.end.call");
-                if (this._data_end_func_call)
-                    this._data_end_func_call.call(this._data_end_func_this);
+                if (s._data_end_func_call)
+                    s._data_end_func_call.call(s._data_end_func_this);
             }
             return indexAdd;
         };
@@ -514,34 +514,6 @@ var codeBase;
         Object.defineProperty(List.prototype, "data", {
             set: function (value) {
                 this._data = value;
-                // this._itemDatas = null;
-                // this._dataIndexToRender = {};
-                // this.setItemContainerSize();
-                // //清空显示
-                // var displayItemUI: egret.DisplayObject = null;
-                // while (this._itemContainer.numChildren > 0) {
-                //     displayItemUI = this._itemContainer.removeChildAt(0);
-                //     if(displayItemUI instanceof this._itemRenderer) {
-                //         this.removeRender(displayItemUI);
-                //     }
-                // }
-                // if (this._data instanceof Array) {
-                //     //进行首次填充
-                //     this._itemDatas = <Array<any>>this._data;
-                //     //console.log("set data.length=" + this._itemDatas.length + ", data=" + this._itemDatas);
-                //     if (this._itemDatas.length == 0) return;
-                //     this._dataIndexBegin = 0;
-                //     var placeValue: number = 0;//占据的位置
-                //     var addNum: number = this.addUIItem(this._dataIndexBegin, false);
-                //     this._dataIndexEnd = addNum;
-                //     while (addNum != 0 && this._dataIndexEnd < this._itemDatas.length) {
-                //         addNum = this.addUIItem(this._dataIndexEnd, false);
-                //         this._dataIndexEnd += addNum;
-                //         //console.log("dataIndexEnd=" + this._dataIndexEnd + ", addNum=" + addNum);
-                //     }
-                //     this._dataIndexEnd--;//起始是从0开始,减去一个下标
-                //     //console.log("setData dataIndexBegin=" + this._dataIndexBegin + ", dataIndexEnd=" + this._dataIndexEnd)
-                // }
             },
             enumerable: true,
             configurable: true
@@ -812,3 +784,4 @@ var codeBase;
     codeBase.List = List;
     __reflect(List.prototype, "codeBase.List");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=List.js.map

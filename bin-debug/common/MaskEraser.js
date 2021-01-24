@@ -164,3 +164,4 @@ var codeBase;
     codeBase.MaskEraser = MaskEraser;
     __reflect(MaskEraser.prototype, "codeBase.MaskEraser");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=MaskEraser.js.map

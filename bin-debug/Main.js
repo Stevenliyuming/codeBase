@@ -72,12 +72,29 @@ var Main = (function (_super) {
         this.loadingView = new codeBase.LoadingUI();
         codeBase.SceneManager.instance.showScene(this.loadingView);
         codeBase.EventManager.addEventListener(codeBase.EventType.LOADINGUI_FINISH, function () {
-            _this.loadResource();
-            _this.createGameScene();
+            _this.loadRes();
+            //this.loadResource()
+            //this.createGameScene();
         }, this);
         // await platform.login();
         // const userInfo = await platform.getUserInfo();
         // console.log(userInfo);
+    };
+    Main.prototype.loadRes = function () {
+        var _this = this;
+        codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, function () {
+            codeBase.ResManager.loadGroups(["preload"], function () {
+                _this.createGameScene();
+            }, _this);
+        }, this);
+        // await RES.loadConfig("resource/default.res.json", "resource/");
+        // codeBase.ResManager.loadGroups(["preload"], ()=>{
+        //     this.createGameScene();
+        // }, this);
+        //RES.getResByUrl("resource/default.res.json", this.onComplete, this, RES.ResourceItem.TYPE_JSON);
+    };
+    Main.prototype.onComplete = function (event) {
+        console.log(event);
     };
     Main.prototype.loadResource = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -114,3 +131,4 @@ var Main = (function (_super) {
     return Main;
 }(egret.DisplayObjectContainer));
 __reflect(Main.prototype, "Main");
+//# sourceMappingURL=Main.js.map

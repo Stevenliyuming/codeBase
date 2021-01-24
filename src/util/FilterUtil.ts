@@ -52,15 +52,8 @@ module codeBase{
 		 * alpha:透明度 默认值1
 		 */
 		public setDisplayColor(display:egret.DisplayObject, color: number, alpha:number=1) {
-			// 将16进制颜色分割成rgb值
-			let spliceColor = (color) => {
-				let result = { r: -1, g: -1, b: -1 };
-				result.b = color % 256;
-				result.g = Math.floor((color / 256)) % 256;
-				result.r = Math.floor((color / 256) / 256);
-				return result;
-			}
-			let result = spliceColor(color);
+			let s = this;
+			let result = s.spliceColor(color);
 			//console.log(result);
 			let colorMatrix = [
 				1, 0, 0, 0, 40,
@@ -74,6 +67,32 @@ module codeBase{
 			colorMatrix[18] = alpha;
 			let colorFilter = new egret.ColorMatrixFilter(colorMatrix);
 			display.filters = [colorFilter];
+		}
+
+		/**
+		 *将16进制颜色分割成rgb值
+		 */
+		public spliceColor(color) {
+			let result = { r: -1, g: -1, b: -1 };
+			result.b = color % 256;
+			result.g = Math.floor((color / 256)) % 256;
+			result.r = Math.floor((color / 256) / 256);
+			return result;
+		}
+
+		/**
+		 * 转换10进制rbg颜色转换到16进制
+		 */
+		public convertNumberToHex(r:number, g:number, b:number) {
+			var strHex:string = "";
+			var r1 = r.toString(16);
+			if(r1.length == 1 || r1 === "0") r1 = "0" + r1;
+			var g1 = g.toString(16);
+			if(g1.length == 1 || g1 === "0") g1 = "0" + g1;
+			var b1 = b.toString(16);
+			if(b1.length == 1 || b1 === "0") b1 = "0" + b1;
+			strHex = "0x" + r1 + g1 + b1;
+			return parseInt(strHex);
 		}
 	}
 }

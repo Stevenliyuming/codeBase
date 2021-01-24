@@ -565,3 +565,4 @@ var codeBase;
     }(codeBase.BaseGroup));
     __reflect(ScrollItemGroup.prototype, "ScrollItemGroup");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=ScrollGroup.js.map

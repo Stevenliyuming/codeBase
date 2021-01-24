@@ -20,7 +20,6 @@ var codeBase;
          * 这个方法是在第一次加入stage的时候,做调用
          */
         ListItemRenderer.prototype.initData = function () {
-            var s = this;
         };
         ListItemRenderer.prototype.draw = function () {
             //super.draw();
@@ -58,3 +57,4 @@ var codeBase;
     codeBase.ListItemRenderer = ListItemRenderer;
     __reflect(ListItemRenderer.prototype, "codeBase.ListItemRenderer");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=ListItemRenderer.js.map

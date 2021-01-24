@@ -425,3 +425,4 @@ var codeBase;
     codeBase.VideoBox = VideoBox;
     __reflect(VideoBox.prototype, "codeBase.VideoBox");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=VideoBox.js.map

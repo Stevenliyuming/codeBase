@@ -50,7 +50,6 @@ var codeBase;
             this.addChild(this._itemContainer);
             this._itemContainer.showBg = false;
             this._itemContainer.setSize(this.width, this.height);
-            this.addHandleEvent(codeBase.EventType.RESOURCE_DOWNLOADED, "onMyEventResDownloaded");
         };
         /**
          * 添加事件的处理
@@ -452,3 +451,4 @@ var codeBase;
     codeBase.ListAd = ListAd;
     __reflect(ListAd.prototype, "codeBase.ListAd");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=ListAd.js.map

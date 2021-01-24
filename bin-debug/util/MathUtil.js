@@ -6,15 +6,33 @@ var codeBase;
     var MathUtil = (function () {
         function MathUtil() {
         }
-        /**范围内获取随机数*/
+        /**范围内获取随机数[min, max)
+         * min:最小值
+         * max:最大值
+         * fixedNum:保留的小数位
+        */
         MathUtil.random = function (min, max, fixedNum) {
             if (fixedNum === void 0) { fixedNum = 0; }
-            var rangeScale = max - min;
+            if (min >= max)
+                return 0;
+            var rangeNum = max - min;
             var randomNum = Math.random();
-            var num = min + randomNum * rangeScale;
-            return parseFloat(num.toFixed(fixedNum));
-            //return (min + Math.round(Rand * Range));
-            //return (min + Math.round(Rand * Range));
+            var num = min + randomNum * rangeNum;
+            // console.log(num);
+            // var numStr = num.toFixed(fixedNum);//toFixed()函数括号里的值就是要保留的位数，值在0-20之间，在保留一位的同时也会进行四舍五入的计算;math.round()：用于对数进行四舍五入
+            // num = parseFloat(numStr);
+            // if(fixedNum == 0 && num == max) {//解决四舍五入问题
+            // 	num -= 1;
+            // }
+            // return num;
+            return MathUtil.toFixed(num, fixedNum);
+        };
+        /**
+         * 取数字固定的小数点位数
+         */
+        MathUtil.toFixed = function (n, fixed) {
+            // return ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed);
+            return ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed);
         };
         /**
          * obj:需要修改角度的物体
@@ -37,8 +55,9 @@ var codeBase;
         };
         /**
          * 面向目标物体方向
+         * target:目标物体
          */
-        MathUtil.lookTo = function (obj, target) {
+        MathUtil.lookToObject = function (obj, target) {
             //let p1 = obj.localToGlobal();
             var p2 = target.localToGlobal(target.anchorOffsetX, target.anchorOffsetY);
             p2 = obj.parent.globalToLocal(p2.x, p2.y);
@@ -47,7 +66,7 @@ var codeBase;
             obj.rotation = angle + 90;
         };
         /**
-         * 面向px、py方向
+         * 面向px、py代表的点方向
          * px、py需要转换成全局坐标
          */
         MathUtil.lookToPosition = function (obj, px, py) {
@@ -126,7 +145,7 @@ var codeBase;
          */
         MathUtil.speedXY = function (source, target, walkSpeed) {
             var diC = egret.Point.distance(source, target);
-            var frams = Math.floor(codeBase.Global.FRAME_RATE * diC / walkSpeed) - 1;
+            var frams = Math.floor(codeBase.GlobalSetting.FRAME_RATE * diC / walkSpeed) - 1;
             frams = frams <= 0 ? 1 : frams;
             var ydC = target.y - source.y;
             var xdC = target.x - source.x;
@@ -146,3 +165,4 @@ var codeBase;
     codeBase.MathUtil = MathUtil;
     __reflect(MathUtil.prototype, "codeBase.MathUtil");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=MathUtil.js.map

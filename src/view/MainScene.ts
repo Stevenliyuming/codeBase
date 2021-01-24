@@ -91,14 +91,6 @@ module codeBase{
 			group.showBg = true;
 			group.border = true;
 
-			// let label:Label = new Label;
-			// //label.setSize(800, 50);
-			// label.text = "这是一个具有布局约束的文本";
-			// s.group_play.addChild(label);
-			// label.left = 50;
-			// label.top = 500;
-			// label.showBg = true;
-
 			let label:Label = new Label;
 			//label.setSize(800, 50);
 			label.text = "这是一个具有布局约束的文本";
@@ -110,7 +102,6 @@ module codeBase{
 			// label.autoSize = false;
 			// label.paddingLeft = 20;
 			// label.paddingRight = 20;
-
 			egret.setTimeout(()=>{
 				label.text = "一个具有布局约束的文本00000000000";
 			}, s, 100);
@@ -119,7 +110,7 @@ module codeBase{
 			hand.texture = RES.getRes("comRes_1_json.hand");
 			s.group_play.addChild(hand);
 			hand.left = 0;
-			hand.top = 0;
+			hand.top = 300;
 			console.log("hand.width:" + hand.width + "  hand.height:" + hand.height);
 
 			let textInput = new TextInput;
@@ -139,7 +130,7 @@ module codeBase{
 			textArea.width = 300;
 			textArea.height = 300;
 			s.group_play.addChild(textArea);
-			textArea.x = 200;
+			textArea.x = 50;
 			textArea.y = 100;
 			textArea.showBg = true;
 			textArea.text = "1月1日"
@@ -153,12 +144,11 @@ module codeBase{
 			s.group_play.addChild(button);
 			button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
 			button.setClickFunction(()=>{
-				EffectUtil.playEffect(button, 1);
+				EffectUtil.playEffect(hand, 1);
 			}, s);
 			button.x = 0;
 			button.y = s.group_play.height - button.height;
 			console.log("button.width:" + button.width + "  button.height:" + button.height);
-
 			EffectUtil.breatheEffect(button);
 
 			let bitmap2 = UICreator.createBitmap("A点击_png");
@@ -178,14 +168,14 @@ module codeBase{
 				button.x = 0;// + i * (button.width + 20);
 				button.y = 0 + i * (button.height + 20);
 			}
-			// buttonGroup.width = button.width;
-			// buttonGroup.height = button.y + button.height + 50;
+			buttonGroup.width = button.width;
+			buttonGroup.height = button.y + button.height + 50;
 
 			let slider = new Image;
 			slider.texture = RES.getRes("slider_bar_v_png");
-			let scrollBar = new ScrollBar(buttonGroup.width, 500, buttonGroup, Style.VERTICAL, slider, true);
-			scrollBar.x = 1300;
-			scrollBar.y = 300;
+			let scrollBar = new Scroller(buttonGroup.width, 500, buttonGroup, Style.VERTICAL, slider, true);
+			scrollBar.x = 1000;
+			scrollBar.y = 600;
 			s.group_play.addChild(scrollBar);
 			scrollBar.setMouseWheelEnable(true);
 
@@ -227,30 +217,30 @@ module codeBase{
 					res: "A点击_png"
 				},
 			];
-			// let listGroup = new List;
-			// s.group_play.addChild(listGroup);
-			// listGroup.x = 800;
-			// listGroup.y = 0;
-			// listGroup.width = 700;
-			// listGroup.height = 600;
-			// listGroup.itemRenderer = ListItemRenderer;
-			// listGroup.gap = 100;
-			// listGroup.line = 2;
-			// listGroup.lineGap = 20;
-			// //listGroup.layout = Style.HORIZONTAL;
-			// listGroup.data = listItemDataArr;
-			// listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
-			// 	console.log(ev.data);
-			// }, s);
+			let listGroup = new List;
+			s.group_play.addChild(listGroup);
+			listGroup.x = 1300;
+			listGroup.y = 0;
+			listGroup.width = 700;
+			listGroup.height = 600;
+			listGroup.itemRenderer = ListItemRenderer;
+			listGroup.gap = 100;
+			listGroup.line = 2;
+			listGroup.lineGap = 20;
+			//listGroup.layout = Style.HORIZONTAL;
+			listGroup.data = listItemDataArr;
+			listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
+				console.log(ev.data);
+			}, s);
 
 			let listGroup2 = new ListGroup(322, 600, Style.VERTICAL, 20);
-			listGroup2.renderList(ListItem, listItemDataArr, true);
+			listGroup2.renderList(ListItemRenderer, listItemDataArr, true);
 			s.group_play.addChild(listGroup2);
-			listGroup2.x = 800;
+			listGroup2.x = 600;
 			listGroup2.y = 0;
 			listGroup2.scrollBar.sliderBarSkins(UICreator.createBitmap("slider_bar_v_png"), UICreator.createBitmap("slider_bar_h_png"));
 
-			let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
+			//let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
 			// img.anchorX = 0.5;
 			// img.anchorY = 0.5;
 			// img.width = 300;
@@ -262,8 +252,10 @@ module codeBase{
 			s.group_play.addChild(btn);
 			btn.x = 0;
 			btn.y = 0;
-			//s.currentDragTarget = img;
-			curStage().addEventListener(egret.TouchEvent.TOUCH_MOVE, s.sceneTouchMoveCall, s);
+
+			for(let i=0; i<100; ++i) {
+				console.log(MathUtil.random(0, 2));
+			}
 
 			//标题
 			// s.titleGroup = new BaseGroup;

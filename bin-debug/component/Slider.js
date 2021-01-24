@@ -104,3 +104,4 @@ var codeBase;
     codeBase.Slider = Slider;
     __reflect(Slider.prototype, "codeBase.Slider", ["codeBase.ILayout"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Slider.js.map

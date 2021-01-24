@@ -98,11 +98,11 @@ module codeBase{
 		public static get gray(): number { return 0X666666 };
 		public static get red(): number { return 0XFF0000 };
 		public static get green(): number { return 0X00FF00 };
-		public static get bule(): number { return 0X0000FF };
+		public static get blue(): number { return 0X0000FF };
 		public static get skinNormal(): number { return 0X15191C };
 		public static get skinDown(): number { return 0X999999 };
 		public static get titleBackground(): number { return 0X20262B };
-		public static getRandomArray(count: number): number[] {
+		public static getRandomColors(count: number): number[] {
 			var colors: number[] = [];
 			for (var i: number = 0; i < count; i++) colors.push(Math.random() * 0XFFFFFF);
 			return colors;
@@ -140,8 +140,8 @@ module codeBase{
 		// public static get checkBoxOff(): Sprite { return LayoutUI.getCheckBoxRect(Color.white, Color.white) };
 		// public static get checkBoxOn(): Sprite { return LayoutUI.getCheckBoxRect(Color.white, Color.black, 1) };
 		/**默认开关 */
-		public static get switchOff(): Sprite { return LayoutUI.getSwitch(Color.skinNormal, Color.white) };
-		public static get switchOn(): Sprite { return LayoutUI.getSwitch(Color.skinNormal, Color.white, 1) };
+		// public static get switchOff(): Sprite { return LayoutUI.getSwitch(Color.skinNormal, Color.white) };
+		// public static get switchOn(): Sprite { return LayoutUI.getSwitch(Color.skinNormal, Color.white, 1) };
 		/**默认进度条 */
 		public static get progressBackground(): Sprite { return LayoutUI.getRect(300, 20, Color.skinNormal); }
 		public static get progressValue(): Sprite { return LayoutUI.getRect(300, 20, Color.skinDown); }

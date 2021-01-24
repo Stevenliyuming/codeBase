@@ -42,11 +42,6 @@ var codeBase;
             }
             s.stage = egret.MainContext.instance.stage;
             mouse.enable(s.stage);
-            s.stageW = s.stage.stageWidth;
-            s.stageH = s.stage.stageHeight;
-            s.stageCenterW = s.stage.stageWidth * 0.5;
-            s.stageCenterH = s.stage.stageHeight * 0.5;
-            //console.log("stageWidth:" +s.stageW + "     stageHeight:" + s.stageH);
             s.registerMouseMove = false;
             s.modulePath = ""; //UIControl.getInstance().curUIIDPath;
         };
@@ -135,8 +130,8 @@ var codeBase;
             s.documentEventListenerArr.length = 0;
         };
         /**
-         * target:添加移动监听的对象 IPad下不使用该参数
          * moveCallFun:返回px,py两个舞台全局坐标 兼容PC和移动端跟随鼠标移动的需求
+         * )target:添加移动监听的对象 IPad下不使用该参数
          */
         GameUtil.prototype.addMouseMoveListener = function (moveCallFun, funObj, _target) {
             if (_target === void 0) { _target = null; }
@@ -150,7 +145,8 @@ var codeBase;
                 s.registerMouseMove = true;
                 if (!codeBase.isMobile()) {
                     s.onMove = s.onMove.bind(s);
-                    s.canvas.addEventListener('mousemove', s.onMove);
+                    //s.canvas.addEventListener('mousemove', s.onMove);
+                    s.addCanvasEventListener("mousemove", s.onMove, s);
                 }
                 else {
                     s.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouchMove, s);
@@ -163,7 +159,8 @@ var codeBase;
             if (s.registerMouseMove) {
                 s.registerMouseMove = false;
                 if (!codeBase.isMobile()) {
-                    s.canvas.removeEventListener('mousemove', s.onMove);
+                    //s.canvas.removeEventListener('mousemove', s.onMove);
+                    s.removeCanvasEventListener("mousemove", s.onMove, s);
                 }
                 else {
                     s.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouchMove, s);
@@ -539,3 +536,4 @@ var codeBase;
     codeBase.GameUtil = GameUtil;
     __reflect(GameUtil.prototype, "codeBase.GameUtil");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=GameUtil.js.map

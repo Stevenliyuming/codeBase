@@ -88,3 +88,4 @@ var codeBase;
     codeBase.Loader = Loader;
     __reflect(Loader.prototype, "codeBase.Loader");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Loader.js.map

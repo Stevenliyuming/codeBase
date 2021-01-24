@@ -46,3 +46,4 @@ var codeBase;
     codeBase.LoadingUI = LoadingUI;
     __reflect(LoadingUI.prototype, "codeBase.LoadingUI", ["RES.PromiseTaskReporter"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=LoadingUI.js.map

@@ -46,49 +46,6 @@ var codeBase;
             return GlobalSetting.RUNTIME == GlobalSetting.RUNTIME_NATIVE;
         };
         /**
-         * 判断是不是微信
-         * @returns {boolean}
-         */
-        GlobalSetting.prototype.isWeiXin = function () {
-            var ua = navigator.userAgent.toString();
-            var str = ua.match(/MicroMessenger/i);
-            if (str == "MicroMessenger") {
-                return true;
-            }
-            else {
-                return false;
-            }
-            //var bet = 1;//iphone系列比较特殊，尺寸需要翻倍
-            //switch (wid) {
-            //    case 320://iphone4\5
-            //        bet = 2;
-            //        break;
-            //    case 375://iphone 6
-            //        bet = 2;
-            //        break;
-            //    case 414://iphone 6+
-            //        bet = 3;
-            //        break;
-            //    default:
-            //        bet = 1;
-            //        break;
-            //}
-            //wid *= bet; hei *= bet;
-        };
-        /**
-         * 在显示view的时候,按照设计的尺寸显示,不做view宽高的改变,采用egret自带的scale策略
-         */
-        GlobalSetting.DISPLAY_VIEW_EGRET = "egret";
-        /**
-         * 在显示view的时候会自动把view页面设置成当前最大显示宽高
-         */
-        GlobalSetting.DISPLAY_VIEW_EASYGAME = "easygame";
-        /**
-         * 显示模式设置
-         * @type {string}
-         */
-        GlobalSetting.DISPLAY_MODEL = GlobalSetting.DISPLAY_VIEW_EGRET;
-        /**
          * 开发模式开关
          * 打开开发模式,logger会记录打印信息到debug窗口
          * @type {boolean}
@@ -224,3 +181,4 @@ var codeBase;
     codeBase.GlobalSetting = GlobalSetting;
     __reflect(GlobalSetting.prototype, "codeBase.GlobalSetting");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=GlobalSetting.js.map

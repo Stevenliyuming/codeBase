@@ -304,3 +304,4 @@ var codeBase;
     codeBase.WebSocket = WebSocket;
     __reflect(WebSocket.prototype, "codeBase.WebSocket");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=WebSocket.js.map

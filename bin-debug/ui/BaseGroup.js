@@ -22,9 +22,6 @@ var codeBase;
             _this._right = NaN;
             _this._horizontalCenter = NaN;
             _this._verticalCenter = NaN;
-            //xy自身原点偏移比例
-            // private _anchorX: number = 0;
-            // private _anchorY: number = 0;
             //是否重新计算位置布局
             _this._hasInvalidatePosition = false;
             //延迟绘制
@@ -33,8 +30,9 @@ var codeBase;
             _this._hasInvalidate = false;
             _this._data = null; //可携带的数据
             _this._enabled = true; //不可用状态
-            _this._drawDelay = false;
-            _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
+            var s = _this;
+            s._drawDelay = false;
+            s.addEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
             return _this;
             //console.log("this._drawDelay=" + this._drawDelay)
         }
@@ -42,12 +40,13 @@ var codeBase;
          * 第一次加入场景的时候会运行该方法
          */
         BaseGroup.prototype.onAddToStage = function (event) {
-            this._isAddedToStage = true;
-            this.removeEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
-            this.createChildren();
-            this.initData();
-            this.onInvalidatePosition();
-            this.invalidate();
+            var s = this;
+            s._isAddedToStage = true;
+            s.removeEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
+            s.createChildren();
+            s.initData();
+            s.onInvalidatePosition();
+            s.invalidate();
             //console.log("222222this._drawDelay=" + this._drawDelay)
         };
         /**
@@ -61,7 +60,8 @@ var codeBase;
          * 子类覆写该方法,添加UI逻辑
          */
         BaseGroup.prototype.createChildren = function () {
-            this.touchEnabled = false; //默认不接受事件
+            var s = this;
+            s.touchEnabled = false; //默认不接受事件
             //this.setSize(Style.BASEGROUP_WIDTH, Style.BASEGROUP_HEIGHT);
         };
         Object.defineProperty(BaseGroup.prototype, "width", {
@@ -108,11 +108,12 @@ var codeBase;
          * @param h The height of the component.
          */
         BaseGroup.prototype.setSize = function (w, h) {
-            if (this.width != w || this.height != h) {
-                this.width = w;
-                this.height = h;
-                this.onInvalidatePosition();
-                this.invalidate();
+            var s = this;
+            if (s.width != w || s.height != h) {
+                s.width = w;
+                s.height = h;
+                s.onInvalidatePosition();
+                s.invalidate();
             }
         };
         Object.defineProperty(BaseGroup.prototype, "top", {
@@ -126,9 +127,10 @@ var codeBase;
              * 设置顶距
              */
             set: function (value) {
-                if (this._top != value) {
-                    this._top = value;
-                    this.onInvalidatePosition();
+                var s = this;
+                if (s._top != value) {
+                    s._top = value;
+                    s.onInvalidatePosition();
                 }
             },
             enumerable: true,
@@ -142,9 +144,10 @@ var codeBase;
                 return this._left;
             },
             set: function (value) {
-                if (this._left != value) {
-                    this._left = value;
-                    this.onInvalidatePosition();
+                var s = this;
+                if (s._left != value) {
+                    s._left = value;
+                    s.onInvalidatePosition();
                 }
             },
             enumerable: true,
@@ -158,9 +161,10 @@ var codeBase;
              * 设置底距
              */
             set: function (value) {
-                if (this._bottom != value) {
-                    this._bottom = value;
-                    this.onInvalidatePosition();
+                var s = this;
+                if (s._bottom != value) {
+                    s._bottom = value;
+                    s.onInvalidatePosition();
                 }
             },
             enumerable: true,
@@ -174,9 +178,10 @@ var codeBase;
              * 设置右距
              */
             set: function (value) {
-                if (this._right != value) {
-                    this._right = value;
-                    this.onInvalidatePosition();
+                var s = this;
+                if (s._right != value) {
+                    s._right = value;
+                    s.onInvalidatePosition();
                 }
             },
             enumerable: true,
@@ -190,9 +195,10 @@ var codeBase;
              * 设置水平居中相对位置
              */
             set: function (value) {
-                if (this._horizontalCenter != value) {
-                    this._horizontalCenter = value;
-                    this.onInvalidatePosition();
+                var s = this;
+                if (s._horizontalCenter != value) {
+                    s._horizontalCenter = value;
+                    s.onInvalidatePosition();
                 }
             },
             enumerable: true,
@@ -206,9 +212,10 @@ var codeBase;
              * 设置竖直居中相对位置
              */
             set: function (value) {
-                if (this._verticalCenter != value) {
-                    this._verticalCenter = value;
-                    this.onInvalidatePosition();
+                var s = this;
+                if (s._verticalCenter != value) {
+                    s._verticalCenter = value;
+                    s.onInvalidatePosition();
                 }
             },
             enumerable: true,
@@ -451,13 +458,14 @@ var codeBase;
              */
             set: function (delay) {
                 //console.log("drawDelay=" + delay)
-                this._drawDelay = delay;
-                if (this._drawDelay) {
-                    this.removeEventListener(egret.Event.ENTER_FRAME, this.onInvalidate, this);
-                    this._hasInvalidate = false;
+                var s = this;
+                s._drawDelay = delay;
+                if (s._drawDelay) {
+                    s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+                    s._hasInvalidate = false;
                 }
                 else {
-                    this.invalidate();
+                    s.invalidate();
                 }
             },
             enumerable: true,
@@ -480,3 +488,4 @@ var codeBase;
     codeBase.BaseGroup = BaseGroup;
     __reflect(BaseGroup.prototype, "codeBase.BaseGroup");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=BaseGroup.js.map

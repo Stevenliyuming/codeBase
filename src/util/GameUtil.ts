@@ -52,13 +52,6 @@ module codeBase{
 			}
 			s.stage = egret.MainContext.instance.stage;
 			mouse.enable(s.stage);
-
-			s.stageW = s.stage.stageWidth;
-			s.stageH = s.stage.stageHeight;
-			s.stageCenterW = s.stage.stageWidth * 0.5;
-			s.stageCenterH = s.stage.stageHeight * 0.5;
-			//console.log("stageWidth:" +s.stageW + "     stageHeight:" + s.stageH);
-
 			s.registerMouseMove = false;
 			s.modulePath = "";//UIControl.getInstance().curUIIDPath;
 		}
@@ -98,7 +91,6 @@ module codeBase{
 			s.canvas.addEventListener(type, bindFun);
 			s.canvasEventListenerArr.push({ eventType: type, fun: bindFun, originFun: fun, funObj: funObj });
 		}
-
 		public removeCanvasEventListener(type: string, fun: Function, funObj: any) {
 			let s = this;
 			for (let i = s.canvasEventListenerArr.length - 1; i >= 0; --i) {
@@ -109,7 +101,6 @@ module codeBase{
 				}
 			}
 		}
-
 		private clearCanvasEventListener() {
 			let s = this;
 			let num = s.canvasEventListenerArr.length;
@@ -132,7 +123,6 @@ module codeBase{
 			document.addEventListener(type, bindFun);
 			s.documentEventListenerArr.push({ eventType: type, fun: bindFun, originFun: fun, funObj: funObj });
 		}
-
 		public removeDocumentEventListener(type: string, fun: Function, funObj: any) {
 			let s = this;
 			for (let i = s.documentEventListenerArr.length - 1; i >= 0; --i) {
@@ -143,7 +133,6 @@ module codeBase{
 				}
 			}
 		}
-
 		private clearDocumentEventListener() {
 			let s = this;
 			let num = s.documentEventListenerArr.length;
@@ -155,8 +144,8 @@ module codeBase{
 		}
 
 		/**
-		 * target:添加移动监听的对象 IPad下不使用该参数
 		 * moveCallFun:返回px,py两个舞台全局坐标 兼容PC和移动端跟随鼠标移动的需求
+		 * )target:添加移动监听的对象 IPad下不使用该参数
 		 */
 		public addMouseMoveListener(moveCallFun:Function, funObj:any, _target:egret.DisplayObject=null) {
 			let s = this;
@@ -169,20 +158,21 @@ module codeBase{
 				s.registerMouseMove = true;
 				if (!isMobile()) {
 					s.onMove = s.onMove.bind(s);
-					s.canvas.addEventListener('mousemove', s.onMove);
+					//s.canvas.addEventListener('mousemove', s.onMove);
+					s.addCanvasEventListener("mousemove", s.onMove, s);
 				}  else {
 					s.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouchMove, s);
 				}
 			}
 			s.mouseMoveListenerArr.push({ callFun:moveCallFun, funObj:funObj, target:_target });
 		}
-
 		private clearMouseMoveListener() {
 			let s = this;
 			if (s.registerMouseMove) {
 				s.registerMouseMove = false;
 				if (!isMobile()) {
-					s.canvas.removeEventListener('mousemove', s.onMove);
+					//s.canvas.removeEventListener('mousemove', s.onMove);
+					s.removeCanvasEventListener("mousemove", s.onMove, s);
 				} else {
 					s.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouchMove, s);
 				}

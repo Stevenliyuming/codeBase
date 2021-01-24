@@ -12,15 +12,33 @@ module codeBase{
 		public constructor() {
 		}
 
-		/**范围内获取随机数*/
+		/**范围内获取随机数[min, max)
+		 * min:最小值
+		 * max:最大值
+		 * fixedNum:保留的小数位
+		*/
 		public static random(min: number, max: number, fixedNum: number = 0): number {
-			var rangeScale = max - min;
+			if(min >= max) return 0;
+			var rangeNum = max - min;
 			var randomNum = Math.random();
-			var num:number = min + randomNum * rangeScale;
-			return parseFloat(num.toFixed(fixedNum));
-			//return (min + Math.round(Rand * Range));
-			//return (min + Math.round(Rand * Range));
+			var num:number = min + randomNum * rangeNum;
+			// console.log(num);
+			// var numStr = num.toFixed(fixedNum);//toFixed()函数括号里的值就是要保留的位数，值在0-20之间，在保留一位的同时也会进行四舍五入的计算;math.round()：用于对数进行四舍五入
+			// num = parseFloat(numStr);
+			// if(fixedNum == 0 && num == max) {//解决四舍五入问题
+			// 	num -= 1;
+			// }
+			// return num;
+			return MathUtil.toFixed(num, fixedNum);
 		}
+
+		/**
+		 * 取数字固定的小数点位数
+		 */
+		public static toFixed(n:number, fixed:number):number {
+			// return ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed);
+			return ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed);
+		} 
 
 		/**
 		 * obj:需要修改角度的物体
@@ -43,8 +61,9 @@ module codeBase{
 
 		/**
 		 * 面向目标物体方向
+		 * target:目标物体
 		 */
-		public static lookTo(obj:egret.DisplayObject, target:egret.DisplayObject) {
+		public static lookToObject(obj:egret.DisplayObject, target:egret.DisplayObject) {
 			//let p1 = obj.localToGlobal();
 			let p2 = target.localToGlobal(target.anchorOffsetX, target.anchorOffsetY);
 			p2 = obj.parent.globalToLocal(p2.x, p2.y);
@@ -54,7 +73,7 @@ module codeBase{
 		}
 
 		/**
-		 * 面向px、py方向
+		 * 面向px、py代表的点方向
 		 * px、py需要转换成全局坐标
 		 */
 		public static lookToPosition(obj:egret.DisplayObject, px:number, py:number) {
@@ -137,14 +156,14 @@ module codeBase{
          * @source point 结束位置
          * @walkSpeed Number 单帧行走的线速度
          */  
-        public static speedXY(source:egret.Point, target:egret.Point, walkSpeed:number):egret.Point {
-            var diC:number = egret.Point.distance(source, target);
-            var frams:number = Math.floor(Global.FRAME_RATE *diC/walkSpeed) - 1;
-            frams = frams<=0?1:frams;
-            var ydC:number =  target.y - source.y;
-            var xdC:number =  target.x - source.x;
-            //console.log("DirectionUtil.speedXY diC=" + diC + ", xdC/frams=" + xdC + "/" + frams + ", ydC/frams=" + ydC + "/" + frams);
-            return new egret.Point(Math.round(xdC/frams*100)/100, Math.round(ydC/frams*100)/100);
-        }
+		public static speedXY(source: egret.Point, target: egret.Point, walkSpeed: number): egret.Point {
+			var diC: number = egret.Point.distance(source, target);
+			var frams: number = Math.floor(GlobalSetting.FRAME_RATE * diC / walkSpeed) - 1;
+			frams = frams <= 0 ? 1 : frams;
+			var ydC: number = target.y - source.y;
+			var xdC: number = target.x - source.x;
+			//console.log("DirectionUtil.speedXY diC=" + diC + ", xdC/frams=" + xdC + "/" + frams + ", ydC/frams=" + ydC + "/" + frams);
+			return new egret.Point(Math.round(xdC / frams * 100) / 100, Math.round(ydC / frams * 100) / 100);
+		}
 	}
 }

@@ -31,13 +31,30 @@ class  Main extends egret.DisplayObjectContainer {
         this.loadingView = new codeBase.LoadingUI();
         codeBase.SceneManager.instance.showScene(this.loadingView);
         codeBase.EventManager.addEventListener(codeBase.EventType.LOADINGUI_FINISH, () => {
-            this.loadResource()
-            this.createGameScene();
+            this.loadRes();
+            //this.loadResource()
+            //this.createGameScene();
         }, this);
 
         // await platform.login();
         // const userInfo = await platform.getUserInfo();
         // console.log(userInfo);
+    }
+
+    private loadRes() {
+        codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, ()=>{
+            codeBase.ResManager.loadGroups(["preload"], ()=>{
+                this.createGameScene();
+            }, this);
+        }, this);
+        // await RES.loadConfig("resource/default.res.json", "resource/");
+        // codeBase.ResManager.loadGroups(["preload"], ()=>{
+        //     this.createGameScene();
+        // }, this);
+    }
+
+    private onComplete(event:any):void {
+        console.log(event);
     }
 
     private async loadResource() {

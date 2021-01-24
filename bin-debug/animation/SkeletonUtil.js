@@ -29,10 +29,11 @@ var codeBase;
             return clip;
         };
         //初始骨骼动画数据
-        SkeletonUtil.prototype.initDragonBonesData = function (filePath, skeName) {
-            var skejson = filePath + skeName + "_ske.json";
-            var texjson = filePath + skeName + "_tex.json";
-            var texpng = filePath + skeName + "_tex.png";
+        SkeletonUtil.prototype.initDragonBonesData = function (skeName, filePath) {
+            if (filePath === void 0) { filePath = ""; }
+            var skejson = filePath + skeName + "_ske_json";
+            var texjson = filePath + skeName + "_tex_json";
+            var texpng = filePath + skeName + "_tex_png";
             var skeData = RES.getRes(skejson);
             //console.log(skeData);
             var textureData = RES.getRes(texjson);
@@ -52,7 +53,7 @@ var codeBase;
             var data1 = dragonBones.EgretFactory.factory.getDragonBonesData(skeName);
             var data2 = dragonBones.EgretFactory.factory.getTextureAtlasData(skeName);
             if (!data1 || !data2) {
-                s.initDragonBonesData(filePath, skeName);
+                s.initDragonBonesData(skeName, filePath);
             }
             //不需要世界时钟驱动
             var displayObj = dragonBones.EgretFactory.factory.buildArmatureDisplay(armatureName, dragonBonesName);
@@ -100,3 +101,4 @@ var codeBase;
     codeBase.SkeletonUtil = SkeletonUtil;
     __reflect(SkeletonUtil.prototype, "codeBase.SkeletonUtil");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=SkeletonUtil.js.map

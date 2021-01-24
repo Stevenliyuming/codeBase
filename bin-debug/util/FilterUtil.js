@@ -57,15 +57,8 @@ var codeBase;
          */
         FilterUtil.prototype.setDisplayColor = function (display, color, alpha) {
             if (alpha === void 0) { alpha = 1; }
-            // 将16进制颜色分割成rgb值
-            var spliceColor = function (color) {
-                var result = { r: -1, g: -1, b: -1 };
-                result.b = color % 256;
-                result.g = Math.floor((color / 256)) % 256;
-                result.r = Math.floor((color / 256) / 256);
-                return result;
-            };
-            var result = spliceColor(color);
+            var s = this;
+            var result = s.spliceColor(color);
             //console.log(result);
             var colorMatrix = [
                 1, 0, 0, 0, 40,
@@ -80,8 +73,36 @@ var codeBase;
             var colorFilter = new egret.ColorMatrixFilter(colorMatrix);
             display.filters = [colorFilter];
         };
+        /**
+         *将16进制颜色分割成rgb值
+         */
+        FilterUtil.prototype.spliceColor = function (color) {
+            var result = { r: -1, g: -1, b: -1 };
+            result.b = color % 256;
+            result.g = Math.floor((color / 256)) % 256;
+            result.r = Math.floor((color / 256) / 256);
+            return result;
+        };
+        /**
+         * 转换10进制rbg颜色转换到16进制
+         */
+        FilterUtil.prototype.convertNumberToHex = function (r, g, b) {
+            var strHex = "";
+            var r1 = r.toString(16);
+            if (r1.length == 1 || r1 === "0")
+                r1 = "0" + r1;
+            var g1 = g.toString(16);
+            if (g1.length == 1 || g1 === "0")
+                g1 = "0" + g1;
+            var b1 = b.toString(16);
+            if (b1.length == 1 || b1 === "0")
+                b1 = "0" + b1;
+            strHex = "0x" + r1 + g1 + b1;
+            return parseInt(strHex);
+        };
         return FilterUtil;
     }());
     codeBase.FilterUtil = FilterUtil;
     __reflect(FilterUtil.prototype, "codeBase.FilterUtil");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=FilterUtil.js.map

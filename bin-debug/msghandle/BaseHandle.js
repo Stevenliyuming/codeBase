@@ -10,17 +10,17 @@ var codeBase;
         function BaseHandle() {
             this.METHOD_DEF = {}; //消息和方法的映射关系表
             this.EVENT_DEF = [];
-            this.initWeekListener();
+            this.initWeakListener();
         }
         /**
          * 初始化弱监听
          * 子类可以覆写这个,添加数据
          */
-        BaseHandle.prototype.initWeekListener = function () {
+        BaseHandle.prototype.initWeakListener = function () {
         };
         /**
-         * 添加事件的处理
-         * 如果没有对应的的类型在此出现,则改Handle对Event事件到此为止,不再派发,防止造成事件死循环
+         * 添加事件的处理，注意,functName的名称,前缀onEvent不包含
+         * 如果没有对应的类型在此出现,则该Handle对Event事件到此为止,不再派发,防止造成事件死循环
          * @param type MyEvent事件的类型
          */
         BaseHandle.prototype.addHandleEvent = function (type, funcName) {
@@ -32,7 +32,7 @@ var codeBase;
         /**
          * 添加协议处理的Handle,注意,functName的名称,前缀onPacket不包含
          * @param msgId packet协议号
-         * @param func  对应的call back function,不包含onPacket前缀
+         * @param funcName  对应的callback function,不包含onPacket前缀
          */
         BaseHandle.prototype.addHandlePacket = function (msgId, funcName) {
             this.METHOD_DEF["" + msgId] = funcName;
@@ -64,3 +64,4 @@ var codeBase;
     codeBase.BaseHandle = BaseHandle;
     __reflect(BaseHandle.prototype, "codeBase.BaseHandle", ["codeBase.IHandle"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=BaseHandle.js.map

@@ -1,6 +1,3 @@
-var __reflect = (this && this.__reflect) || function (p, c, t) {
-    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
-};
 var codeBase;
 (function (codeBase) {
     //全局字体颜色表--可以扩展
@@ -164,13 +161,5 @@ var codeBase;
     codeBase.getCurUrl = getCurUrl;
     //当前游戏角度
     codeBase.curAngle = Number(window["orientation"]);
-    var Global = (function () {
-        function Global() {
-        }
-        /**帧率 */
-        Global.FRAME_RATE = 30;
-        return Global;
-    }());
-    codeBase.Global = Global;
-    __reflect(Global.prototype, "codeBase.Global");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Global.js.map

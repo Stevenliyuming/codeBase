@@ -147,3 +147,4 @@ var codeBase;
     codeBase.HGroup = HGroup;
     __reflect(HGroup.prototype, "codeBase.HGroup");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=HGroup.js.map

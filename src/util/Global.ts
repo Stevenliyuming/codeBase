@@ -150,9 +150,4 @@ module codeBase{
 
 	//当前游戏角度
 	export var curAngle:number = Number(window["orientation"]);	
-
-    export class Global {
-        /**帧率 */
-        public static FRAME_RATE:number = 30;
-    }
 }

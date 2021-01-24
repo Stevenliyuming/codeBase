@@ -1,0 +1,1 @@
+{"version":3,"file":"BaseEntity.js","sourceRoot":"","sources":["../../../src/socket/protocol/BaseEntity.ts"],"names":[],"mappings":";;;AAAA,IAAO,QAAQ,CAMd;AAND,WAAO,QAAQ;IACd;QAAA;YACc,WAAM,GAAc,IAAI,KAAK,EAAO,CAAC,CAAA,aAAa;QAG7D,CAAC;QAFU,4BAAO,GAAd;QACA,CAAC;QACL,iBAAC;IAAD,CAAC,AAJJ,IAII;IAJS,mBAAU,aAInB,CAAA;IAJS,UAAA,UAAU,kCAInB,CAAA;AACL,CAAC,EANM,QAAQ,KAAR,QAAQ,QAMd"}
