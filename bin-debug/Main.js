@@ -81,17 +81,33 @@ var Main = (function (_super) {
         // console.log(userInfo);
     };
     Main.prototype.loadRes = function () {
+        // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, ()=>{
+        //     codeBase.ResManager.loadGroups(["preload"], ()=>{
+        //         this.createGameScene();
+        //     }, this);
+        // }, this);
         var _this = this;
-        codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, function () {
-            codeBase.ResManager.loadGroups(["preload"], function () {
-                _this.createGameScene();
-            }, _this);
-        }, this);
         // await RES.loadConfig("resource/default.res.json", "resource/");
         // codeBase.ResManager.loadGroups(["preload"], ()=>{
         //     this.createGameScene();
         // }, this);
-        //RES.getResByUrl("resource/default.res.json", this.onComplete, this, RES.ResourceItem.TYPE_JSON);
+        codeBase.ResLoader.getInstance().resGroupLoad([
+            "resource/assets/A.png",
+            "resource/assets/A点击.png",
+            "resource/assets/btnNumber.fnt",
+            "resource/assets/btnNumber.png",
+            "resource/assets/click.mp3",
+            "resource/assets/comRes_1.json",
+            "resource/assets/comRes_1.png",
+            "resource/assets/bg.png",
+            "resource/assets/slider_bar_h.png",
+            "resource/assets/slider_bar_v.png",
+            "resource/default.res.json",
+        ], "", null, function (data) {
+            console.log(data);
+            codeBase.EgretProto.inject();
+            _this.createGameScene();
+        }, this);
     };
     Main.prototype.onComplete = function (event) {
         console.log(event);

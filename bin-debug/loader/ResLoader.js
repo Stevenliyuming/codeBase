@@ -232,7 +232,7 @@ var codeBase;
         __extends(ResLoader, _super);
         function ResLoader() {
             var _this = _super.call(this) || this;
-            _this.resDic = {};
+            _this.resDict = {};
             _this.loadPool = [];
             _this.waitPool = [];
             _this._maxLoadNum = 5;
@@ -590,10 +590,10 @@ var codeBase;
         ResLoader.prototype.setRes = function (url, res, loadInfo) {
             if (loadInfo === void 0) { loadInfo = null; }
             var s = this;
-            if (s.resDic[url]) {
-                s.resDic[url].clear();
+            if (s.resDict[url]) {
+                s.resDict[url].clear();
             }
-            s.resDic[url] = res;
+            s.resDict[url] = res;
             /**资源加载完成回调 */
             if (loadInfo) {
                 console.log("单个资源加载完成:" + loadInfo.url);
@@ -625,16 +625,16 @@ var codeBase;
             }
             var res;
             if (aliasKey == null)
-                res = s.resDic[key];
+                res = s.resDict[key];
             else {
                 var arr = void 0;
                 key = aliasKey + "$" + key;
-                res = s.resDic[key];
+                res = s.resDict[key];
                 if (res == null) {
                     var spriteSheet = void 0;
                     var textureRes = void 0;
                     /**图集资源 */
-                    textureRes = s.resDic[aliasKey];
+                    textureRes = s.resDict[aliasKey];
                     if (textureRes) {
                         /**图集中的散图资源 */
                         if (textureRes.param == null) {
@@ -667,16 +667,33 @@ var codeBase;
                         }
                     }
                 }
-                res = s.resDic[key];
+                res = s.resDict[key];
             }
             return res;
         };
         /**
          * 获取文本数据
          */
-        ResLoader.prototype.getResData = function (name, alias) {
+        ResLoader.prototype.getResData = function (key, alias) {
             if (alias === void 0) { alias = null; }
             var s = this;
+        };
+        ResLoader.prototype.getResGroup = function (key) {
+            var s = this;
+            var resGroup = [];
+            if (key == null) {
+                console.log("getResGroup:key为空");
+                return resGroup;
+            }
+            ;
+            var ind;
+            for (var key2 in s.resDict) {
+                ind = key2.indexOf(key);
+                if (ind > -1) {
+                    resGroup.push(s.resDict[key2]);
+                }
+            }
+            return resGroup;
         };
         ResLoader.prototype.getTexture = function (imageName) {
             var s = this;
@@ -744,7 +761,7 @@ var codeBase;
                 "text": s.decodeTEXT,
                 "xml": s.decodeXML,
                 //"sheet": s.decodeSHEET,
-                "font": s.decodeFONT,
+                "font": s.decodeJSON,
                 "bin": s.decodeBIN,
                 // "commonjs": processor_1.CommonJSProcessor,
                 "sound": s.decodeSOUND,

@@ -9,68 +9,61 @@ var codeBase;
         /**
          * 获取Texture材质
          */
-        ResManager.getTexture = function (name) {
-            //判断是项目公用素材,还是独立下载资源
-            if (!this._isInit && ResManager._canSplit) {
-                ResManager.splitSpriteSheet();
-            }
-            if (ResManager._projectNameSprite.indexOf(name) >= 0) {
-                if (!this._isInit) {
-                    return null;
-                }
-                return ResManager._spriteSheet.getTexture(name);
-            }
-            else {
-                return ResManager.getRes(name);
-            }
-        };
-        /**
-         * 非材质或者材质,请通过这个方法获取
-         * 内容请自行解析
-         */
-        ResManager.getRes = function (name, type) {
-            if (type === void 0) { type = RES.ResourceItem.TYPE_IMAGE; }
-            if (!codeBase.StringUtil.isUsage(name))
-                return null;
-            if (ResManager._urlDataDict[name]) {
-                return ResManager._urlDataDict[name];
-            }
-            else if (RES.hasRes(name)) {
-                return RES.getRes(name);
-            }
-            else if (ResManager._urlDownloading.indexOf(name) < 0) {
-                ResManager._urlDownloading.push(name);
-                if (codeBase.GlobalSetting.isNative()) {
-                    RES.getResByUrl(RES.getVersionController().getVirtualUrl(name), ResManager.onloadedCompleteDynamicTexture, this, type);
-                }
-                else {
-                    RES.getResByUrl(name + "?r=" + Math.floor(Math.random() * 9999999999), ResManager.onloadedCompleteDynamicTexture, this, type);
-                }
-            }
-            return null;
-        };
-        /**
-         * 动态加载的数据完成
-         * @param data
-         * @param url
-         */
-        ResManager.onloadedCompleteDynamicTexture = function (data, url) {
-            var key = url;
-            if (key.lastIndexOf("?r=") > 0) {
-                key = key.substring(0, key.lastIndexOf("?r="));
-            }
-            //console.log("loaded.url=" + key);
-            //console.log("loaded.data=" + RES.getRes(key));
-            if (data) {
-                if (ResManager._urlDownloading.indexOf(key) >= 0)
-                    ResManager._urlDownloading.splice(ResManager._urlDownloading.indexOf(key), 1);
-                ResManager._urlDataDict[key] = data;
-                var myEvent = codeBase.MyEvent.getEvent(codeBase.EventType.RESOURCE_DOWNLOADED);
-                myEvent.addItem("name", key);
-                myEvent.addItem("data", data);
-                myEvent.send();
-            }
-        };
+        // public static getTexture(name: string): egret.Texture {
+        //     //判断是项目公用素材,还是独立下载资源
+        //     if (!this._isInit && ResManager._canSplit) {
+        //         ResManager.splitSpriteSheet();
+        //     }
+        //     if (ResManager._projectNameSprite.indexOf(name) >= 0) {//项目公用的材质
+        //         if (!this._isInit) {
+        //             return null;
+        //         }
+        //         return ResManager._spriteSheet.getTexture(name);
+        //     } else {//动态下载的资源
+        //         return ResManager.getRes(name);
+        //     }
+        // }
+        // /**
+        //  * 非材质或者材质,请通过这个方法获取
+        //  * 内容请自行解析
+        //  */
+        // public static getRes(name: string, type: string = RES.ResourceItem.TYPE_IMAGE): any {
+        //     if (!StringUtil.isUsage(name)) return null;
+        //     if (ResManager._urlDataDict[name]) {
+        //         return ResManager._urlDataDict[name];
+        //     } else if (RES.hasRes(name)) {
+        //         return RES.getRes(name);
+        //     } else if (ResManager._urlDownloading.indexOf(name) < 0) {//启动下载
+        //         ResManager._urlDownloading.push(name);
+        //         if (GlobalSetting.isNative()) {
+        //             RES.getResByUrl(RES.getVersionController().getVirtualUrl(name), ResManager.onloadedCompleteDynamicTexture, this, type);
+        //         } else {
+        //             RES.getResByUrl(name + "?r=" + Math.floor(Math.random() * 9999999999), ResManager.onloadedCompleteDynamicTexture, this, type);
+        //         }
+        //     }
+        //     return null;
+        // }
+        // /**
+        //  * 动态加载的数据完成
+        //  * @param data
+        //  * @param url
+        //  */
+        // private static onloadedCompleteDynamicTexture(data, url) {
+        //     var key: string = url;
+        //     if (key.lastIndexOf("?r=") > 0) {
+        //         key = key.substring(0, key.lastIndexOf("?r="));
+        //     }
+        //     //console.log("loaded.url=" + key);
+        //     //console.log("loaded.data=" + RES.getRes(key));
+        //     if (data) {
+        //         if (ResManager._urlDownloading.indexOf(key) >= 0) ResManager._urlDownloading.splice(ResManager._urlDownloading.indexOf(key), 1);
+        //         ResManager._urlDataDict[key] = data;
+        //         var myEvent: MyEvent = MyEvent.getEvent(EventType.RESOURCE_DOWNLOADED);
+        //         myEvent.addItem("name", key);
+        //         myEvent.addItem("data", data);
+        //         myEvent.send();
+        //     }
+        // }
         /**
          * 初始化加载报表信息
          */

@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_png,comRes_1_json,A_png,A点击_png,slider_bar_h_png,slider_bar_v_png,slider_bar_h2_png,slider_bar_v2_png",
+			"keys": "bg_png,comRes_1_json,A_png,A点击_png,slider_bar_h_png,slider_bar_v_png,slider_bar_h2_png,slider_bar_v2_png,click_mp3,btnNumber_png,btnNumber_fnt",
 			"name": "preload"
 		}
 	],
@@ -46,6 +46,21 @@
 			"name": "slider_bar_v2_png",
 			"type": "image",
 			"url": "assets/slider_bar_v.png"
+		},
+		{
+			"name": "click_mp3",
+			"type": "sound",
+			"url": "assets/click.mp3"
+		},
+		{
+			"name": "btnNumber_png",
+			"type": "image",
+			"url": "assets/btnNumber.png"
+		},
+		{
+			"name": "btnNumber_fnt",
+			"type": "font",
+			"url": "assets/btnNumber.fnt"
 		}
 	]
 }

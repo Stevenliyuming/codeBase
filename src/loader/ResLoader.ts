@@ -219,7 +219,7 @@ module codeBase{
 	}
 
 	export class ResLoader extends Loader {
-		protected resDic: any = {};
+		protected resDict: any = {};
 		protected loadPool: ResourceItem.LoadInfo[] = [];
 		protected waitPool: ResourceItem.LoadInfo[] = [];
 		protected _maxLoadNum: number = 5;
@@ -546,6 +546,7 @@ module codeBase{
 		/**解析字体 */
 		protected decodeFONT() {
 			let s = this;
+
 		}
 
 		/**解析字节数据 */
@@ -584,10 +585,10 @@ module codeBase{
 		/**设置加载资源 */
 		protected setRes(url: string, res: any, loadInfo: ResourceItem.LoadInfo = null) {
 			let s = this;
-			if (s.resDic[url]) {
-				(<ResourceItem.ResObject>s.resDic[url]).clear();
+			if (s.resDict[url]) {
+				(<ResourceItem.ResObject>s.resDict[url]).clear();
 			}
-			s.resDic[url] = res;
+			s.resDict[url] = res;
 
 			/**资源加载完成回调 */
 			if (loadInfo) {
@@ -617,16 +618,16 @@ module codeBase{
 			if (aliasKey === void 0) { aliasKey = null; }
 			var res;
 			if (aliasKey == null)
-				res = s.resDic[key];
+				res = s.resDict[key];
 			else {
 				var arr = void 0;
 				key = aliasKey + "$" + key;
-				res = s.resDic[key];
+				res = s.resDict[key];
 				if (res == null) {
 					var spriteSheet = void 0;
 					var textureRes = void 0;
 					/**图集资源 */
-					textureRes = s.resDic[aliasKey];
+					textureRes = s.resDict[aliasKey];
 					if (textureRes) {
 						/**图集中的散图资源 */
 						if (textureRes.param == null) {
@@ -659,7 +660,7 @@ module codeBase{
 						}
 					}
 				}
-				res = s.resDic[key];
+				res = s.resDict[key];
 			}
 			return res;
 		}
@@ -667,8 +668,25 @@ module codeBase{
 		/**
 		 * 获取文本数据
 		 */
-		public getResData(name: string, alias: string = null) {
+		public getResData(key: string, alias: string = null) {
 			let s = this;
+		}
+
+		public getResGroup(key:string):ResourceItem.ResObject[] {
+			let s = this;
+			let resGroup:ResourceItem.ResObject[] = [];
+			if(key == null) {
+				console.log("getResGroup:key为空");
+				return resGroup;
+			};
+            let ind;
+            for (let key2 in s.resDict) {
+                ind = key2.indexOf(key);
+                if (ind > -1) {
+                    resGroup.push(s.resDict[key2]);
+                }
+            }
+			return resGroup;
 		}
 
 		protected getTexture(imageName: string) {
@@ -739,7 +757,7 @@ module codeBase{
 				"text": s.decodeTEXT,
 				"xml": s.decodeXML,
 				//"sheet": s.decodeSHEET,
-				"font": s.decodeFONT,
+				"font": s.decodeJSON,
 				"bin": s.decodeBIN,
 				// "commonjs": processor_1.CommonJSProcessor,
 				"sound": s.decodeSOUND,

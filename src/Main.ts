@@ -42,15 +42,35 @@ class  Main extends egret.DisplayObjectContainer {
     }
 
     private loadRes() {
-        codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, ()=>{
-            codeBase.ResManager.loadGroups(["preload"], ()=>{
-                this.createGameScene();
-            }, this);
-        }, this);
+        // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, ()=>{
+        //     codeBase.ResManager.loadGroups(["preload"], ()=>{
+        //         this.createGameScene();
+        //     }, this);
+        // }, this);
+
         // await RES.loadConfig("resource/default.res.json", "resource/");
         // codeBase.ResManager.loadGroups(["preload"], ()=>{
         //     this.createGameScene();
         // }, this);
+
+        codeBase.ResLoader.getInstance().resGroupLoad([
+            "resource/assets/A.png",
+            "resource/assets/A点击.png",
+            "resource/assets/btnNumber.fnt",
+            "resource/assets/btnNumber.png",
+            "resource/assets/click.mp3",
+            "resource/assets/comRes_1.json",
+            "resource/assets/comRes_1.png",
+            "resource/assets/bg.png",
+            "resource/assets/slider_bar_h.png",
+            "resource/assets/slider_bar_v.png",
+            "resource/default.res.json",
+        ], "", null, (data:any)=>{
+            console.log(data);
+            codeBase.EgretProto.inject();
+
+             this.createGameScene();
+        }, this);
     }
 
     private onComplete(event:any):void {
