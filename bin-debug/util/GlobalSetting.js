@@ -20,6 +20,8 @@ var codeBase;
             codeBase.Debug.log = "---- GlobalSetting init ----";
             codeBase.Debug.log = "runtimeType=" + egret.Capabilities.runtimeType + ", deviceType=" + egret.MainContext.deviceType;
             codeBase.Debug.log = "RUNTIME=" + GlobalSetting.RUNTIME;
+            //是否支持webgl
+            GlobalSetting.deviceVer = egret.WebGLUtils.checkCanUseWebGL() ? "webgl" : "canvas";
             //尺寸初始化
             GlobalSetting.initInfoSize();
         };
@@ -176,9 +178,12 @@ var codeBase;
          * CDN资源位置
          */
         GlobalSetting.CDN_RES = "resource/";
+        /**
+         * 是否支持webgl
+         */
+        GlobalSetting.deviceVer = "webgl";
         return GlobalSetting;
     }());
     codeBase.GlobalSetting = GlobalSetting;
     __reflect(GlobalSetting.prototype, "codeBase.GlobalSetting");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=GlobalSetting.js.map

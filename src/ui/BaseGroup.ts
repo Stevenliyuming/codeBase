@@ -18,6 +18,8 @@ module codeBase {
 		public _data: any = null;//可携带的数据
 		private _enabled: boolean = true;//不可用状态
 
+		private elements:egret.DisplayObject[] = [];
+
 		public constructor() {
 			super();
 			let s = this;
@@ -214,6 +216,7 @@ module codeBase {
 				}
 			}
 		}
+
 		/**
 		 * 容器相对位置刷新
 		 */
@@ -278,22 +281,128 @@ module codeBase {
 					//console.log("this._verticalEnabled=" + this._verticalEnabled + ", y=" + this._y);
 				}
 
-				//设置锚点
-				// s.anchorOffsetX = s._anchorX * s.width;
-				// s.anchorOffsetY = s._anchorY * s.height;
-
 				//改变子级布局
-				if (widthChanged || heightChanged) {
-					let child: any;
-					for (var i: number = 0; i < s.numChildren; i++) {
-						child = s.getChildAt(i);
-						if (child instanceof BaseGroup)
-							child.onInvalidatePosition();
+				// if (widthChanged || heightChanged) {
+				// 	let child: any;
+				// 	for (var i: number = 0; i < s.numChildren; i++) {
+				// 		child = s.getChildAt(i);
+				// 		if ((widthChanged || heightChanged) && child instanceof BaseGroup) {
+				// 			child.onInvalidatePosition();
+				// 		}
+				// 	}
+				// }
+
+				//添加具有约束布局的元素
+				if(s.elements.length > 0) {
+					for(let i=0; i<s.elements.length; ++i) {
+						this.addChild(s.elements[i]);
+					}
+					s.elements.length = 0;
+				}
+
+				let child: any;
+				for (var i: number = 0; i < s.numChildren; i++) {
+					child = s.getChildAt(i);
+					if ((widthChanged || heightChanged) && child instanceof BaseGroup) {
+						child.onInvalidatePosition();
+					} else {
+						if (egret.is(child, "eui.UIComponent")) {
+							BaseGroup.resetChildPosition(child);
+						}
 					}
 				}
 			}
 			s.removeEventListener(egret.Event.ENTER_FRAME, s.resetPosition, s);
 			s._hasInvalidatePosition = false;
+		}
+
+		private static resetChildPosition(child: egret.DisplayObjectContainer) {
+			var pr: egret.DisplayObject = child.parent;
+			if (pr != null && child['top'] !== undefined && child['bottom'] !== undefined && child['left'] !== undefined && child['right'] !== undefined && child['horizontalCenter'] !== undefined && child['verticalCenter'] !== undefined) {
+				var parentWidth: number = pr.width;
+				var parentHeight: number = pr.height;
+				var thisWidth: number = child.width;
+				var thisHeight: number = child.height;
+				//为了保证得到的宽高是数值型,这里进行了严格的检测
+				if (isNaN(parentWidth) || parentHeight == undefined) {
+					parentWidth = 0;
+				}
+				if (isNaN(parentHeight) || parentHeight == undefined) {
+					parentHeight = 0;
+				}
+
+				if (isNaN(thisWidth) || thisWidth == undefined) {
+					thisWidth = 0;
+				}
+				if (isNaN(thisHeight) || thisHeight == undefined) {
+					thisWidth = 0;
+				}
+
+				var widthChanged: boolean = false;//宽度有改变
+				var heightChanged: boolean = false;//高度有改变
+				if (!isNaN(child['top']) && isNaN(child['bottom'])) {
+					child.y = child['top'];
+				} else if (!isNaN(child['bottom']) && isNaN(child['top'])) {
+					child.y = parentHeight - child['bottom'] - thisHeight;
+				} else if (!isNaN(child['top']) && !isNaN(child['bottom'])) {
+					child.y = child['top'];
+					thisHeight = parentHeight - child['top'] - child['bottom'];
+					if (child.height != thisHeight) {
+						child.height = thisHeight;
+						heightChanged = true;
+					}
+				}
+
+				if (!isNaN(child['left']) && isNaN(child['right'])) {
+					child.x = child['left'];
+				} else if (!isNaN(child['right']) && isNaN(child['left'])) {
+					child.x = parentWidth - child['right'] - thisWidth;
+				} else if (!isNaN(child['left']) && !isNaN(child['right'])) {
+					child.x = child['left'];
+					thisWidth = parentWidth - child['left'] - child['right'];
+					if (child.width != thisWidth) {
+						child.width = thisWidth;
+						widthChanged = true;
+					}
+				}
+
+				if (!isNaN(child['horizontalCenter']) && !widthChanged) {//宽度有改变的情况下(左右拉伸),水平居中不再生效
+					child.x = (parentWidth - thisWidth) / 2 + child['horizontalCenter'];
+					//console.log("this._horizontalEnabled=" + this._horizontalEnabled + ", x=" + this._x);
+				}
+				if (!isNaN(child['verticalCenter']) && !heightChanged) {//高度有改变的情况下(上下拉伸),竖直居中不再生效
+					child.y = (parentHeight - thisHeight) / 2 + child['verticalCenter'];
+					//console.log("this._verticalEnabled=" + this._verticalEnabled + ", y=" + this._y);
+				}
+
+				//改变子级布局
+				if (widthChanged || heightChanged) {
+					if (child.numChildren == undefined) return;
+					let temp: any;
+					for (var i: number = 0; i < child.numChildren; i++) {
+						temp = child.getChildAt(i);
+						if (temp instanceof BaseGroup) {
+							temp.onInvalidatePosition();
+						} else {
+							BaseGroup.resetChildPosition(temp);
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		 * 添加实现了eui.UIComponent类约束布局的元素,例如：eui.Image
+		 */
+		public addElement(child:egret.DisplayObject) {
+			let s = this;
+			if (s.elements.indexOf(child) >= 0) return;
+			if (egret.is(child, "eui.UIComponent")) {
+				s.elements.push(child);
+				s.onInvalidatePosition();
+			} else {
+				s.addChild(child);
+			}
 		}
 
 		/**

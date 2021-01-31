@@ -32,4 +32,3 @@ var codeBase;
     codeBase.HexUtil = HexUtil;
     __reflect(HexUtil.prototype, "codeBase.HexUtil");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=HexUtil.js.map

@@ -39,4 +39,3 @@ var codeBase;
         __reflect(P2Constants.prototype, "codeBase.easyP2.P2Constants");
     })(easyP2 = codeBase.easyP2 || (codeBase.easyP2 = {}));
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=P2Constants.js.map

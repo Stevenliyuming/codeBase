@@ -136,6 +136,11 @@ module codeBase{
         public static CDN_RES:string = "resource/";
 
         /**
+         * 是否支持webgl
+         */
+        public static deviceVer:string = "webgl";
+
+        /**
          * 初始化全局的数据
          */
         public static initData():void{
@@ -147,6 +152,9 @@ module codeBase{
             Debug.log = "---- GlobalSetting init ----";
             Debug.log = "runtimeType=" + egret.Capabilities.runtimeType + ", deviceType=" + egret.MainContext.deviceType;
             Debug.log = "RUNTIME=" + GlobalSetting.RUNTIME;
+
+            //是否支持webgl
+            GlobalSetting.deviceVer = egret.WebGLUtils.checkCanUseWebGL()?"webgl":"canvas";
 
             //尺寸初始化
             GlobalSetting.initInfoSize();

@@ -32,8 +32,6 @@ class  Main extends egret.DisplayObjectContainer {
         codeBase.SceneManager.instance.showScene(this.loadingView);
         codeBase.EventManager.addEventListener(codeBase.EventType.LOADINGUI_FINISH, () => {
             this.loadRes();
-            //this.loadResource()
-            //this.createGameScene();
         }, this);
 
         // await platform.login();
@@ -42,8 +40,11 @@ class  Main extends egret.DisplayObjectContainer {
     }
 
     private loadRes() {
-        // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, ()=>{
-        //     codeBase.ResManager.loadGroups(["preload"], ()=>{
+        this.loadResource()
+        this.createGameScene();
+
+        // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", ()=>{
+        //     codeBase.ResManager.loadGroups(["preload", "res"], ()=>{
         //         this.createGameScene();
         //     }, this);
         // }, this);
@@ -53,24 +54,24 @@ class  Main extends egret.DisplayObjectContainer {
         //     this.createGameScene();
         // }, this);
 
-        codeBase.ResLoader.getInstance().resGroupLoad([
-            "resource/assets/A.png",
-            "resource/assets/A点击.png",
-            "resource/assets/btnNumber.fnt",
-            "resource/assets/btnNumber.png",
-            "resource/assets/click.mp3",
-            "resource/assets/comRes_1.json",
-            "resource/assets/comRes_1.png",
-            "resource/assets/bg.png",
-            "resource/assets/slider_bar_h.png",
-            "resource/assets/slider_bar_v.png",
-            "resource/default.res.json",
-        ], "", null, (data:any)=>{
-            console.log(data);
-            codeBase.EgretProto.inject();
+        // codeBase.ResLoader.getInstance().resGroupLoad([
+        //     "resource/assets/A.png",
+        //     "resource/assets/A点击.png",
+        //     "resource/assets/btnNumber.fnt",
+        //     "resource/assets/btnNumber.png",
+        //     "resource/assets/click.mp3",
+        //     "resource/assets/comRes_1.json",
+        //     "resource/assets/comRes_1.png",
+        //     "resource/assets/bg.png",
+        //     "resource/assets/slider_bar_h.png",
+        //     "resource/assets/slider_bar_v.png",
+        //     "resource/default.res.json",
+        // ], "preload", null, (data:any)=>{
+        //     console.log(data);
+        //     codeBase.EgretProto.inject();
 
-             this.createGameScene();
-        }, this);
+        //      this.createGameScene();
+        // }, this);
     }
 
     private onComplete(event:any):void {
@@ -80,7 +81,8 @@ class  Main extends egret.DisplayObjectContainer {
     private async loadResource() {
         try {
             await RES.loadConfig("resource/default.res.json", "resource/");
-            await RES.loadGroup("preload", 0, this.loadingView);
+            RES.loadGroup("preload", 0, this.loadingView);
+            RES.loadGroup("res", 0, this.loadingView);
         }
         catch (e) {
             console.error(e);

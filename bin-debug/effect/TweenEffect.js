@@ -2252,4 +2252,3 @@ var codeBase;
     codeBase.TweenEffect = TweenEffect;
     __reflect(TweenEffect.prototype, "codeBase.TweenEffect");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=TweenEffect.js.map

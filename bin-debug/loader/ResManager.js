@@ -3,116 +3,12 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 var codeBase;
 (function (codeBase) {
+    /**
+     * 对config文件下载进行统一调度,加强RES下载的及时性,确保成功
+     */
     var ResManager = (function () {
         function ResManager() {
         }
-        /**
-         * 获取Texture材质
-         */
-        // public static getTexture(name: string): egret.Texture {
-        //     //判断是项目公用素材,还是独立下载资源
-        //     if (!this._isInit && ResManager._canSplit) {
-        //         ResManager.splitSpriteSheet();
-        //     }
-        //     if (ResManager._projectNameSprite.indexOf(name) >= 0) {//项目公用的材质
-        //         if (!this._isInit) {
-        //             return null;
-        //         }
-        //         return ResManager._spriteSheet.getTexture(name);
-        //     } else {//动态下载的资源
-        //         return ResManager.getRes(name);
-        //     }
-        // }
-        // /**
-        //  * 非材质或者材质,请通过这个方法获取
-        //  * 内容请自行解析
-        //  */
-        // public static getRes(name: string, type: string = RES.ResourceItem.TYPE_IMAGE): any {
-        //     if (!StringUtil.isUsage(name)) return null;
-        //     if (ResManager._urlDataDict[name]) {
-        //         return ResManager._urlDataDict[name];
-        //     } else if (RES.hasRes(name)) {
-        //         return RES.getRes(name);
-        //     } else if (ResManager._urlDownloading.indexOf(name) < 0) {//启动下载
-        //         ResManager._urlDownloading.push(name);
-        //         if (GlobalSetting.isNative()) {
-        //             RES.getResByUrl(RES.getVersionController().getVirtualUrl(name), ResManager.onloadedCompleteDynamicTexture, this, type);
-        //         } else {
-        //             RES.getResByUrl(name + "?r=" + Math.floor(Math.random() * 9999999999), ResManager.onloadedCompleteDynamicTexture, this, type);
-        //         }
-        //     }
-        //     return null;
-        // }
-        // /**
-        //  * 动态加载的数据完成
-        //  * @param data
-        //  * @param url
-        //  */
-        // private static onloadedCompleteDynamicTexture(data, url) {
-        //     var key: string = url;
-        //     if (key.lastIndexOf("?r=") > 0) {
-        //         key = key.substring(0, key.lastIndexOf("?r="));
-        //     }
-        //     //console.log("loaded.url=" + key);
-        //     //console.log("loaded.data=" + RES.getRes(key));
-        //     if (data) {
-        //         if (ResManager._urlDownloading.indexOf(key) >= 0) ResManager._urlDownloading.splice(ResManager._urlDownloading.indexOf(key), 1);
-        //         ResManager._urlDataDict[key] = data;
-        //         var myEvent: MyEvent = MyEvent.getEvent(EventType.RESOURCE_DOWNLOADED);
-        //         myEvent.addItem("name", key);
-        //         myEvent.addItem("data", data);
-        //         myEvent.send();
-        //     }
-        // }
-        /**
-         * 初始化加载报表信息
-         */
-        // public static loadResFile(projectName: string): void {
-        //     ResManager._projectName = projectName;
-        //     ResManager._projectGroup = projectName + "_common";
-        //     //初始化Resource资源加载库
-        //     ResManager.loadConfig(GlobalSetting.CDN_RES + "assets/ui/" + ResManager._projectName + "/" + ResManager._projectGroup + "_loader.json", [ResManager._projectGroup + "_group"], ResManager.onLoadingGroupJosnFileComplete, ResManager);
-        // }
-        /**
-         * loading配置文件的Group加载完成
-         * @param event
-         */
-        ResManager.onLoadingGroupJosnFileComplete = function (event) {
-            //console.log("onLoadingGroupJosnFileComplete.groupName=" + event.groupName);
-            //console.log("@RES_MANAGER onLoadingGroupJosnFileComplete=" + event.groupName);
-            if (RES.isGroupLoaded(ResManager._projectGroup + "_group") && !ResManager._canSplit) {
-                //console.log("ResManager init!!")
-                ResManager._canSplit = true;
-                codeBase.MyEvent.sendEvent(codeBase.EventType.PROJECT_RES_DOWNLOADED);
-            }
-        };
-        /**
-         * 切割材质
-         */
-        ResManager.splitSpriteSheet = function () {
-            if (!ResManager._isInit && ResManager._canSplit) {
-                ResManager._isInit = true;
-                //材质集的情况
-                var jsonData = RES.getRes(ResManager._projectGroup + "_json");
-                if (jsonData) {
-                    ResManager._spriteSheet = new egret.SpriteSheet(RES.getRes(ResManager._projectGroup + "_img"));
-                    for (var key in jsonData.texture) {
-                        ResManager._projectNameSprite.push(key);
-                        ResManager._spriteSheet.createTexture(key, jsonData.texture[key].x, jsonData.texture[key].y, jsonData.texture[key].w, jsonData.texture[key].h);
-                    }
-                }
-            }
-        };
-        /**
-         * 检测是否公用资源加载已经全部完成
-         * @returns {boolean}
-         */
-        ResManager.checkProjectResLoaded = function () {
-            if (codeBase.StringUtil.isUsage(ResManager._projectGroup)) {
-                return ResManager._canSplit;
-            }
-            return true;
-        };
         /**
          * 下载config文件
          * @param url config文件路径
@@ -120,33 +16,44 @@ var codeBase;
          * @param funcThis
          * @param groupNames
          */
-        ResManager.loadConfig = function (url, root, groupNames, listener, thisObject) {
-            //Debug.log = "@RES_M loadConfig url=" + url;
-            // if(!RES['instance']) RES['instance'] = new RES.Resource();
-            //RES.setMaxLoadingThread(5);
-            // if (GlobalSetting.isNative()) {
-            //     RES.getResByUrl(RES.getVersionController().getVirtualUrl(url), ResManager.onLoadConfigComplete, ResManager, RES.ResourceItem.TYPE_JSON);
-            // } else {
-            //     RES.getResByUrl(url, ResManager.onLoadConfigComplete, ResManager, RES.ResourceItem.TYPE_JSON);
-            // }
-            // ResLoader.getInstance().resLoad(url, null, (data:ResourceItem.LoadInfo)=>{
-            //     RES.config.config = ResLoader.getInstance().getRes(data.url).res;
-            //     ResManager.onCheckLoadGroup();
-            // }, this);
-            // if (groupNames && groupNames.length > 0) {
-            //     ResManager.loadGroups(groupNames, listener, thisObject);
-            // }
-            if (groupNames === void 0) { groupNames = null; }
-            if (listener === void 0) { listener = null; }
+        ResManager.loadConfig = function (url, root, complete, thisObject, loadError, thisObject2) {
+            if (root === void 0) { root = "resource/"; }
+            if (complete === void 0) { complete = null; }
             if (thisObject === void 0) { thisObject = null; }
-            RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, listener, thisObject);
+            if (loadError === void 0) { loadError = null; }
+            if (thisObject2 === void 0) { thisObject2 = null; }
+            ResManager.config_load_listener.push({ configUrl: url, root: root, complete: complete, thisObj: thisObject, loadError: loadError, thisObj2: thisObject2 });
+            RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, ResManager.onConfigComplete, ResManager);
             RES.addEventListener(RES.ResourceEvent.CONFIG_LOAD_ERROR, ResManager.onConfigLoadError, ResManager);
             RES.loadConfig(url, root);
         };
+        /**
+         * 资源配置加载完成
+         */
         ResManager.onConfigComplete = function (event) {
+            if (ResManager.config_load_listener.length > 0) {
+                for (var i = 0; i < ResManager.config_load_listener.length; ++i) {
+                    if (ResManager.config_load_listener[i].complete) {
+                        ResManager.config_load_listener[i].complete.call(ResManager.config_load_listener[i].thisObj, ResManager.config_load_listener[i].configUrl);
+                    }
+                }
+                ResManager.config_load_listener.length = 0;
+            }
             ResManager.onCheckLoadGroup();
         };
+        /**
+         * 资源配置加载错误
+         */
         ResManager.onConfigLoadError = function (event) {
+            if (ResManager.config_load_listener.length > 0) {
+                for (var i = 0; i < ResManager.config_load_listener.length; ++i) {
+                    if (ResManager.config_load_listener[i].loadError) {
+                        ResManager.config_load_listener[i].loadError.call(ResManager.config_load_listener[i].thisObj2, ResManager.config_load_listener[i].configUrl);
+                    }
+                }
+                ResManager.config_load_listener.length = 0;
+            }
+            console.log("CONFIG_LOAD_ERROR");
         };
         /**
          * 对group组进行检测加载
@@ -163,7 +70,7 @@ var codeBase;
             }
         };
         /**
-         * 加载group选项
+         * 对单个group进行检测加载
          * @param groupName
          */
         ResManager.loadGroup = function (groupName, listener, thisObject, loadingNow) {
@@ -192,6 +99,7 @@ var codeBase;
                     ResManager._res_group_arr.push(groupName);
                 }
                 ResManager.checkAddGroupCompleteListener();
+                codeBase.HeartBeat.addListener(ResManager, ResManager.onCheckLoadGroup, ResManager._res_hb_rate);
             }
             var funcArr = [];
             if (ResManager._res_group_listener_name.indexOf(groupName) >= 0) {
@@ -209,7 +117,6 @@ var codeBase;
                 }
                 funcArr.push({ func: listener, thisObj: thisObject });
             }
-            codeBase.HeartBeat.addListener(ResManager, ResManager.onCheckLoadGroup, ResManager._res_hb_rate);
         };
         //检测是否添加过RES的Group完成通知
         ResManager.checkAddGroupCompleteListener = function () {
@@ -226,9 +133,8 @@ var codeBase;
          * @param event
          */
         ResManager.onLoadGroupComplete = function (event) {
-            if (event)
-                ResManager._res_resourceConfig = event.target.resConfig;
             var groupName = null;
+            var index;
             //Debug.log = "@RES_M group complete 000";
             //var resItems: Array<RES.ResourceItem> = null;
             for (var i = ResManager._res_group_arr.length - 1; i >= 0; i--) {
@@ -239,8 +145,9 @@ var codeBase;
                     continue;
                 }
                 if (RES.isGroupLoaded(groupName)) {
-                    if (ResManager._res_group_loading_arr.indexOf(groupName) >= 0) {
-                        ResManager._res_group_loading_arr.splice(ResManager._res_group_loading_arr.indexOf(groupName), 1);
+                    index = ResManager._res_group_loading_arr.indexOf(groupName);
+                    if (index >= 0) {
+                        ResManager._res_group_loading_arr.splice(index, 1);
                     }
                     //Debug.log = "@RES_M group complete 111 name=" + groupName;
                     ResManager._res_group_arr.splice(ResManager._res_group_arr.indexOf(groupName), 1);
@@ -260,10 +167,10 @@ var codeBase;
                 //Debug.log = "@RES_M group complete 333 remove listener";
                 codeBase.HeartBeat.removeListener(ResManager, ResManager.onCheckLoadGroup);
                 if (ResManager._res_group_listener_add) {
+                    ResManager._res_group_listener_add = false;
                     RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, ResManager.onLoadGroupComplete, ResManager);
                     RES.removeEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, ResManager.onLoadGroupError, ResManager);
                 }
-                ResManager._res_group_listener_add = false;
             }
             //Debug.log = "@RES_M group complete 444 group.length=" + ResManager._res_group_arr.length + ", v=" + ResManager._res_group_arr;
         };
@@ -273,34 +180,20 @@ var codeBase;
          */
         ResManager.onLoadGroupError = function (event) {
             if (event && codeBase.StringUtil.isUsage(event.groupName)) {
-                if (ResManager._res_group_loading_arr.indexOf(event.groupName) >= 0)
-                    ResManager._res_group_loading_arr.splice(ResManager._res_group_loading_arr.indexOf(event.groupName), 1);
-                if (ResManager._res_group_arr.indexOf(event.groupName) >= 0)
-                    ResManager._res_group_arr.splice(ResManager._res_group_arr.indexOf(event.groupName), 1);
-                //ResManager.loadGroup(event.groupName);
+                var index = ResManager._res_group_loading_arr.indexOf(event.groupName);
+                if (index >= 0)
+                    ResManager._res_group_loading_arr.splice(index, 1);
+                // index = ResManager._res_group_arr.indexOf(event.groupName);
+                // if (index >= 0) ResManager._res_group_arr.splice(index, 1);
                 //console.log("onLoadGroupError=" + event.groupName);
             }
-        };
-        /**
-         * 配置文件加载完成
-         */
-        ResManager.onLoadConfigComplete = function (config) {
-            //Debug.log = "@RES_M config complete _res_resourceConfig=" + ResManager._res_resourceConfig;
-            //RES.parseConfig(config, GlobalSetting.CDN_RES);
-            RES.config.config = config;
-            ResManager.onCheckLoadGroup();
         };
         /**
          * 检测group是否可以开始下载
          */
         ResManager.onCheckLoadGroup = function () {
-            if (ResManager._res_resourceConfig == null)
-                ResManager._res_resourceConfig = RES["configInstance"];
             //Debug.log = "@RES_M group 000 checkload onCheckLoadGroup=" + ResManager._res_group_arr;
-            var resItems = null;
-            var allloaded = true;
             var groupName = null;
-            var delNameArr = [];
             for (var i = 0; i < ResManager._res_group_arr.length; i++) {
                 //console.log("@Main onConfigComplete resItems" + JSON.stringify(resItems));
                 groupName = ResManager._res_group_arr[i];
@@ -308,68 +201,13 @@ var codeBase;
                     ResManager._res_group_arr.splice(i, 1);
                     continue;
                 }
-                if (RES.isGroupLoaded(groupName)) {
-                    //Debug.log = "@RES_M group checkload 222 name=" + groupName;
-                    delNameArr.push(groupName);
+                //添加到加载队列
+                if (ResManager._res_group_loading_arr.indexOf(groupName) < 0) {
+                    ResManager._res_group_loading_arr.push(groupName);
+                    //Debug.log = "@RES_M group checkload 111 name=" + groupName;
+                    RES.loadGroup(groupName);
                 }
-                else {
-                    if (ResManager._res_group_loading_arr.indexOf(groupName) < 0) {
-                        ResManager._res_group_loading_arr.push(groupName);
-                        //Debug.log = "@RES_M group checkload 111 name=" + groupName;
-                        RES.loadGroup(groupName);
-                    }
-                }
-                // resItems = null;
-                // if (ResManager._res_resourceConfig) {
-                //     resItems = ResManager._res_resourceConfig.getGroupByName(groupName);// getRawGroupByName(groupName);
-                // }
-                // //Debug.log = "@RES_M group checkload i=" + i + ", name=" + groupName + ", resItems=" + resItems;
-                // if (resItems && resItems.length > 0 && !resItems[0].loaded) {
-                //     allloaded = false;
-                //     //Debug.log = "@RES_M group checkload 111 _res_group_loading_arr=" + this._res_group_loading_arr;
-                //     if (ResManager._res_group_loading_arr.indexOf(groupName) < 0) {
-                //         ResManager._res_group_loading_arr.push(groupName);
-                //         //Debug.log = "@RES_M group checkload 111 name=" + groupName;
-                //         RES.loadGroup(groupName);
-                //     }
-                // } else if (RES.isGroupLoaded(groupName)) {
-                //     //Debug.log = "@RES_M group checkload 222 name=" + groupName;
-                //     delNameArr.push(groupName);
-                // } else if (resItems) {//把所有的resItems全部下载完成,说明group也下载完成了
-                //     var downNum: number = 0;
-                //     for (var j: number = 0; j < resItems.length; j++) {
-                //         if (resItems[j].loaded) {
-                //             downNum++;
-                //         }
-                //     }
-                //     if (downNum == resItems.length) {
-                //         if (!RES.isGroupLoaded(groupName)) {
-                //             RES.loadGroup(groupName);
-                //         } else {
-                //             delNameArr.push(groupName);
-                //         }
-                //     }
-                //     //Debug.log = "@RES_M group checkload ------ resItems=" + JSON.stringify(resItems);
-                // }
             }
-            //删除已检测到下载完成的名称
-            // for (var j: number = 0; j < delNameArr.length; j++) {
-            //     groupName = delNameArr[j];
-            //     ResManager._res_group_arr.splice(ResManager._res_group_arr.indexOf(groupName), 1);
-            //     if (ResManager._res_group_loading_arr.indexOf(groupName) >= 0) {
-            //         ResManager._res_group_loading_arr.splice(ResManager._res_group_loading_arr.indexOf(groupName), 1);
-            //     }
-            //     //监听触发
-            //     if (ResManager._res_group_listener_name.indexOf(groupName) >= 0) {
-            //         //Debug.log = "@RES_M group checkload 333 name=" + groupName;
-            //         var funcArr: Array<any> = ResManager._res_group_listener[groupName];
-            //         for (var i: number = 0; i < funcArr.length; i++) {
-            //             if (funcArr[i].func) funcArr[i].func.call(funcArr[i].thisObj, null);
-            //         }
-            //         ResManager.removeGroupCompleteListener(groupName);
-            //     }
-            // }
-            // this.onLoadGroupComplete(null);
         };
         /**
          * 移除group完成的监听
@@ -378,84 +216,19 @@ var codeBase;
          */
         ResManager.removeGroupCompleteListener = function (groupName) {
             //Debug.log = "@RES_M group removel 000 name=" + groupName;
-            if (ResManager._res_group_listener_name.indexOf(groupName) >= 0) {
+            var index = ResManager._res_group_listener_name.indexOf(groupName);
+            if (index >= 0) {
                 //Debug.log = "@RES_M group removel 111 name=" + groupName;
                 delete ResManager._res_group_listener[groupName];
-                ResManager._res_group_listener_name.splice(ResManager._res_group_listener_name.indexOf(groupName), 1);
+                ResManager._res_group_listener_name.splice(index, 1);
                 if (ResManager._res_group_listener_name.length == 0) {
                     //Debug.log = "@RES_M group removel 222 name=" + groupName;
                     RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, ResManager.onLoadGroupComplete, ResManager);
+                    RES.removeEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, ResManager.onLoadGroupError, ResManager);
                     ResManager._res_group_listener_add = false;
                 }
             }
         };
-        //---- for project texture manager---
-        ResManager._hasProjectResLoading = false; //是否有公用资源要下载
-        ResManager._isInit = false; //是否已初始化
-        ResManager._canSplit = false; //是否可以切割
-        ResManager._projectGroup = "";
-        ResManager._projectName = "";
-        ResManager._projectNameSprite = [];
-        ResManager._spriteSheet = null;
-        //--- for Dynamic loaded texture manager ----
-        ResManager._urlDataDict = {};
-        ResManager._urlDownloading = []; //已进入下载的url
-        // //空闲下载控制
-        // private static _idleDownloadClz: Array<any> = [];
-        // //当前在空闲下载的对象
-        // private static _currentIdleDown: ReceiveGroup = null;
-        // /**
-        //  * 添加闲时加载的View或者Win类
-        //  * 遵循先加先下的原则
-        //  * @param clz
-        //  */
-        // public static addIdleDownload(clz: any): void {
-        //     if (clz) {
-        //         var inst: any = new clz();
-        //         if (inst instanceof View || inst instanceof Win || inst instanceof Template) {
-        //             if (ResManager._idleDownloadClz.indexOf(clz) < 0) {
-        //                 ResManager._idleDownloadClz.push(clz);
-        //             }
-        //             ObjectPool.recycleClass(inst);
-        //             HeartBeat.addListener(this, this.onHbCheckDownloadIdle, GlobalSetting.CHECK_IDLE_LOADING);
-        //         } else {
-        //             Debug.log = "[WARING]addIdleDownload 类不是WIN或者VIEW,不做调度下载!";
-        //         }
-        //     }
-        // }
-        // /**
-        //  * 检测是否可以进行闲时现在
-        //  */
-        // private static onHbCheckDownloadIdle(): void {
-        //     if (ResManager._currentIdleDown && ResManager._currentIdleDown._uiResReady) {//下载完成
-        //         ResManager._currentIdleDown = null;
-        //     }
-        //     if (ResManager._currentIdleDown == null && ResManager._idleDownloadClz.length > 0) {
-        //         ResManager.onFireIdleDownload();
-        //     }
-        //     if (ResManager._idleDownloadClz.length == 0) {
-        //         ResManager._currentIdleDown = null;
-        //         HeartBeat.removeListener(this, this.onHbCheckDownloadIdle);
-        //     }
-        // }
-        // /**
-        //  * 进行闲时现在
-        //  */
-        // private static onFireIdleDownload(): void {
-        //     if (ResManager._currentIdleDown == null && ResManager._idleDownloadClz.length > 0) {
-        //         var clz: any = ResManager._idleDownloadClz.shift();
-        //         var inst: ReceiveGroup = <ReceiveGroup>ObjectPool.getByClass(clz, "", false);
-        //         if (inst && !inst._uiResReady) {
-        //             ResManager._currentIdleDown = inst;
-        //             inst.visible = false;
-        //             GlobalSetting.STAGE.addChildAt(inst, 0);
-        //             inst.idleDownload();
-        //             inst.removeFromParent();
-        //             inst.visible = true;
-        //         }
-        //     }
-        // }
-        /****************** 对config文件下载进行统一调度,加强RES下载的及时性,确保成功 *****************************/
         /**
          *  要下载的group列表
          */
@@ -476,11 +249,10 @@ var codeBase;
          * group complete的通知是否已经添加
          */
         ResManager._res_group_listener_add = false;
-        ResManager._res_resourceConfig = null;
         ResManager._res_hb_rate = 30;
+        ResManager.config_load_listener = [];
         return ResManager;
     }());
     codeBase.ResManager = ResManager;
     __reflect(ResManager.prototype, "codeBase.ResManager");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=ResManager.js.map

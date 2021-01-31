@@ -97,4 +97,3 @@ var codeBase;
     codeBase.Style = Style;
     __reflect(Style.prototype, "codeBase.Style");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=Style.js.map

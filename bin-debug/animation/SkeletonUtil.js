@@ -101,4 +101,3 @@ var codeBase;
     codeBase.SkeletonUtil = SkeletonUtil;
     __reflect(SkeletonUtil.prototype, "codeBase.SkeletonUtil");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=SkeletonUtil.js.map

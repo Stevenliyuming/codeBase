@@ -73,41 +73,40 @@ var Main = (function (_super) {
         codeBase.SceneManager.instance.showScene(this.loadingView);
         codeBase.EventManager.addEventListener(codeBase.EventType.LOADINGUI_FINISH, function () {
             _this.loadRes();
-            //this.loadResource()
-            //this.createGameScene();
         }, this);
         // await platform.login();
         // const userInfo = await platform.getUserInfo();
         // console.log(userInfo);
     };
     Main.prototype.loadRes = function () {
-        // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", null, ()=>{
-        //     codeBase.ResManager.loadGroups(["preload"], ()=>{
+        this.loadResource();
+        this.createGameScene();
+        // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", ()=>{
+        //     codeBase.ResManager.loadGroups(["preload", "res"], ()=>{
         //         this.createGameScene();
         //     }, this);
         // }, this);
-        var _this = this;
         // await RES.loadConfig("resource/default.res.json", "resource/");
         // codeBase.ResManager.loadGroups(["preload"], ()=>{
         //     this.createGameScene();
         // }, this);
-        codeBase.ResLoader.getInstance().resGroupLoad([
-            "resource/assets/A.png",
-            "resource/assets/A点击.png",
-            "resource/assets/btnNumber.fnt",
-            "resource/assets/btnNumber.png",
-            "resource/assets/click.mp3",
-            "resource/assets/comRes_1.json",
-            "resource/assets/comRes_1.png",
-            "resource/assets/bg.png",
-            "resource/assets/slider_bar_h.png",
-            "resource/assets/slider_bar_v.png",
-            "resource/default.res.json",
-        ], "", null, function (data) {
-            console.log(data);
-            codeBase.EgretProto.inject();
-            _this.createGameScene();
-        }, this);
+        // codeBase.ResLoader.getInstance().resGroupLoad([
+        //     "resource/assets/A.png",
+        //     "resource/assets/A点击.png",
+        //     "resource/assets/btnNumber.fnt",
+        //     "resource/assets/btnNumber.png",
+        //     "resource/assets/click.mp3",
+        //     "resource/assets/comRes_1.json",
+        //     "resource/assets/comRes_1.png",
+        //     "resource/assets/bg.png",
+        //     "resource/assets/slider_bar_h.png",
+        //     "resource/assets/slider_bar_v.png",
+        //     "resource/default.res.json",
+        // ], "preload", null, (data:any)=>{
+        //     console.log(data);
+        //     codeBase.EgretProto.inject();
+        //      this.createGameScene();
+        // }, this);
     };
     Main.prototype.onComplete = function (event) {
         console.log(event);
@@ -118,19 +117,18 @@ var Main = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, RES.loadGroup("preload", 0, this.loadingView)];
+                        RES.loadGroup("preload", 0, this.loadingView);
+                        RES.loadGroup("res", 0, this.loadingView);
+                        return [3 /*break*/, 3];
                     case 2:
-                        _a.sent();
-                        return [3 /*break*/, 4];
-                    case 3:
                         e_1 = _a.sent();
                         console.error(e_1);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -147,4 +145,3 @@ var Main = (function (_super) {
     return Main;
 }(egret.DisplayObjectContainer));
 __reflect(Main.prototype, "Main");
-//# sourceMappingURL=Main.js.map

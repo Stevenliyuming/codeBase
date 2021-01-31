@@ -29,4 +29,3 @@ var codeBase;
     codeBase.FairyGUIProto = FairyGUIProto;
     __reflect(FairyGUIProto.prototype, "codeBase.FairyGUIProto");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=FairyGUIProto.js.map

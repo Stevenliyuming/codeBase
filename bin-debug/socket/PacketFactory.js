@@ -53,4 +53,3 @@ var codeBase;
     codeBase.PacketFactory = PacketFactory;
     __reflect(PacketFactory.prototype, "codeBase.PacketFactory");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=PacketFactory.js.map

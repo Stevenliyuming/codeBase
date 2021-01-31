@@ -24,4 +24,3 @@ var codeBase;
     codeBase.ParticleUtil = ParticleUtil;
     __reflect(ParticleUtil.prototype, "codeBase.ParticleUtil");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=ParticleUtil.js.map

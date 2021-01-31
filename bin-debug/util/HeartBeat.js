@@ -267,4 +267,3 @@ var codeBase;
     }());
     __reflect(BeatItem.prototype, "BeatItem");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=HeartBeat.js.map

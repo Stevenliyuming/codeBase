@@ -1,8 +1,12 @@
 {
 	"groups": [
 		{
-			"keys": "bg_png,comRes_1_json,A_png,A点击_png,slider_bar_h_png,slider_bar_v_png,slider_bar_h2_png,slider_bar_v2_png,click_mp3,btnNumber_png,btnNumber_fnt",
+			"keys": "bg_png,comRes_1_json,A_png,A点击_png,slider_bar_h_png,slider_bar_v_png,slider_bar_h2_png,slider_bar_v2_png,btnNumber_png,btnNumber_fnt,btnNumber2_fnt,btnNumber2_png",
 			"name": "preload"
+		},
+		{
+			"keys": "click_mp3,click2_mp3,hexiaoma_tex_png,hexiaoma_tex_json,hexiaoma_ske_json,xilili_ske_json,xilili_tex_json,xilili_tex_png",
+			"name": "res"
 		}
 	],
 	"resources": [
@@ -18,49 +22,104 @@
 			"subkeys": "hand,playSound,restart"
 		},
 		{
-			"name": "A_png",
+			"url": "assets/A.png",
 			"type": "image",
-			"url": "assets/A.png"
+			"name": "A_png"
 		},
 		{
-			"name": "A点击_png",
+			"url": "assets/A点击.png",
 			"type": "image",
-			"url": "assets/A点击.png"
+			"name": "A点击_png"
 		},
 		{
-			"name": "slider_bar_h_png",
+			"url": "assets/slider_bar_h.png",
 			"type": "image",
-			"url": "assets/slider_bar_h.png"
+			"name": "slider_bar_h_png"
 		},
 		{
-			"name": "slider_bar_v_png",
+			"url": "assets/slider_bar_v.png",
 			"type": "image",
-			"url": "assets/slider_bar_v.png"
+			"name": "slider_bar_v_png"
 		},
 		{
-			"name": "slider_bar_h2_png",
+			"url": "assets/slider_bar_h.png",
 			"type": "image",
-			"url": "assets/slider_bar_h.png"
+			"name": "slider_bar_h2_png"
 		},
 		{
-			"name": "slider_bar_v2_png",
+			"url": "assets/slider_bar_v.png",
 			"type": "image",
-			"url": "assets/slider_bar_v.png"
+			"name": "slider_bar_v2_png"
 		},
 		{
-			"name": "click_mp3",
+			"url": "assets/click.mp3",
 			"type": "sound",
-			"url": "assets/click.mp3"
+			"name": "click_mp3"
 		},
 		{
-			"name": "btnNumber_png",
+			"url": "assets/btnNumber.png",
 			"type": "image",
-			"url": "assets/btnNumber.png"
+			"name": "btnNumber_png"
 		},
 		{
-			"name": "btnNumber_fnt",
+			"url": "assets/btnNumber.fnt",
 			"type": "font",
-			"url": "assets/btnNumber.fnt"
+			"name": "btnNumber_fnt"
+		},
+		{
+			"url": "assets/btnNumber.fnt",
+			"type": "font",
+			"name": "btnNumber2_fnt"
+		},
+		{
+			"url": "assets/btnNumber.png",
+			"type": "image",
+			"name": "btnNumber2_png"
+		},
+		{
+			"url": "assets/click.mp3",
+			"type": "sound",
+			"name": "click2_mp3"
+		},
+		{
+			"url": "assets/skeleton/hexiaoma_ske.json",
+			"type": "json",
+			"name": "hexiaoma_ske_json"
+		},
+		{
+			"url": "assets/skeleton/hexiaoma_tex.json",
+			"type": "json",
+			"name": "hexiaoma_tex_json"
+		},
+		{
+			"url": "assets/skeleton/hexiaoma_tex.png",
+			"type": "image",
+			"name": "hexiaoma_tex_png"
+		},
+		{
+			"url": "assets/framesAnimation/hexiaoma_mc.json",
+			"type": "json",
+			"name": "hexiaoma_mc_json"
+		},
+		{
+			"url": "assets/framesAnimation/hexiaoma_tex.png",
+			"type": "image",
+			"name": "hexiaoma_tex2_png"
+		},
+		{
+			"url": "assets/skeleton/xilili_ske.json",
+			"type": "json",
+			"name": "xilili_ske_json"
+		},
+		{
+			"url": "assets/skeleton/xilili_tex.json",
+			"type": "json",
+			"name": "xilili_tex_json"
+		},
+		{
+			"url": "assets/skeleton/xilili_tex.png",
+			"type": "image",
+			"name": "xilili_tex_png"
 		}
 	]
 }

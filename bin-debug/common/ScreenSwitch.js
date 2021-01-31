@@ -107,4 +107,3 @@ var codeBase;
     codeBase.ScreenSwitch = ScreenSwitch;
     __reflect(ScreenSwitch.prototype, "codeBase.ScreenSwitch");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=ScreenSwitch.js.map

@@ -682,7 +682,7 @@ var codeBase;
             var s = this;
             var resGroup = [];
             if (key == null) {
-                console.log("getResGroup:key为空");
+                console.log("key为空");
                 return resGroup;
             }
             ;
@@ -777,4 +777,3 @@ var codeBase;
     codeBase.ResLoader = ResLoader;
     __reflect(ResLoader.prototype, "codeBase.ResLoader");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=ResLoader.js.map

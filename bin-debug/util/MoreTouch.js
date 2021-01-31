@@ -149,4 +149,3 @@ var codeBase;
     codeBase.MoreTouch = MoreTouch;
     __reflect(MoreTouch.prototype, "codeBase.MoreTouch");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=MoreTouch.js.map

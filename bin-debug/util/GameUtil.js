@@ -536,4 +536,3 @@ var codeBase;
     codeBase.GameUtil = GameUtil;
     __reflect(GameUtil.prototype, "codeBase.GameUtil");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=GameUtil.js.map

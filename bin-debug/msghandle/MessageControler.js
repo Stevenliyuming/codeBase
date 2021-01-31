@@ -60,4 +60,3 @@ var codeBase;
     codeBase.MessageControler = MessageControler;
     __reflect(MessageControler.prototype, "codeBase.MessageControler");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=MessageControler.js.map

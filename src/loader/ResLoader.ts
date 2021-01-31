@@ -676,7 +676,7 @@ module codeBase{
 			let s = this;
 			let resGroup:ResourceItem.ResObject[] = [];
 			if(key == null) {
-				console.log("getResGroup:key为空");
+				console.log("key为空");
 				return resGroup;
 			};
             let ind;

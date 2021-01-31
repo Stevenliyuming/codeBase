@@ -63,17 +63,17 @@ module codeBase {
 				return res;
 			}
 			
-			// eui.getAssets = function (key: string, callBack: Function, thisObject: any) {
-			// 	if (key == null) {
-			// 		Debug.log = "资源key为空";
-			// 		return;
-			// 	}
-			// 	let res: any;
-			// 	res = RES.getRes(key);
+			eui.getAssets = function (key: string, callBack: Function, thisObject: any) {
+				if (key == null) {
+					Debug.log = "资源key为空";
+					return;
+				}
+				let res: any;
+				res = RES.getRes(key);
 
-			// 	if (callBack != null)
-			// 		callBack.call(thisObject, res);
-			// }
+				if (callBack != null)
+					callBack.call(thisObject, res);
+			}
 			EgretProto.injectResConfig("default.res.json");
 		}
 

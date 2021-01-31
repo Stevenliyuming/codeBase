@@ -70,170 +70,181 @@ var codeBase;
             s.group_play.horizontalCenter = 0;
             s.group_play.verticalCenter = 0;
             //s.group_play.showBg = true;
-            var group = new codeBase.Group;
-            group.width = 300;
-            group.height = 200;
-            group.x = 600;
-            group.y = 600;
-            s.group_play.addChild(group);
-            group.showBg = true;
-            group.border = true;
-            var label = new codeBase.Label;
-            //label.setSize(800, 50);
-            label.text = "这是一个具有布局约束的文本";
-            s.group_play.addChild(label);
-            label.left = 50;
-            label.top = 500;
-            label.showBg = true;
-            console.log("label.width:" + label.width + "  label.height:" + label.height);
-            // label.autoSize = false;
-            // label.paddingLeft = 20;
-            // label.paddingRight = 20;
+            // let group = new Group;
+            // group.width = 300;
+            // group.height = 200;
+            // group.x = 600;
+            // group.y = 600;
+            // s.group_play.addChild(group);
+            // group.showBg = true;
+            // group.border = true;
+            // let label:Label = new Label;
+            // //label.setSize(800, 50);
+            // label.text = "这是一个具有布局约束的文本";
+            // s.group_play.addChild(label);
+            // label.left = 50;
+            // label.top = 500;
+            // label.showBg = true;
+            // console.log("label.width:" + label.width + "  label.height:" + label.height);
+            // // label.autoSize = false;
+            // // label.paddingLeft = 20;
+            // // label.paddingRight = 20;
+            // egret.setTimeout(()=>{
+            // 	label.text = "一个具有布局约束的文本00000000000";
+            // }, s, 100);
+            // let hand = new Image;
+            // hand.texture = RES.getRes("comRes_1_json.hand");
+            // s.group_play.addChild(hand);
+            // hand.left = 0;
+            // hand.top = 300;
+            // console.log("hand.width:" + hand.width + "  hand.height:" + hand.height);
+            // let textInput = new TextInput;
+            // textInput.width = 100;
+            // textInput.height = 60;
+            // s.group_play.addChild(textInput);
+            // textInput.x = 1000;
+            // textInput.y = 650;
+            // textInput.showBg = true;
+            // textInput.paddingLeft = 10;
+            // textInput.paddingTop = 5;
+            // textInput.paddingRight = 10;
+            // textInput.paddingBottom = 5;
+            // textInput.vAlign = egret.VerticalAlign.MIDDLE;
+            // let textArea = new TextArea;
+            // textArea.width = 300;
+            // textArea.height = 300;
+            // s.group_play.addChild(textArea);
+            // textArea.x = 50;
+            // textArea.y = 100;
+            // textArea.showBg = true;
+            // textArea.text = "1月1日"
+            // // textArea.editable = true;
+            // // textArea.paddingLeft = 10;
+            // // textArea.paddingTop = 20;
+            // // textArea.paddingRight = 10;
+            // // textArea.paddingBottom = 20;
+            // let button = new Button;
+            // s.group_play.addChild(button);
+            // button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
+            // button.setClickFunction(()=>{
+            // 	EffectUtil.playEffect(hand, 1);
+            // }, s);
+            // button.x = 0;
+            // button.y = s.group_play.height - button.height;
+            // console.log("button.width:" + button.width + "  button.height:" + button.height);
+            // EffectUtil.breatheEffect(button);
+            // let bitmap2 = UICreator.createBitmap("A点击_png");
+            // s.group_play.addChild(bitmap2);
+            // bitmap2.x = 500;
+            // bitmap2.y = s.group_play.height - bitmap2.height;
+            // EffectUtil.breatheEffect(bitmap2);
+            // let buttonGroup = new BaseGroup;
+            // let buttonSkins:any[] = [RES.getRes("A_png"), RES.getRes("A点击_png")];
+            // for(let i=0; i<3; ++i) {
+            // 	button = UICreator.createToggleButton(buttonSkins, "abc", (data:any)=>{
+            // 		console.log(i);
+            // 		console.log(data);
+            // 	}, s);
+            // 	buttonGroup.addChild(button);
+            // 	button.x = 0;// + i * (button.width + 20);
+            // 	button.y = 0 + i * (button.height + 20);
+            // }
+            // buttonGroup.width = button.width;
+            // buttonGroup.height = button.y + button.height + 50;
+            // let slider = new Image;
+            // slider.texture = RES.getRes("slider_bar_v_png");
+            // let scrollBar = new Scroller(buttonGroup.width, 500, buttonGroup, Style.VERTICAL, slider, true);
+            // scrollBar.x = 1000;
+            // scrollBar.y = 600;
+            // s.group_play.addChild(scrollBar);
+            // scrollBar.setMouseWheelEnable(true);
+            // let listItemDataArr:any[] = [
+            // 	{
+            // 		res: "A_png"
+            // 	},
+            // 	{
+            // 		res: "A点击_png"
+            // 	},
+            // 	{
+            // 		res: "A_png"
+            // 	},
+            // 	{
+            // 		res: "A点击_png"
+            // 	},
+            // 	{
+            // 		res: "A_png"
+            // 	},				
+            // 	{
+            // 		res: "A点击_png"
+            // 	},				
+            // 	{
+            // 		res: "A_png"
+            // 	},
+            // 	{
+            // 		res: "A点击_png"
+            // 	},
+            // 	{
+            // 		res: "A_png"
+            // 	},
+            // 	{
+            // 		res: "A点击_png"
+            // 	},
+            // 	{
+            // 		res: "A_png"
+            // 	},				
+            // 	{
+            // 		res: "A点击_png"
+            // 	},
+            // ];
+            // let listGroup = new List;
+            // s.group_play.addChild(listGroup);
+            // listGroup.x = 1300;
+            // listGroup.y = 0;
+            // listGroup.width = 700;
+            // listGroup.height = 600;
+            // listGroup.itemRenderer = ListItemRenderer;
+            // listGroup.gap = 100;
+            // listGroup.line = 2;
+            // listGroup.lineGap = 20;
+            // //listGroup.layout = Style.HORIZONTAL;
+            // listGroup.data = listItemDataArr;
+            // listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
+            // 	console.log(ev.data);
+            // }, s);
+            // let listGroup2 = new ListGroup(322, 600, Style.VERTICAL, 20);
+            // listGroup2.renderList(ListItemRenderer, listItemDataArr, true);
+            // s.group_play.addChild(listGroup2);
+            // listGroup2.x = 600;
+            // listGroup2.y = 0;
+            // listGroup2.scrollBar.sliderBarSkins(UICreator.createBitmap("slider_bar_v_png"), UICreator.createBitmap("slider_bar_h_png"));
+            // //let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
+            // // img.anchorX = 0.5;
+            // // img.anchorY = 0.5;
+            // // img.width = 300;
+            // // img.height = 200;
+            // // img.autoSize = false;
+            // //MoreTouch.start(img, true, 0.5, 5, true);
+            // let btn:egret.Bitmap = UICreator.createBitmap("A_png");
+            // s.group_play.addChild(btn);
+            // btn.x = 0;
+            // btn.y = 0;
+            var euiImage2 = new eui.Image;
+            euiImage2.texture = RES.getRes("comRes_1_json.playSound");
+            s.group_play.addChild(euiImage2);
+            euiImage2.left = 350;
+            euiImage2.top = 600;
             egret.setTimeout(function () {
-                label.text = "一个具有布局约束的文本00000000000";
-            }, s, 100);
-            var hand = new codeBase.Image;
-            hand.texture = RES.getRes("comRes_1_json.hand");
-            s.group_play.addChild(hand);
-            hand.left = 0;
-            hand.top = 300;
-            console.log("hand.width:" + hand.width + "  hand.height:" + hand.height);
-            var textInput = new codeBase.TextInput;
-            textInput.width = 100;
-            textInput.height = 60;
-            s.group_play.addChild(textInput);
-            textInput.x = 1000;
-            textInput.y = 650;
-            textInput.showBg = true;
-            textInput.paddingLeft = 10;
-            textInput.paddingTop = 5;
-            textInput.paddingRight = 10;
-            textInput.paddingBottom = 5;
-            textInput.vAlign = egret.VerticalAlign.MIDDLE;
-            var textArea = new codeBase.TextArea;
-            textArea.width = 300;
-            textArea.height = 300;
-            s.group_play.addChild(textArea);
-            textArea.x = 50;
-            textArea.y = 100;
-            textArea.showBg = true;
-            textArea.text = "1月1日";
-            // textArea.editable = true;
-            // textArea.paddingLeft = 10;
-            // textArea.paddingTop = 20;
-            // textArea.paddingRight = 10;
-            // textArea.paddingBottom = 20;
-            var button = new codeBase.Button;
-            s.group_play.addChild(button);
-            button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
-            button.setClickFunction(function () {
-                codeBase.EffectUtil.playEffect(hand, 1);
-            }, s);
-            button.x = 0;
-            button.y = s.group_play.height - button.height;
-            console.log("button.width:" + button.width + "  button.height:" + button.height);
-            codeBase.EffectUtil.breatheEffect(button);
-            var bitmap2 = codeBase.UICreator.createBitmap("A点击_png");
-            s.group_play.addChild(bitmap2);
-            bitmap2.x = 500;
-            bitmap2.y = s.group_play.height - bitmap2.height;
-            codeBase.EffectUtil.breatheEffect(bitmap2);
-            var buttonGroup = new codeBase.BaseGroup;
-            var buttonSkins = [RES.getRes("A_png"), RES.getRes("A点击_png")];
-            var _loop_1 = function (i) {
-                button = codeBase.UICreator.createToggleButton(buttonSkins, "abc", function (data) {
-                    console.log(i);
-                    console.log(data);
-                }, s);
-                buttonGroup.addChild(button);
-                button.x = 0; // + i * (button.width + 20);
-                button.y = 0 + i * (button.height + 20);
-            };
-            for (var i = 0; i < 3; ++i) {
-                _loop_1(i);
-            }
-            buttonGroup.width = button.width;
-            buttonGroup.height = button.y + button.height + 50;
-            var slider = new codeBase.Image;
-            slider.texture = RES.getRes("slider_bar_v_png");
-            var scrollBar = new codeBase.Scroller(buttonGroup.width, 500, buttonGroup, codeBase.Style.VERTICAL, slider, true);
-            scrollBar.x = 1000;
-            scrollBar.y = 600;
-            s.group_play.addChild(scrollBar);
-            scrollBar.setMouseWheelEnable(true);
-            var listItemDataArr = [
-                {
-                    res: "A_png"
-                },
-                {
-                    res: "A点击_png"
-                },
-                {
-                    res: "A_png"
-                },
-                {
-                    res: "A点击_png"
-                },
-                {
-                    res: "A_png"
-                },
-                {
-                    res: "A点击_png"
-                },
-                {
-                    res: "A_png"
-                },
-                {
-                    res: "A点击_png"
-                },
-                {
-                    res: "A_png"
-                },
-                {
-                    res: "A点击_png"
-                },
-                {
-                    res: "A_png"
-                },
-                {
-                    res: "A点击_png"
-                },
-            ];
-            var listGroup = new codeBase.List;
-            s.group_play.addChild(listGroup);
-            listGroup.x = 1300;
-            listGroup.y = 0;
-            listGroup.width = 700;
-            listGroup.height = 600;
-            listGroup.itemRenderer = codeBase.ListItemRenderer;
-            listGroup.gap = 100;
-            listGroup.line = 2;
-            listGroup.lineGap = 20;
-            //listGroup.layout = Style.HORIZONTAL;
-            listGroup.data = listItemDataArr;
-            listGroup.addEventListener(codeBase.List.ITEM_SELECTED, function (ev) {
-                console.log(ev.data);
-            }, s);
-            var listGroup2 = new codeBase.ListGroup(322, 600, codeBase.Style.VERTICAL, 20);
-            listGroup2.renderList(codeBase.ListItemRenderer, listItemDataArr, true);
-            s.group_play.addChild(listGroup2);
-            listGroup2.x = 600;
-            listGroup2.y = 0;
-            listGroup2.scrollBar.sliderBarSkins(codeBase.UICreator.createBitmap("slider_bar_v_png"), codeBase.UICreator.createBitmap("slider_bar_h_png"));
-            //let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
-            // img.anchorX = 0.5;
-            // img.anchorY = 0.5;
-            // img.width = 300;
-            // img.height = 200;
-            // img.autoSize = false;
-            //MoreTouch.start(img, true, 0.5, 5, true);
-            var btn = codeBase.UICreator.createBitmap("A_png");
-            s.group_play.addChild(btn);
-            btn.x = 0;
-            btn.y = 0;
-            for (var i = 0; i < 100; ++i) {
-                console.log(codeBase.MathUtil.random(0, 2));
-            }
+                var euiImage = new eui.Image;
+                euiImage.texture = RES.getRes("A_png");
+                s.group_play.addElement(euiImage);
+                euiImage.left = 0;
+                euiImage.top = 600;
+            }, s, 1000);
+            var hxmSkeleton = new codeBase.Skeleton;
+            hxmSkeleton.setDataByName("xilili", "", "xilili", "xilili");
+            hxmSkeleton.show(s.group_play, 500, 600);
+            hxmSkeleton.gotoAndPlay("daiji", -1);
+            //hxmSkeleton.setTimeScale(2);
             //标题
             // s.titleGroup = new BaseGroup;
             // s.titleGroup.touchEnabled = true;
@@ -444,4 +455,3 @@ var codeBase;
     codeBase.MainScene = MainScene;
     __reflect(MainScene.prototype, "codeBase.MainScene");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=MainScene.js.map
