@@ -440,3 +440,4 @@ var codeBase;
     codeBase.Skeleton = Skeleton;
     __reflect(Skeleton.prototype, "codeBase.Skeleton");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Skeleton.js.map

@@ -14,3 +14,4 @@ var codeBase;
     codeBase.BaseEntity = BaseEntity;
     __reflect(BaseEntity.prototype, "codeBase.BaseEntity");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=BaseEntity.js.map

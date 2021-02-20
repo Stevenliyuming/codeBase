@@ -33,3 +33,4 @@ var codeBase;
     codeBase.MyEventDispatcher = MyEventDispatcher;
     __reflect(MyEventDispatcher.prototype, "codeBase.MyEventDispatcher", ["egret.IEventDispatcher"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=MyEventDispatcher.js.map

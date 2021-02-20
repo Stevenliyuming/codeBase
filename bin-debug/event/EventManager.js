@@ -291,3 +291,4 @@ var codeBase;
     codeBase.EventManager = EventManager;
     __reflect(EventManager.prototype, "codeBase.EventManager");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=EventManager.js.map

@@ -64,3 +64,4 @@ var codeBase;
     codeBase.BaseHandle = BaseHandle;
     __reflect(BaseHandle.prototype, "codeBase.BaseHandle", ["codeBase.IHandle"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=BaseHandle.js.map

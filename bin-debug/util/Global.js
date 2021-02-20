@@ -162,3 +162,4 @@ var codeBase;
     //当前游戏角度
     codeBase.curAngle = Number(window["orientation"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Global.js.map

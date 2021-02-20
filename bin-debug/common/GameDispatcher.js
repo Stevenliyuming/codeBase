@@ -58,3 +58,4 @@ var codeBase;
     codeBase.GameDispatcher = GameDispatcher;
     __reflect(GameDispatcher.prototype, "codeBase.GameDispatcher");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=GameDispatcher.js.map

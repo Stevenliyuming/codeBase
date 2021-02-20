@@ -78,3 +78,4 @@ var codeBase;
     codeBase.FlippingCard = FlippingCard;
     __reflect(FlippingCard.prototype, "codeBase.FlippingCard");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=FlippingCard.js.map

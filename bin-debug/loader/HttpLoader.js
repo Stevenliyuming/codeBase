@@ -272,3 +272,4 @@ var codeBase;
     codeBase.HttpLoader = HttpLoader;
     __reflect(HttpLoader.prototype, "codeBase.HttpLoader");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=HttpLoader.js.map

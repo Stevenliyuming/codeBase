@@ -70,3 +70,4 @@ var codeBase;
     codeBase.Progress = Progress;
     __reflect(Progress.prototype, "codeBase.Progress");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Progress.js.map

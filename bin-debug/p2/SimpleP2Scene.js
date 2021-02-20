@@ -65,3 +65,4 @@ var codeBase;
         __reflect(SimpleP2Scene.prototype, "codeBase.easyP2.SimpleP2Scene");
     })(easyP2 = codeBase.easyP2 || (codeBase.easyP2 = {}));
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=SimpleP2Scene.js.map

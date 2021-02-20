@@ -187,3 +187,4 @@ var codeBase;
     codeBase.GlobalSetting = GlobalSetting;
     __reflect(GlobalSetting.prototype, "codeBase.GlobalSetting");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=GlobalSetting.js.map

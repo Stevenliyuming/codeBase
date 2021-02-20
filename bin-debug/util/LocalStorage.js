@@ -30,3 +30,4 @@ var codeBase;
     codeBase.LocalStorage = LocalStorage;
     __reflect(LocalStorage.prototype, "codeBase.LocalStorage");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=LocalStorage.js.map

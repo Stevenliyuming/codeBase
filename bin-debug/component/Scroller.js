@@ -345,3 +345,4 @@ var codeBase;
     codeBase.Scroller = Scroller;
     __reflect(Scroller.prototype, "codeBase.Scroller", ["codeBase.ILayout"]);
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=Scroller.js.map

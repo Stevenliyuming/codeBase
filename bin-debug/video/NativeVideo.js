@@ -196,3 +196,4 @@ var codeBase;
     codeBase.NativeVideo = NativeVideo;
     __reflect(NativeVideo.prototype, "codeBase.NativeVideo");
 })(codeBase || (codeBase = {}));
+//# sourceMappingURL=NativeVideo.js.map
