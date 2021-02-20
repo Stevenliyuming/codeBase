@@ -38,4 +38,3 @@ var codeBase;
     codeBase.MapUtil = MapUtil;
     __reflect(MapUtil.prototype, "codeBase.MapUtil");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=MapUtil.js.map

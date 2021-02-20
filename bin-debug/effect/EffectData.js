@@ -29,4 +29,3 @@ var codeBase;
     codeBase.EffectData = EffectData;
     __reflect(EffectData.prototype, "codeBase.EffectData");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=EffectData.js.map

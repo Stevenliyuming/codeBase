@@ -596,4 +596,3 @@ var codeBase;
     codeBase.BaseGroup = BaseGroup;
     __reflect(BaseGroup.prototype, "codeBase.BaseGroup");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=BaseGroup.js.map

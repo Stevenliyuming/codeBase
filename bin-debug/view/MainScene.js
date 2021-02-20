@@ -455,4 +455,3 @@ var codeBase;
     codeBase.MainScene = MainScene;
     __reflect(MainScene.prototype, "codeBase.MainScene");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=MainScene.js.map

@@ -428,4 +428,3 @@ var codeBase;
     codeBase.ImageAnimation = ImageAnimation;
     __reflect(ImageAnimation.prototype, "codeBase.ImageAnimation");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=ImageAnimation.js.map

@@ -246,4 +246,3 @@ var codeBase;
     codeBase.EgretProto = EgretProto;
     __reflect(EgretProto.prototype, "codeBase.EgretProto");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=EgretProto.js.map

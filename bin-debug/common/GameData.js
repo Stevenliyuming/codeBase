@@ -23,4 +23,3 @@ var codeBase;
     codeBase.GameData = GameData;
     __reflect(GameData.prototype, "codeBase.GameData");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=GameData.js.map

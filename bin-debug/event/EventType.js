@@ -84,4 +84,3 @@ var codeBase;
     codeBase.EventType = EventType;
     __reflect(EventType.prototype, "codeBase.EventType");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=EventType.js.map

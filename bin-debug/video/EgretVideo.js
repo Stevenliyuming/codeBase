@@ -232,4 +232,3 @@ var codeBase;
     codeBase.EgretVideo = EgretVideo;
     __reflect(EgretVideo.prototype, "codeBase.EgretVideo");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=EgretVideo.js.map

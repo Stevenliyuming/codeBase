@@ -117,18 +117,22 @@ var Main = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
+                        _a.trys.push([0, 4, , 5]);
                         return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
                     case 1:
                         _a.sent();
-                        RES.loadGroup("preload", 0, this.loadingView);
-                        RES.loadGroup("res", 0, this.loadingView);
-                        return [3 /*break*/, 3];
+                        return [4 /*yield*/, RES.loadGroup("preload", 0, this.loadingView)];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, RES.loadGroup("res", 0, this.loadingView)];
+                    case 3:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
                         e_1 = _a.sent();
                         console.error(e_1);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
@@ -145,4 +149,3 @@ var Main = (function (_super) {
     return Main;
 }(egret.DisplayObjectContainer));
 __reflect(Main.prototype, "Main");
-//# sourceMappingURL=Main.js.map

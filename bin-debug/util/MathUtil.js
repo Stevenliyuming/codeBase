@@ -165,4 +165,3 @@ var codeBase;
     codeBase.MathUtil = MathUtil;
     __reflect(MathUtil.prototype, "codeBase.MathUtil");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=MathUtil.js.map

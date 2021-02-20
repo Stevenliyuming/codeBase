@@ -57,4 +57,3 @@ var codeBase;
     codeBase.ListItemRenderer = ListItemRenderer;
     __reflect(ListItemRenderer.prototype, "codeBase.ListItemRenderer");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=ListItemRenderer.js.map

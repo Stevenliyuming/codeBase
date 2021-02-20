@@ -270,4 +270,3 @@ var codeBase;
     codeBase.SoundManager = SoundManager;
     __reflect(SoundManager.prototype, "codeBase.SoundManager");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=SoundManager.js.map

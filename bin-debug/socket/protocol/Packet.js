@@ -81,4 +81,3 @@ var codeBase;
     codeBase.Packet = Packet;
     __reflect(Packet.prototype, "codeBase.Packet");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=Packet.js.map

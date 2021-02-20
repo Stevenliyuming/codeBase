@@ -129,4 +129,3 @@ var codeBase;
     codeBase.BinaryHeap = BinaryHeap;
     __reflect(BinaryHeap.prototype, "codeBase.BinaryHeap");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=BinaryHeap.js.map

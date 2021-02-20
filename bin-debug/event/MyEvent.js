@@ -87,4 +87,3 @@ var codeBase;
     codeBase.MyEvent = MyEvent;
     __reflect(MyEvent.prototype, "codeBase.MyEvent");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=MyEvent.js.map

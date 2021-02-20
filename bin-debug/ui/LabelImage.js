@@ -661,4 +661,3 @@ var codeBase;
     }());
     __reflect(EffectNumberRolling.prototype, "EffectNumberRolling");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=LabelImage.js.map

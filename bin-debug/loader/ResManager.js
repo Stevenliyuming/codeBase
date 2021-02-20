@@ -256,4 +256,3 @@ var codeBase;
     codeBase.ResManager = ResManager;
     __reflect(ResManager.prototype, "codeBase.ResManager");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=ResManager.js.map

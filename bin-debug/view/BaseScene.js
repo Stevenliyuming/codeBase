@@ -38,4 +38,3 @@ var codeBase;
     codeBase.BaseScene = BaseScene;
     __reflect(BaseScene.prototype, "codeBase.BaseScene");
 })(codeBase || (codeBase = {}));
-//# sourceMappingURL=BaseScene.js.map
