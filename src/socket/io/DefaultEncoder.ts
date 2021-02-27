@@ -23,7 +23,6 @@ module codeBase{
                 headBytes.writeShort(packet.header.messageId);//WORD  cmd_index;//命令
                 headBytes.writeShort(packet.header.code);//WORD   check_code;//校验位
             }
-
             return headBytes;
         }
         public encodeBody(packet:Packet):egret.ByteArray {

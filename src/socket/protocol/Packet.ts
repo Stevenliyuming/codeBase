@@ -26,13 +26,14 @@ module codeBase{
 
 
         public header:IHeader = null;//包头
-        public define:Array<any> = new Array<any>();//包体 item定义数据
-
+        public define:Array<any> = new Array<any>();//包体item定义数据，item:{ type:string, id:string };type:数据类型，id:定义的包类属性名
         private _clientSide:boolean = true;//cleint 端协议
+
         public constructor(messageId:number = 0, cside:boolean = true) {
             this.clientSide = cside;
             this.header.messageId = messageId;
         }
+
         /**
          * 内容成功与否标识
          * @return true,对应请求成功;false,对应请求失败
@@ -41,6 +42,7 @@ module codeBase{
         public get isSuccess():boolean{
 			return this.header.code == 0?true:false;
         }
+
         public send():void {
             if (this.clientSide){
                 WebSocket.getInstance().send(this);
@@ -48,6 +50,7 @@ module codeBase{
                 EventManager.dispactchPacket(this);
             }
         }
+        
         public get clientSide():boolean {
             return this._clientSide;
         }

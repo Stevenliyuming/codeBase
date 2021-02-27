@@ -1,9 +1,9 @@
-module codeBase{
+module codeBase {
 	//课程类型
 	enum InteractionType {
-		kids=1, pupil
+		kids = 1, pupil
 	}
-	export class MainScene extends BaseScene {	
+	export class MainScene extends BaseScene {
 		//eui属性
 		// public bg:Image;
 		// public group_play:eui.Group;
@@ -14,29 +14,29 @@ module codeBase{
 		public bg: Image;
 		public group_play: Group;
 		public rect_mask: Image;
-		public titleGroup:BaseGroup;
-		public title:Image;
-		public playSound_btn:Image;
+		public titleGroup: BaseGroup;
+		public title: Image;
+		public playSound_btn: Image;
 
 
 		//自定义属性
-		private interactionType:InteractionType = InteractionType.pupil;
-		private currentDragTarget:Image = null;
-		private currentDragTargetRenderIndex:number = 0;
-		private currentDragTargetIndex:number = -1;
-		private dragTargetLeavePos:egret.Point = new egret.Point();
-		private _distance:egret.Point = new egret.Point(0, 0); //鼠标点击时，鼠标全局坐标与目标的位置差
+		private interactionType: InteractionType = InteractionType.pupil;
+		private currentDragTarget: Image = null;
+		private currentDragTargetRenderIndex: number = 0;
+		private currentDragTargetIndex: number = -1;
+		private dragTargetLeavePos: egret.Point = new egret.Point();
+		private _distance: egret.Point = new egret.Point(0, 0); //鼠标点击时，鼠标全局坐标与目标的位置差
 
 		//键盘输入数字
 		//private inputText:string = "0";
 
 		//交互状态,初始默认为0
-		private gameStage:number = 0;
-		private wrongCounter:number = 0;
+		private gameStage: number = 0;
+		private wrongCounter: number = 0;
 
 		//手势指示
-		private hand:Image;
-		private counter:number = 0;
+		private hand: Image;
+		private counter: number = 0;
 
 		public constructor() {
 			super();
@@ -253,25 +253,27 @@ module codeBase{
 			// btn.x = 0;
 			// btn.y = 0;
 
-			let euiImage2:eui.Image = new eui.Image;
+			let euiImage2: eui.Image = new eui.Image;
 			euiImage2.texture = RES.getRes("comRes_1_json.playSound");
 			s.group_play.addChild(euiImage2);
 			euiImage2.left = 350;
 			euiImage2.top = 600;
 
-			egret.setTimeout(()=>{
-				let euiImage:eui.Image = new eui.Image;
+			egret.setTimeout(() => {
+				let euiImage: eui.Image = new eui.Image;
 				euiImage.texture = RES.getRes("A_png");
 				s.group_play.addElement(euiImage);
 				euiImage.left = 0;
 				euiImage.top = 600;
 			}, s, 1000);
 
-			let hxmSkeleton:Skeleton = new Skeleton;
+			let hxmSkeleton: Skeleton = new Skeleton;
 			hxmSkeleton.setDataByName("xilili", "", "xilili", "xilili");
 			hxmSkeleton.show(s.group_play, 500, 600);
 			hxmSkeleton.gotoAndPlay("daiji", -1);
 			//hxmSkeleton.setTimeScale(2);
+
+			console.log(egret.getQualifiedClassName(s.group_play));
 
 			//标题
 			// s.titleGroup = new BaseGroup;
@@ -285,7 +287,7 @@ module codeBase{
 			// s.addChild(s.titleGroup);
 			// s.titleGroup.top = 10;
 			// s.titleGroup.horizonalCenter = 0;
-			
+
 			//s.dispatchEvent(new egret.Event(egret.Event.RESIZE));
 			//s.addEventListener(egret.Event.ENTER_FRAME, s.update, s);
 
@@ -304,7 +306,7 @@ module codeBase{
 			// }
 		}
 
-		private virtualKeyBoardCall(str:string) {
+		private virtualKeyBoardCall(str: string) {
 			//console.log(str);
 			let s = this;
 			if (str == "up") {
@@ -314,7 +316,7 @@ module codeBase{
 			}
 		}
 
-		private virtualKeyBoardBeginCall(str:string) {
+		private virtualKeyBoardBeginCall(str: string) {
 			//console.log(str);
 			let s = this;
 			if (str == "up") {
@@ -324,14 +326,14 @@ module codeBase{
 			}
 		}
 
-		private tweeObjectAlpha(obj:egret.DisplayObject, from:number, to:number, duration:number, callFun:Function = null, _obj:any = null) {
+		private tweeObjectAlpha(obj: egret.DisplayObject, from: number, to: number, duration: number, callFun: Function = null, _obj: any = null) {
 			obj.scaleX = 1;
 			obj.scaleY = 1;
 			obj.alpha = from;
-			if(callFun && _obj) {
-				egret.Tween.get(obj).to({ alpha:to }, duration).call(callFun.bind(_obj), this);
+			if (callFun && _obj) {
+				egret.Tween.get(obj).to({ alpha: to }, duration).call(callFun.bind(_obj), this);
 			} else {
-				egret.Tween.get(obj).to({ alpha:to }, duration);
+				egret.Tween.get(obj).to({ alpha: to }, duration);
 			}
 		}
 
@@ -342,7 +344,7 @@ module codeBase{
 			//this.gameStage = 0;
 		}
 
-		private selectOptions(e:egret.Event) {
+		private selectOptions(e: egret.Event) {
 			// if (this.gameStage != 0) {
 			// 	return;
 			// }
@@ -352,10 +354,10 @@ module codeBase{
 		public hide() {
 			super.hide();
 			let s = this;
-			if(s.isClear) return;
+			if (s.isClear) return;
 			s.isClear = true;
 			s.removeEventListener(egret.Event.ENTER_FRAME, s.update, s);
-			if(isMobile()) {
+			if (isMobile()) {
 				//ui1Lib.VirtualKeyboard.getInstance().hide();
 			} else {
 				document.removeEventListener("keydown", s.onkeydown);
@@ -365,7 +367,7 @@ module codeBase{
 
 		private gameFinished() {
 			let s = this;
-			if(s.gameStage > 0) {
+			if (s.gameStage > 0) {
 				return;
 			}
 			s.gameStage = 1;
@@ -380,13 +382,13 @@ module codeBase{
 			let s = this;
 		}
 
-		private onkeydown(event:KeyboardEvent) {
+		private onkeydown(event: KeyboardEvent) {
 			//console.log(event.keyCode);
 			let s = this;
 			s.keyDown(event.keyCode);
 		}
 
-		private keyDown(keyCode:number) {
+		private keyDown(keyCode: number) {
 			let s = this;
 			if (keyCode == 38) {
 				//up Arrow
@@ -396,7 +398,7 @@ module codeBase{
 			}
 		}
 
-		private keyUp(keyCode:number) {
+		private keyUp(keyCode: number) {
 			let s = this;
 			if (keyCode == 38) {
 				//up Arrow
@@ -406,7 +408,7 @@ module codeBase{
 			}
 		}
 
-		private onkeyup(event:KeyboardEvent) {
+		private onkeyup(event: KeyboardEvent) {
 			//console.log(event.keyCode);
 			let s = this;
 			s.keyUp(event.keyCode);

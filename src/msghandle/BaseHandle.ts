@@ -1,6 +1,6 @@
 module codeBase {
     /**
-     * 数据集中处理
+     * UI数据集中处理
      */
     export class BaseHandle implements IHandle {
         public METHOD_DEF: Object = {};//消息和方法的映射关系表

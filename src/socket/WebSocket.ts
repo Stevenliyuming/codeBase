@@ -32,7 +32,7 @@ module codeBase{
          */
         public static getInstance(): WebSocket {
             if (WebSocket._instance == null) {
-                WebSocket._instance = new codeBase.WebSocket();
+                WebSocket._instance = new WebSocket();
             }
             return WebSocket._instance;
         }
@@ -46,7 +46,7 @@ module codeBase{
                 //校验断线的情况下,重连
                 this.autoConnect();
                 this.packetSendCache.push(pkt);
-                codeBase.HeartBeat.addListener(this, this.checkPacketByteArray)
+                HeartBeat.addListener(this, this.checkPacketByteArray)
             }
         }
 
@@ -88,7 +88,7 @@ module codeBase{
             Debug.log = "@连接　host＝" + host + ", port=" + port;
             this.host = host;
             this.port = port;
-            if (this.port <= 0 || !codeBase.StringUtil.isUsage(this.host)) {
+            if (this.port <= 0 || !StringUtil.isUsage(this.host)) {
                 Debug.log = "[ERROR] port=" + this.port + ", host=" + this.host + ",不合法,无法连接!";
                 return;
             }
@@ -119,8 +119,8 @@ module codeBase{
          */
         private onEventWebSocketCloseHandler(event: Event): void {
             MyEvent.sendEvent(EventType.SOCKET_DISCONNECT);
-            //codeBase.MessageTips.showMessage("Socket close:" + event.type);
-            codeBase.Debug.log = "Socket close:" + event.type;
+            //MessageTips.showMessage("Socket close:" + event.type);
+            Debug.log = "Socket close:" + event.type;
             this.close();
         }
 
@@ -130,8 +130,8 @@ module codeBase{
          */
         private onEventWebSocketErrorHandler(event: egret.IOErrorEvent): void {
             MyEvent.sendEvent(EventType.SOCKET_DISCONNECT_ERROR);
-            //codeBase.MessageTips.showMessage("Socket error:" + event.type);
-            codeBase.Debug.log = "Socket error:" + event.type;
+            //MessageTips.showMessage("Socket error:" + event.type);
+            Debug.log = "Socket error:" + event.type;
         }
 
         /**
@@ -179,7 +179,7 @@ module codeBase{
             // Debug.log = this._webSocket.readUTF();
             this._byteRawBuffer.position = 0;
             this.rawByteArrayCache.push(this._byteRawBuffer);
-            codeBase.HeartBeat.addListener(this, this.checkPacketByteArray)
+            HeartBeat.addListener(this, this.checkPacketByteArray)
         }
 
 
@@ -305,7 +305,7 @@ module codeBase{
             }
 
             if (this.packetByteArrayCache.length == 0 && this.packetSendCache.length == 0) {
-                codeBase.HeartBeat.removeListener(this, this.checkPacketByteArray)
+                HeartBeat.removeListener(this, this.checkPacketByteArray)
             }
         }
     }

@@ -1,14 +1,14 @@
-module codeBase{
+module codeBase {
     export class MyEvent {
-        public callStack:string = null;
-        public type:string = null;
-        public datas:Object = {};
+        public callStack: string = null;
+        public type: string = null;
+        public datas: Object = {};
 
         /**
          * <p>事件基类构造函数,包含一个参数</p>
          * @param type 事件类型
          */
-        public constructor(typeValue:string) {
+        public constructor(typeValue: string) {
             this.type = typeValue;
         }
 
@@ -17,7 +17,7 @@ module codeBase{
          *  @param value 要添加的对象
          */
 
-        public addItem(property:string, value:any):void {
+        public addItem(property: string, value: any): void {
             this.datas[property] = value;
         }
 
@@ -26,8 +26,8 @@ module codeBase{
          * @param property
          * @returns {null}
          */
-        public getItem(property:string):any {
-            if (this.datas.hasOwnProperty(property)){
+        public getItem(property: string): any {
+            if (this.datas.hasOwnProperty(property)) {
                 return this.datas[property];
             }
             return null;
@@ -38,14 +38,14 @@ module codeBase{
          * @param property
          * @returns {boolean}
          */
-        public hasItem(property:string):any {
+        public hasItem(property: string): any {
             return this.datas.hasOwnProperty(property);
         }
 
         /**
          * 回收对象到对象池中
          */
-        public destory():void {
+        public destory(): void {
             this.callStack = null;
             for (var item in this.datas) {
                 delete this.datas[item];
@@ -56,8 +56,8 @@ module codeBase{
          * 删除property名称的数据
          * @param proprty
          */
-        public removeItem(property:string):boolean {
-            if (this.datas.hasOwnProperty(property)){
+        public removeItem(property: string): boolean {
+            if (this.datas.hasOwnProperty(property)) {
                 delete this.datas[property];
                 return true;
             }
@@ -67,7 +67,7 @@ module codeBase{
         /**
          * 派发event对象
          */
-        public send():void {
+        public send(): void {
             EventManager.dispatchEvent(this);
         }
 
@@ -76,7 +76,7 @@ module codeBase{
          * @param type
          * @returns {MyEvent}
          */
-        public static getEvent(type:string):MyEvent {
+        public static getEvent(type: string): MyEvent {
             return EventManager.getEvent(type);
         }
 
@@ -84,7 +84,7 @@ module codeBase{
          * 快捷发送一个type类型的event事件
          * @param type
          */
-        public static sendEvent(type:string, param:any = null):void {
+        public static sendEvent(type: string, param: any = null): void {
             EventManager.dispatch(type, param);
         }
     }

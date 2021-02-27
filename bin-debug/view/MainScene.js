@@ -245,6 +245,7 @@ var codeBase;
             hxmSkeleton.show(s.group_play, 500, 600);
             hxmSkeleton.gotoAndPlay("daiji", -1);
             //hxmSkeleton.setTimeScale(2);
+            console.log(egret.getQualifiedClassName(s.group_play));
             //标题
             // s.titleGroup = new BaseGroup;
             // s.titleGroup.touchEnabled = true;
