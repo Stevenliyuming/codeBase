@@ -24,11 +24,7 @@ var codeBase;
                 EventManager.packetCachePool[(clientSide ? "c_" : "s_") + messageId] = packetArray;
             }
             if (packetArray.length == 0) {
-                var packetFactory = egret.getDefinitionByName("PacketFactory");
-                if (packetFactory) {
-                    return packetFactory.createPacket(messageId, clientSide);
-                }
-                return null;
+                return codeBase.PacketFactory.createPacket(messageId, clientSide);
             }
             return packetArray.shift();
         };
@@ -81,7 +77,7 @@ var codeBase;
          * @param service  服务器id对应的响应service
          */
         EventManager.addPacketEvent = function (messageId, response, thisArg) {
-            if (response == null || EventManager.isContainerPacketEventListener(messageId, response, thisArg))
+            if (response == null || EventManager.isContainPacketEventListener(messageId, response, thisArg))
                 return;
             var serverList = null;
             serverList = EventManager.packetEventList[EventManager.PREFIX + messageId];
@@ -92,7 +88,7 @@ var codeBase;
             serverList.push({ func: response, owner: thisArg });
         };
         EventManager.removePacketEvent = function (messageId, response, thisArg) {
-            if (response == null || !EventManager.isContainerPacketEventListener(messageId, response, thisArg))
+            if (response == null || !EventManager.isContainPacketEventListener(messageId, response, thisArg))
                 return;
             var listenerList = EventManager.packetEventList[EventManager.PREFIX + messageId];
             if (listenerList)
@@ -104,7 +100,7 @@ var codeBase;
                 }
         };
         //同一事件类型,是否包含相同的响应方法
-        EventManager.isContainerPacketEventListener = function (messageId, response, thisArg) {
+        EventManager.isContainPacketEventListener = function (messageId, response, thisArg) {
             var listenerList = EventManager.packetEventList[EventManager.PREFIX + messageId];
             if (listenerList != null) {
                 for (var i = 0; i < listenerList.length; i++) {
@@ -151,6 +147,57 @@ var codeBase;
             }
         };
         //////////////////////////////////////////////
+        /**
+        * 添加事件监听
+        * @param eventType 事件的类型
+        * @param respone 对应的call back function
+        * @param thisArg 方法所在的this对象
+        */
+        EventManager.addEventListener = function (eventType, response, thisArg) {
+            if (response == null || EventManager.isContainEventListener(eventType, response, thisArg))
+                return;
+            var listenerList = EventManager.commEventList[eventType];
+            if (listenerList == null) {
+                listenerList = new Array();
+                EventManager.commEventList["" + eventType] = listenerList;
+            }
+            listenerList.push({ func: response, owner: thisArg });
+        };
+        /**
+         * 移除事件监听
+         * @param eventType 事件的类型
+         * @param respone 对应的call back function
+         * @param thisArg 方法所在的this对象
+         */
+        EventManager.removeEventListener = function (eventType, response, thisArg) {
+            var listenerList = EventManager.commEventList[eventType];
+            if (listenerList != null) {
+                for (var i = 0; i < listenerList.length; i++) {
+                    if (listenerList[i]["func"] == response && listenerList[i]["owner"] == thisArg) {
+                        listenerList.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        };
+        /**
+         * 同样的事件监听是否已经存在,防止二次添加
+         * @param eventType 事件的类型
+         * @param respone  对应的call back function
+         * @param thisArg  方法所在的this对象
+         * @returns {boolean}  true:已经存在, false:不存在
+         */
+        EventManager.isContainEventListener = function (eventType, response, thisArg) {
+            var listenerList = EventManager.commEventList["" + eventType];
+            if (listenerList != null) {
+                for (var i = 0; i < listenerList.length; i++) {
+                    if (listenerList[i]["func"] == response && listenerList[i]["owner"] == thisArg) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
         /**
          * 无参数的事件快捷派发
          * @param type 事件的类型
@@ -203,57 +250,6 @@ var codeBase;
             }
         };
         /**
-         * 移除事件监听
-         * @param eventType 事件的类型
-         * @param respone 对应的call back function
-         * @param thisArg 方法所在的this对象
-         */
-        EventManager.removeEventListener = function (eventType, response, thisArg) {
-            var listenerList = EventManager.commEventList[eventType];
-            if (listenerList != null) {
-                for (var i = 0; i < listenerList.length; i++) {
-                    if (listenerList[i]["func"] == response && listenerList[i]["owner"] == thisArg) {
-                        listenerList.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-        };
-        /**
-         * 添加时间监听
-         * @param eventType 事件的类型
-         * @param respone 对应的call back function
-         * @param thisArg 方法所在的this对象
-         */
-        EventManager.addEventListener = function (eventType, response, thisArg) {
-            if (response == null || EventManager.isContainerEventListener(eventType, response, thisArg))
-                return;
-            var listenerList = EventManager.commEventList[eventType];
-            if (listenerList == null) {
-                listenerList = new Array();
-                EventManager.commEventList["" + eventType] = listenerList;
-            }
-            listenerList.push({ func: response, owner: thisArg });
-        };
-        /**
-         * 同样的事件监听是否已经存在,防止二次添加
-         * @param eventType 事件的类型
-         * @param respone  对应的call back function
-         * @param thisArg  方法所在的this对象
-         * @returns {boolean}  true:已经存在, false:不存在
-         */
-        EventManager.isContainerEventListener = function (eventType, response, thisArg) {
-            var listenerList = EventManager.commEventList["" + eventType];
-            if (listenerList != null) {
-                for (var i = 0; i < listenerList.length; i++) {
-                    if (listenerList[i]["func"] == response && listenerList[i]["owner"] == thisArg) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        };
-        /**
          * 协议的的事件,会自动加一个前缀
          * @type {string}
          */
@@ -264,19 +260,10 @@ var codeBase;
          */
         EventManager.packetEventList = {}; //server event list
         /**
-         * 逻辑时间的监听列表
+         * 逻辑事件的监听列表
          * @type {{}}
          */
         EventManager.commEventList = {}; //comm event list
-        /**
-         * 事件回收池
-         */
-        EventManager.eventCachePool = {};
-        /**
-         * 需要发送的事件列表
-         * 用来解耦同步调用
-         */
-        EventManager.eventSendCacheList = [];
         /**
          * 协议回收池
          */
@@ -286,6 +273,15 @@ var codeBase;
          * 用来解耦同步调用
          */
         EventManager.packetSendCacheList = [];
+        /**
+         * 事件回收池
+         */
+        EventManager.eventCachePool = {};
+        /**
+         * 需要发送的事件列表
+         * 用来解耦同步调用
+         */
+        EventManager.eventSendCacheList = [];
         return EventManager;
     }());
     codeBase.EventManager = EventManager;

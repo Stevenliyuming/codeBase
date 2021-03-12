@@ -34,7 +34,7 @@ var codeBase;
          */
         WebSocket.getInstance = function () {
             if (WebSocket._instance == null) {
-                WebSocket._instance = new codeBase.WebSocket();
+                WebSocket._instance = new WebSocket();
             }
             return WebSocket._instance;
         };
@@ -116,7 +116,7 @@ var codeBase;
          */
         WebSocket.prototype.onEventWebSocketCloseHandler = function (event) {
             codeBase.MyEvent.sendEvent(codeBase.EventType.SOCKET_DISCONNECT);
-            //codeBase.MessageTips.showMessage("Socket close:" + event.type);
+            //MessageTips.showMessage("Socket close:" + event.type);
             codeBase.Debug.log = "Socket close:" + event.type;
             this.close();
         };
@@ -126,7 +126,7 @@ var codeBase;
          */
         WebSocket.prototype.onEventWebSocketErrorHandler = function (event) {
             codeBase.MyEvent.sendEvent(codeBase.EventType.SOCKET_DISCONNECT_ERROR);
-            //codeBase.MessageTips.showMessage("Socket error:" + event.type);
+            //MessageTips.showMessage("Socket error:" + event.type);
             codeBase.Debug.log = "Socket error:" + event.type;
         };
         /**

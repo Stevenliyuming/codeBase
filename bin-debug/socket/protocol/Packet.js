@@ -8,7 +8,14 @@ var codeBase;
             if (messageId === void 0) { messageId = 0; }
             if (cside === void 0) { cside = true; }
             this.header = null; //包头
-            this.define = new Array(); //包体 item定义数据
+            /**
+             * 包体item定义:item = { type:string, id:string, length:number, entity:string|Packet }
+             * type:数据类型
+             * id:定义的包类属性名
+             * length:定长数组长度
+             * entity：数组里面的数据具体类型
+             */
+            this.define = new Array();
             this._clientSide = true; //cleint 端协议
             this.clientSide = cside;
             this.header.messageId = messageId;

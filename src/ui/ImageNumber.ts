@@ -1,4 +1,4 @@
-module codeBase{
+module codeBase {
 	//图片字体类
 	export class ImageNumber extends egret.Sprite {
 		private numberImages: egret.Bitmap[] = [];
@@ -12,7 +12,17 @@ module codeBase{
 		/**水平和垂直对齐方式 */
 		public verticalAlign: string;
 		public horizontalAlign: string;
+		public deltaWidth: number = 0;
+		public deltaHeight: number = 0;
+		private px: number;
+		private py: number;
 
+		/**
+		 * imageAlias 单张字体图片命名格式
+		 * sheetAlias 全部字体图片的纹理图集
+		 * verticalAlign 垂直方向的对齐方式 默认顶部对齐
+		 * horizontalAlign 水平方向的对齐方式 默认左边对齐
+		 */
 		public constructor() {
 			super();
 		}
@@ -36,6 +46,8 @@ module codeBase{
 			if (s.parent != pr) {
 				pr.addChild(s);
 			}
+			s.px = px;
+			s.py = py;
 			s.x = px;
 			s.y = py;
 			s.numberValue = defaultText;
@@ -87,11 +99,11 @@ module codeBase{
 					if (numberBitmap) {
 						s.addChild(numberBitmap);
 						if (s.horizontalAlign == "left") {
-							numberBitmap.x = 0 + i * numberBitmap.width;
+							numberBitmap.x = 0 + i * numberBitmap.width + i * s.deltaWidth;
 						} else if (s.horizontalAlign == "center") {
-							numberBitmap.x = 0 + (i - temp) * numberBitmap.width;
+							numberBitmap.x = 0 + (i - temp) * numberBitmap.width + i * s.deltaWidth;
 						} else if (s.horizontalAlign == "right") {
-							numberBitmap.x = 0 - (i + 1) * numberBitmap.width;
+							numberBitmap.x = 0 - (i + 1) * numberBitmap.width + i * s.deltaWidth;
 						}
 
 						if (s.verticalAlign == "top") {
@@ -102,19 +114,16 @@ module codeBase{
 							numberBitmap.y = 0 - numberBitmap.height;
 						}
 						s.numberImages.push(numberBitmap);
-						spriteWidth += numberBitmap.width;
+						spriteWidth += (numberBitmap.width + s.deltaWidth);
 						spriteHeight = numberBitmap.height;
 					}
 				}
 				s.width = spriteWidth;
 				s.height = spriteHeight;
-			}
-		}
 
-		public hide() {
-			let s = this;
-			if(s.parent) {
-				s.parent.removeChild(s);
+				if (s.horizontalAlign == "center") {
+					s.x = s.px + ((num - 1) * s.deltaWidth * -1) / 2;
+				}
 			}
 		}
 	}

@@ -20,6 +20,11 @@ var codeBase;
         PacketFactory.setPacketDefine = function (messageId, clientSide, packetClass) {
             PacketFactory.packetDefineDic[(clientSide ? "c_" : "s_") + messageId] = packetClass;
         };
+        //从packet字典中删除包定义
+        PacketFactory.removePacketDefine = function (messageId, clientSize) {
+            if (clientSize === void 0) { clientSize = true; }
+            delete PacketFactory.packetDefineDic[messageId + "_" + (clientSize ? 0 : 1)];
+        };
         /**
          * 根据协议号,创建协议
          * @param messageId
@@ -37,11 +42,6 @@ var codeBase;
             }
             codeBase.Debug.log = "header->packet:" + "NULL";
             return null;
-        };
-        //从packet字典中删除包定义
-        PacketFactory.removePacketDefine = function (messageId, clientSize) {
-            if (clientSize === void 0) { clientSize = true; }
-            delete PacketFactory.packetDefineDic[messageId + "_" + (clientSize ? 0 : 1)];
         };
         PacketFactory.headerClientClz = codeBase.DefaultHeader;
         PacketFactory.headerClientLength = 6;

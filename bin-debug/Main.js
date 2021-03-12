@@ -107,6 +107,11 @@ var Main = (function (_super) {
         //     codeBase.EgretProto.inject();
         //      this.createGameScene();
         // }, this);
+        codeBase.ResLoader.getInstance().resLoad("http://dev4iandcode.oss-cn-shenzhen.aliyuncs.com/s/platform/interactive/common/interactiveTemplate/mainScratch/moduleRelease/test.pkg", null, function (data) {
+            console.log(data);
+            //codeBase.EgretProto.inject();
+            //this.createGameScene();
+        }, this, "get", "arraybuffer");
     };
     Main.prototype.onComplete = function (event) {
         console.log(event);

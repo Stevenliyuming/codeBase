@@ -139,14 +139,16 @@ var codeBase;
         };
         //数据流
         DefaultEncoder.prototype.writeByteArray = function (defItem, outByteArray, target) {
+            //填充字节长度
             outByteArray.writeShort(target[defItem.id].length);
+            //填充具体字节数据
             if (target[defItem.id].length > 0)
                 outByteArray.writeBytes(target[defItem.id]);
         };
         //数组
         DefaultEncoder.prototype.writeArray = function (defItem, outByteArray, target) {
-            var vectorData = target[defItem.id];
-            var count = vectorData.length;
+            var arrayData = target[defItem.id];
+            var count = arrayData.length;
             if (codeBase.Packet.TYPE_ARRAY_CONST == defItem.type) {
                 count = defItem["length"];
             }
@@ -162,11 +164,11 @@ var codeBase;
             }
             for (i = 0; i < count; i++) {
                 if (isEntity) {
-                    this.writeEntity(defItem, outByteArray, vectorData[i]);
+                    this.writeEntity(defItem, outByteArray, arrayData[i]);
                 }
                 else {
                     tempObj = {};
-                    tempObj["value"] = vectorData[i];
+                    tempObj["value"] = arrayData[i];
                     this.encodeItem({ id: "value", type: codeBase.Packet[defItem.entity] }, outByteArray, tempObj);
                 }
             }

@@ -13,11 +13,19 @@ var codeBase;
     //图片字体类
     var ImageNumber = (function (_super) {
         __extends(ImageNumber, _super);
+        /**
+         * imageAlias 单张字体图片命名格式
+         * sheetAlias 全部字体图片的纹理图集
+         * verticalAlign 垂直方向的对齐方式 默认顶部对齐
+         * horizontalAlign 水平方向的对齐方式 默认左边对齐
+         */
         function ImageNumber() {
             var _this = _super.call(this) || this;
             _this.numberImages = [];
             _this.numberImagePool = [];
             _this.numberTexture = {};
+            _this.deltaWidth = 0;
+            _this.deltaHeight = 0;
             return _this;
         }
         /**
@@ -42,6 +50,8 @@ var codeBase;
             if (s.parent != pr) {
                 pr.addChild(s);
             }
+            s.px = px;
+            s.py = py;
             s.x = px;
             s.y = py;
             s.numberValue = defaultText;
@@ -95,13 +105,13 @@ var codeBase;
                     if (numberBitmap) {
                         s.addChild(numberBitmap);
                         if (s.horizontalAlign == "left") {
-                            numberBitmap.x = 0 + i * numberBitmap.width;
+                            numberBitmap.x = 0 + i * numberBitmap.width + i * s.deltaWidth;
                         }
                         else if (s.horizontalAlign == "center") {
-                            numberBitmap.x = 0 + (i - temp) * numberBitmap.width;
+                            numberBitmap.x = 0 + (i - temp) * numberBitmap.width + i * s.deltaWidth;
                         }
                         else if (s.horizontalAlign == "right") {
-                            numberBitmap.x = 0 - (i + 1) * numberBitmap.width;
+                            numberBitmap.x = 0 - (i + 1) * numberBitmap.width + i * s.deltaWidth;
                         }
                         if (s.verticalAlign == "top") {
                             numberBitmap.y = 0;
@@ -113,18 +123,15 @@ var codeBase;
                             numberBitmap.y = 0 - numberBitmap.height;
                         }
                         s.numberImages.push(numberBitmap);
-                        spriteWidth += numberBitmap.width;
+                        spriteWidth += (numberBitmap.width + s.deltaWidth);
                         spriteHeight = numberBitmap.height;
                     }
                 }
                 s.width = spriteWidth;
                 s.height = spriteHeight;
-            }
-        };
-        ImageNumber.prototype.hide = function () {
-            var s = this;
-            if (s.parent) {
-                s.parent.removeChild(s);
+                if (s.horizontalAlign == "center") {
+                    s.x = s.px + ((num - 1) * s.deltaWidth * -1) / 2;
+                }
             }
         };
         return ImageNumber;

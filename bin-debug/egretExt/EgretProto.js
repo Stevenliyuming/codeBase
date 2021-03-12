@@ -23,7 +23,7 @@ var codeBase;
             RES.getRes = function (key) {
                 if (key == null) {
                     codeBase.Debug.log = "资源key为空";
-                    return;
+                    return null;
                 }
                 var res;
                 var arr = key.split(".");
@@ -63,11 +63,11 @@ var codeBase;
                     codeBase.Debug.log = "资源key为空";
                     return;
                 }
-                var res;
-                res = RES.getRes(key);
-                if (callBack != null)
+                var res = RES.getRes(key);
+                if (res && callBack != null)
                     callBack.call(thisObject, res);
             };
+            //资源配置表注入解析
             EgretProto.injectResConfig("default.res.json");
         };
         /**
@@ -130,7 +130,7 @@ var codeBase;
             var arr;
             var dataRes;
             var resKey;
-            uiID = "";
+            uiID = uiID != null ? uiID : "";
             resKey = uiID + "_" + key;
             if (EgretProto._dataDict[resKey] != null)
                 return EgretProto._dataDict[resKey];

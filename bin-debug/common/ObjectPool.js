@@ -131,6 +131,17 @@ var codeBase;
                 delete ObjectPool._dataPool[name];
             }
         };
+        /**
+         * 清空对象池所有对象
+         */
+        ObjectPool.destroy = function () {
+            for (var key in ObjectPool._dataPool) {
+                if (ObjectPool._dataPool.hasOwnProperty(key)) {
+                    ObjectPool._dataPool[key].length = 0;
+                    delete ObjectPool._dataPool[key];
+                }
+            }
+        };
         ObjectPool._dataPool = {}; //池数据
         return ObjectPool;
     }());

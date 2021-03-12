@@ -1,10 +1,10 @@
-module codeBase{
+module codeBase {
     /**
      * 对象池,针对经常创建的对象进行 回收并复用,减少对象创建的消耗
      * 不给垃圾回收的机会
      */
     export class ObjectPool {
-        private static _dataPool:any = {};//池数据
+        private static _dataPool: any = {};//池数据
         //public static length:number = 0;//长度
         /**
          * 传入一个class,给你一个class对象的实例
@@ -14,10 +14,10 @@ module codeBase{
          * @param clz 要提取的objec的Class
          * @return clz 对象的实例
          */
-        public static getByClass(clz:any, flag:string = "", pop:boolean = true):any {
-            var key:string = egret.getQualifiedClassName(clz);
+        public static getByClass(clz: any, flag: string = "", pop: boolean = true): any {
+            var key: string = egret.getQualifiedClassName(clz);
             key = flag + key;
-            var item:any = ObjectPool.getObject(key, pop);
+            var item: any = ObjectPool.getObject(key, pop);
             if (item == null) item = new clz();
             if (!pop) {
                 ObjectPool.recycleClass(item, flag);
@@ -30,9 +30,9 @@ module codeBase{
          * 使用class的名称作为对象映射的key
          * @param item 要返回池中的item对象
          */
-        public static recycleClass(obj:any, flag:string = ""):void {
+        public static recycleClass(obj: any, flag: string = ""): void {
             if (!obj) return;
-            var key:string = egret.getQualifiedClassName(obj);
+            var key: string = egret.getQualifiedClassName(obj);
             key = flag + key;
             ObjectPool.recycleObject(key, obj);
         }
@@ -42,7 +42,7 @@ module codeBase{
          * @param clz
          * @returns {any}
          */
-        public static hasClass(clz:any, flag:string = ""):boolean {
+        public static hasClass(clz: any, flag: string = ""): boolean {
             return ObjectPool.getByClass(clz, flag, false);
         }
 
@@ -52,9 +52,9 @@ module codeBase{
          * @param pop 是否从对象池中弹出
          * @return clz 对象的实例
          */
-        public static getObject(name:string, pop:boolean = true):any {
+        public static getObject(name: string, pop: boolean = true): any {
             if (ObjectPool._dataPool.hasOwnProperty(name) && ObjectPool._dataPool[name].length > 0) {
-                var obj:any = null;
+                var obj: any = null;
                 if (pop) {
                     obj = ObjectPool._dataPool[name].pop();
                     if (ObjectPool._dataPool[name].length == 0) delete ObjectPool._dataPool[name];
@@ -72,7 +72,7 @@ module codeBase{
          * @param name
          * @param group
          */
-        public static setObject(name:string, item:any):void {
+        public static setObject(name: string, item: any): void {
             ObjectPool.recycleObject(name, item);
         }
 
@@ -82,12 +82,12 @@ module codeBase{
          * @param name
          * @param item
          */
-        public static recycleObject(name:string, item:any):void {
+        public static recycleObject(name: string, item: any): void {
             if (!item) return;
             if (!ObjectPool._dataPool.hasOwnProperty(name)) {
                 ObjectPool._dataPool[name] = [];
             }
-            if (item.hasOwnProperty("destroy"))item.destroy();
+            if (item.hasOwnProperty("destroy")) item.destroy();
             if (ObjectPool._dataPool[name].indexOf(item) < 0) {
                 ObjectPool._dataPool[name].push(item);
             }
@@ -98,7 +98,7 @@ module codeBase{
          * @param name
          * @returns {any}
          */
-        public static hasObject(name:string):boolean {
+        public static hasObject(name: string): boolean {
             return ObjectPool.getObject(name, false);
         }
 
@@ -107,8 +107,8 @@ module codeBase{
          * 获取class的名称作为对象映射的key,把对应的对象列表引用释放
          * @param clz 要释放的objec的Class
          */
-        public static dispose(clz:any):void {
-            var key:string = egret.getQualifiedClassName(clz);
+        public static dispose(clz: any): void {
+            var key: string = egret.getQualifiedClassName(clz);
             ObjectPool.disposeObjects(key);
         }
 
@@ -117,10 +117,22 @@ module codeBase{
          * 获取name对应的对象列表, 把引用释放
          * @param name
          */
-        public static disposeObjects(name:string):void {
+        public static disposeObjects(name: string): void {
             if (ObjectPool._dataPool.hasOwnProperty(name)) {
                 ObjectPool._dataPool[name].length = 0;
                 delete ObjectPool._dataPool[name];
+            }
+        }
+
+        /**
+         * 清空对象池所有对象
+         */
+        public static destroy() {
+            for (let key in ObjectPool._dataPool) {
+                if (ObjectPool._dataPool.hasOwnProperty(key)) {
+                    ObjectPool._dataPool[key].length = 0;
+                    delete ObjectPool._dataPool[key];
+                }
             }
         }
     }

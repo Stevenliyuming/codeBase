@@ -419,6 +419,25 @@ var codeBase;
             }, s);
             return newArr;
         };
+        /**
+         * 数组顺序打乱
+         */
+        GameUtil.prototype.washArr = function (arr, count) {
+            if (arr === void 0) { arr = []; }
+            if (count === void 0) { count = 100; }
+            var num1, num2, num3;
+            while (count) {
+                count -= 1;
+                num1 = codeBase.MathUtil.random(0, 2);
+                num2 = codeBase.MathUtil.random(0, 2);
+                if (num1 != num2) {
+                    num3 = arr[num1];
+                    arr[num1] = arr[num2];
+                    arr[num2] = num3;
+                }
+            }
+            return arr;
+        };
         // /**
         //  * 测试文本宽度
         //  */

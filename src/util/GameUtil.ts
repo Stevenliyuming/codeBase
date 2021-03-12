@@ -1,4 +1,4 @@
-module codeBase{
+module codeBase {
 	//游戏状态枚举类型
 	export enum GameState { Start, Playing, Pause, Finished };
 
@@ -17,15 +17,15 @@ module codeBase{
 		public effectVolume: number = 1;
 
 		public stage: egret.Stage;
-		public  canvas: HTMLCanvasElement;
-		
+		public canvas: HTMLCanvasElement;
+
 		private canvasEventListenerArr: any[] = [];
 		private documentEventListenerArr: any[] = [];
 		/**注册鼠标移动监听 */
-		private mouseMoveListenerArr:any[] = [];
-		private registerMouseMove:boolean = false;
+		private mouseMoveListenerArr: any[] = [];
+		private registerMouseMove: boolean = false;
 
-		private modulePath:string = "";
+		private modulePath: string = "";
 
 		public static keyCodes = {
 			space: 32,/**空格 */
@@ -147,24 +147,24 @@ module codeBase{
 		 * moveCallFun:返回px,py两个舞台全局坐标 兼容PC和移动端跟随鼠标移动的需求
 		 * )target:添加移动监听的对象 IPad下不使用该参数
 		 */
-		public addMouseMoveListener(moveCallFun:Function, funObj:any, _target:egret.DisplayObject=null) {
+		public addMouseMoveListener(moveCallFun: Function, funObj: any, _target: egret.DisplayObject = null) {
 			let s = this;
-			for(let i=0; i<s.mouseMoveListenerArr.length; ++i) {
-				if(s.mouseMoveListenerArr[i].callFun == moveCallFun && s.mouseMoveListenerArr[i].funObj == funObj) {
+			for (let i = 0; i < s.mouseMoveListenerArr.length; ++i) {
+				if (s.mouseMoveListenerArr[i].callFun == moveCallFun && s.mouseMoveListenerArr[i].funObj == funObj) {
 					return;
 				}
 			}
-			if(!s.registerMouseMove) {
+			if (!s.registerMouseMove) {
 				s.registerMouseMove = true;
 				if (!isMobile()) {
 					s.onMove = s.onMove.bind(s);
 					//s.canvas.addEventListener('mousemove', s.onMove);
 					s.addCanvasEventListener("mousemove", s.onMove, s);
-				}  else {
+				} else {
 					s.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouchMove, s);
 				}
 			}
-			s.mouseMoveListenerArr.push({ callFun:moveCallFun, funObj:funObj, target:_target });
+			s.mouseMoveListenerArr.push({ callFun: moveCallFun, funObj: funObj, target: _target });
 		}
 		private clearMouseMoveListener() {
 			let s = this;
@@ -186,16 +186,16 @@ module codeBase{
 			s.doMove(evt.x, evt.y);
 		}
 
-		public onTouchMove(ev:egret.TouchEvent) {
+		public onTouchMove(ev: egret.TouchEvent) {
 			//console.log("onTouchMove");
 			let s = this;
 			s.doMove(ev.stageX, ev.stageY);
 		}
 
-		private doMove(px:number, py:number) {
+		private doMove(px: number, py: number) {
 			let s = this;
 			let num = s.mouseMoveListenerArr.length;
-			for(let i=0; i<num; ++i) {
+			for (let i = 0; i < num; ++i) {
 				(<Function>s.mouseMoveListenerArr[i].callFun).call(s.mouseMoveListenerArr[i].funObj, [px, py, s.mouseMoveListenerArr[i].target]);
 			}
 		}
@@ -205,10 +205,9 @@ module codeBase{
 		 */
 		public addKeyBoardListener(onkeydown: Function, onkeydownFunObj: any, onkeyup: Function, onkeyupFunObj: any, pr: any = null, x: number = 0, y: number = 0, type: number = 0) {
 			let s = this;
-			let virtualKeyBoardSprite:BaseGroup;
+			let virtualKeyBoardSprite: BaseGroup;
 			//移动端显示虚拟键盘
-			if (isMobile()) 
-			{
+			if (isMobile()) {
 				// let virtualKeyBoard = ui1Lib.VirtualKeyboard.getInstance();
 				// virtualKeyBoardSprite = new GYLite.GYSprite;
 				// if (pr) {
@@ -220,8 +219,7 @@ module codeBase{
 				// virtualKeyBoard.setTouchBeginCall(onkeydown, onkeydownFunObj);
 				// s.addDocumentEventListener("keyup", onkeyup, onkeyupFunObj);
 			}
-			else 
-			{
+			else {
 				s.addDocumentEventListener("keydown", onkeydown, onkeydownFunObj);
 				s.addDocumentEventListener("keyup", onkeyup, onkeyupFunObj);
 			}
@@ -384,7 +382,7 @@ module codeBase{
 			s.showHandTipAction(hand, _tweenType, _loop);
 			return hand;
 		}
-		
+
 		/**
 		 * _tweenType: 0原位置旋转 1斜方向移动
 		 */
@@ -411,7 +409,7 @@ module codeBase{
 
 		/**
 		 * 对象深拷贝
-		 * */ 
+		 * */
 		public deepCopyObj(obj) {
 			var result = Array.isArray(obj) ? [] : {};
 			for (var key in obj) {
@@ -429,13 +427,31 @@ module codeBase{
 		/**
 		 * 数组去重
 		 */
-		public uniqueArr(arg:any[]) {
+		public uniqueArr(arg: any[]) {
 			let s = this;
 			//当前元素如果在原始数组中的下标等于当前遍历的下标 则返回该元素
-			let newArr = arg.filter((value, index, arr)=>{
-				return arr.indexOf(value, 0) === index?true:false;
-			}, s); 
+			let newArr = arg.filter((value, index, arr) => {
+				return arr.indexOf(value, 0) === index ? true : false;
+			}, s);
 			return newArr;
+		}
+
+		/**
+		 * 数组顺序打乱
+		 */
+		public washArr(arr: any[] = [], count: number = 100):any[] {
+			let num1, num2, num3;
+			while (count) {
+				count -= 1;
+				num1 = MathUtil.random(0, 2);
+				num2 = MathUtil.random(0, 2);
+				if (num1 != num2) {
+					num3 = arr[num1];
+					arr[num1] = arr[num2];
+					arr[num2] = num3;
+				}
+			}
+			return arr;
 		}
 
 		// /**
@@ -452,7 +468,7 @@ module codeBase{
 		// 	let width = egret.sys.measureTextWith(s.sharedContext, text);
 		// 	return fontSize * width / 10;
 		// }
-		
+
 		/**
 		 * 测量文本在指定样式下的宽度。
 		 * @param text 要测量的文本内容。
@@ -461,7 +477,7 @@ module codeBase{
 		 * @param bold 是否粗体
 		 * @param italic 是否斜体
 		 */
-    	public measureText(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean) {
+		public measureText(text: string, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) {
 			return egret.sys.measureText(text, fontFamily, fontSize, bold, italic);
 		}
 
@@ -469,22 +485,22 @@ module codeBase{
 		 * 把字符串转换成hash值
 		 */
 		public static convertStringToHashCode(str: string): number {
-            if (str.length === 0) {
-                return 0;
-            }
-            let hash = 0;
-            for (let i = 0, length = str.length; i < length; ++i) {
-                const chr = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + chr;
-                hash |= 0; // Convert to 32bit integer
-            }
-            return hash;
-        }
+			if (str.length === 0) {
+				return 0;
+			}
+			let hash = 0;
+			for (let i = 0, length = str.length; i < length; ++i) {
+				const chr = str.charCodeAt(i);
+				hash = ((hash << 5) - hash) + chr;
+				hash |= 0; // Convert to 32bit integer
+			}
+			return hash;
+		}
 
 		/**
 		 * 设置游戏分辨率
 		 */
-		public setDesignSize(width:number, height:number) {
+		public setDesignSize(width: number, height: number) {
 			let s = this;
 			s.stage.setContentSize(width, height);
 		}
@@ -492,13 +508,13 @@ module codeBase{
 		/**
 		 * 设置节点渲染标识 让节点重新绘制
 		 */
-		public renderNode(target:egret.DisplayObject) {
-			if(target) {
+		public renderNode(target: egret.DisplayObject) {
+			if (target) {
 				target.$renderDirty = true;
 			}
 		}
 
-		public splitMatrix(matrix:string) {
+		public splitMatrix(matrix: string) {
 			//matrix  为一个matrix(a,b,c,d,e,f)
 			let alls = matrix.replace(/[^0-9\-,]/g, '')
 			//进行拆分获取确切的某个值

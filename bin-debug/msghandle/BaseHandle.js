@@ -4,7 +4,7 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 var codeBase;
 (function (codeBase) {
     /**
-     * 数据集中处理
+     * UI数据集中处理
      */
     var BaseHandle = (function () {
         function BaseHandle() {

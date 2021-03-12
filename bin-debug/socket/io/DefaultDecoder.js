@@ -117,11 +117,11 @@ var codeBase;
         //数据流
         DefaultDecoder.prototype.readByteArray = function (defItem, bytePacket, target) {
             var length = bytePacket.readUnsignedShort(); //数据流长度
-            var ba = codeBase.ObjectPool.getByClass(egret.ByteArray);
+            var data = codeBase.ObjectPool.getByClass(egret.ByteArray);
             if (length > 0) {
-                bytePacket.readBytes(ba, 0, length);
+                bytePacket.readBytes(data, 0, length);
             }
-            target[defItem.id] = ba;
+            target[defItem.id] = data;
         };
         //字符串读取
         DefaultDecoder.prototype.readString = function (defItem, bytePacket, target) {
@@ -184,9 +184,9 @@ var codeBase;
                 case codeBase.Packet.TYPE_BYTE://CHAR	1	单字节字符
                     this.readByte(defItem, bytePacket, target);
                     break;
-                //                case Packet.TYPE_UBYTE://UBYTE	1	1个字节无符合整型
-                //                    this.readUByte(defItem, bytePacket, target);
-                //                    break;
+                // case Packet.TYPE_UBYTE://UBYTE	1	1个字节无符合整型
+                //     this.readUByte(defItem, bytePacket, target);
+                //     break;
                 case codeBase.Packet.TYPE_USHORT://WORD	2	2个字节无符合整型
                     this.readUShort(defItem, bytePacket, target);
                     break;

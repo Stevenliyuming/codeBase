@@ -72,6 +72,13 @@ class  Main extends egret.DisplayObjectContainer {
 
         //      this.createGameScene();
         // }, this);
+
+        codeBase.ResLoader.getInstance().resLoad("http://dev4iandcode.oss-cn-shenzhen.aliyuncs.com/s/platform/interactive/common/interactiveTemplate/mainScratch/moduleRelease/test.pkg", null, (data: any) => {
+            console.log(data);
+            //codeBase.EgretProto.inject();
+
+            //this.createGameScene();
+        }, this, "get", "arraybuffer");
     }
 
     private onComplete(event:any):void {

@@ -82,6 +82,11 @@ module codeBase {
 			s.group_play.verticalCenter = 0;
 			//s.group_play.showBg = true;
 
+			// let proto = Object.getPrototypeOf(s.group_play);
+			// console.log(proto === Group.prototype);
+			// console.log(proto === Object.prototype);
+			// console.log(proto.constructor === Group);
+
 			// let group = new Group;
 			// group.width = 300;
 			// group.height = 200;

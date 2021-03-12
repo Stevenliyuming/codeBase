@@ -24,10 +24,10 @@ module codeBase {
 			// 	window["RES"] = {};
 			// }
 			// res = window["RES"];
-			RES.getRes = function(key) {
+			RES.getRes = function (key) {
 				if (key == null) {
 					Debug.log = "资源key为空";
-					return;
+					return null;
 				}
 				let res: any;
 				let arr: Array<string> = key.split(".");
@@ -62,27 +62,27 @@ module codeBase {
 				}
 				return res;
 			}
-			
+
 			eui.getAssets = function (key: string, callBack: Function, thisObject: any) {
 				if (key == null) {
 					Debug.log = "资源key为空";
 					return;
 				}
-				let res: any;
-				res = RES.getRes(key);
-
-				if (callBack != null)
+				let res = RES.getRes(key);
+				if (res && callBack != null)
 					callBack.call(thisObject, res);
 			}
+
+			//资源配置表注入解析
 			EgretProto.injectResConfig("default.res.json");
 		}
 
 		/**
 		 * 注入资源配置表
 		 */
-		protected static injectResConfig(resFile:string) {
+		protected static injectResConfig(resFile: string) {
 			let s = this;
-			if(resFile == null) {
+			if (resFile == null) {
 				Debug.log = "请指定需要使用的资源配置表文件";
 				return;
 			}
@@ -91,8 +91,7 @@ module codeBase {
 			let i: number, len: number;
 			if (res == null) {
 				Debug.log = "不存在资源配置表文件:" + resFile;
-			}
-			else {
+			} else {
 				if (EgretProto._fileDict[resFile] == null)
 					EgretProto._fileDict[resFile] = {};
 				let fileDict: any = EgretProto._fileDict[resFile];
@@ -109,7 +108,7 @@ module codeBase {
 				}
 			}
 		}
-		
+
 		/**获取数据资源
 		 * @param key 数据键名 json则是_json结尾
 		 * @param uiID 模块名称，没有则默认为当前模块，包含包路径
@@ -136,13 +135,13 @@ module codeBase {
 			let arr: Array<ResourceItem.ResObject>;
 			let dataRes: ResourceItem.ResObject;
 			let resKey: string;
-			uiID = "";
+			uiID = uiID != null ? uiID : "";
 			resKey = uiID + "_" + key;
 			if (EgretProto._dataDict[resKey] != null)
 				return EgretProto._dataDict[resKey];
-			
+
 			arr = ResLoader.getInstance().getResGroup(key);
-			if(arr.length > 0) {
+			if (arr.length > 0) {
 				dataRes = arr[0];
 			}
 			if (dataRes == null && check) {
@@ -166,7 +165,7 @@ module codeBase {
 			fontKey = uiID + "_" + key;
 			if (EgretProto._fontDict[fontKey] != null)
 				return EgretProto._fontDict[fontKey];
-			
+
 			arr = ResLoader.getInstance().getResGroup(key);
 			if (arr.length > 0) {
 				jsonRes = arr[0];
@@ -196,18 +195,18 @@ module codeBase {
 			let len: number;
 			let res: ResourceItem.ResObject;
 			let ind: number;
-			let resKey = alias?alias+key:key
+			let resKey = alias ? alias + key : key
 			if (EgretProto._resDict[resKey] != null)
 				return EgretProto._resDict[resKey];
 			if (alias == null) {
 				arr = ResLoader.getInstance().getResGroup(key);
-				if(arr.length > 0) {
+				if (arr.length > 0) {
 					res = arr[0];
 				}
 
 			} else {
 				let arr2: Array<ResourceItem.ResObject> = ResLoader.getInstance().getResGroup(alias);
-				if(arr2.length > 0) {
+				if (arr2.length > 0) {
 					res = ResLoader.getInstance().getRes(key, arr2[0].pathKey);
 				}
 			}
