@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_png,comRes_1_json,A_png,A点击_png,slider_bar_h_png,slider_bar_v_png,slider_bar_h2_png,slider_bar_v2_png,btnNumber_png,btnNumber_fnt,btnNumber2_fnt,btnNumber2_png,hexiaoma_tex3_png",
+			"keys": "bg_png,comRes_1_json,A_png,A点击_png,slider_bar_h_png,slider_bar_v_png,slider_bar_h2_png,slider_bar_v2_png,btnNumber_png,btnNumber_fnt,btnNumber2_fnt,btnNumber2_png,hexiaoma_tex3_png,tuzi_png,raptor_json,raptor_png,spineboy_json,spineboy_png,tuzi_json,tuzi_atlas,spineboy_atlas,raptor_atlas",
 			"name": "preload"
 		},
 		{
@@ -140,6 +140,51 @@
 			"url": "assets/skeleton/xilili_tex.png",
 			"type": "image",
 			"name": "xilili_tex2_png"
+		},
+		{
+			"url": "assets/spine/tuzi.png",
+			"type": "image",
+			"name": "tuzi_png"
+		},
+		{
+			"url": "assets/spine/raptor.json",
+			"type": "json",
+			"name": "raptor_json"
+		},
+		{
+			"url": "assets/spine/raptor.png",
+			"type": "image",
+			"name": "raptor_png"
+		},
+		{
+			"url": "assets/spine/spineboy.json",
+			"type": "json",
+			"name": "spineboy_json"
+		},
+		{
+			"url": "assets/spine/spineboy.png",
+			"type": "image",
+			"name": "spineboy_png"
+		},
+		{
+			"url": "assets/spine/tuzi.json",
+			"type": "json",
+			"name": "tuzi_json"
+		},
+		{
+			"url": "assets/spine/tuzi.atlas",
+			"type": "text",
+			"name": "tuzi_atlas"
+		},
+		{
+			"url": "assets/spine/spineboy.atlas",
+			"type": "text",
+			"name": "spineboy_atlas"
+		},
+		{
+			"url": "assets/spine/raptor.atlas",
+			"type": "text",
+			"name": "raptor_atlas"
 		}
 	]
 }

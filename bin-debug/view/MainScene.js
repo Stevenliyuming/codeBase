@@ -250,6 +250,18 @@ var codeBase;
             hxmSkeleton.gotoAndPlay("daiji", -1);
             //hxmSkeleton.setTimeScale(2);
             console.log(egret.getQualifiedClassName(s.group_play));
+            var spineAni = codeBase.UICreator.createSpineAnimation("spineboy");
+            s.group_play.addChild(spineAni);
+            spineAni.x = s.group_play.width / 2 + 300;
+            spineAni.y = s.group_play.height - 100;
+            var track = spineAni.play("portal", -1);
+            // track.add("jump");
+            // track.add("roar");
+            // track.add("gun-grab");
+            // track.add("gun-holster");
+            track.waitPlayEnd().then(function (resolve) {
+                console.log("Finished!");
+            });
             //标题
             // s.titleGroup = new BaseGroup;
             // s.titleGroup.touchEnabled = true;

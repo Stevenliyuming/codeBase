@@ -194,6 +194,27 @@ var codeBase;
             result.texture = texture;
             return result;
         };
+        UICreator.createSpineAnimation = function (skeletonName, _path) {
+            if (_path === void 0) { _path = null; }
+            var json = RES.getRes(skeletonName + "_json");
+            var atlas = RES.getRes(skeletonName + "_atlas");
+            var imgs = (_a = {},
+                _a[skeletonName + '.png'] = RES.getRes(skeletonName + "_png"),
+                _a);
+            for (var i = 2; i < 5; i++) {
+                var img = RES.getRes(skeletonName + i + "_png");
+                if (img != null) {
+                    imgs[skeletonName + i + '.png'] = img;
+                }
+                else {
+                    break;
+                }
+            }
+            var texAtlas = spine.createTextureAtlas(atlas, imgs);
+            var skelData = spine.createSkeletonData(json, texAtlas);
+            return new spine.SkeletonAnimation(skelData);
+            var _a;
+        };
         /**
          * 获取xy位置的像素值,xy是舞台值
          * @param x
