@@ -110,40 +110,41 @@ module codeBase {
 		 */
 		public draw(): void {
 			//console.log("Group draw");
-			if (this.width == 0 || this.height == 0) return;
+			let s = this;
+			if (s.width == 0 || s.height == 0) return;
 			super.draw();
 			//console.log("Group draw this._clip=" + this._clip + ", _showBg=" + this._showBg);
-			if (this._clip) {//剪裁
+			if (s._clip) {//剪裁
 				var rect: egret.Rectangle = ObjectPool.getByClass(egret.Rectangle);
-				if (this.scrollRect) {
-					ObjectPool.recycleClass(this.scrollRect);
-					this.scrollRect = null;
+				if (s.scrollRect) {
+					ObjectPool.recycleClass(s.scrollRect);
+					s.scrollRect = null;
 				}
-				rect.width = this.width;
-				rect.height = this.height;
+				rect.width = s.width;
+				rect.height = s.height;
 				rect.x = 0;
 				rect.y = 0;
-				this.scrollRect = rect;
+				s.scrollRect = rect;
 			} else {
-				this.scrollRect = null;
+				s.scrollRect = null;
 			}
 
 			//console.log("Group draw this._showDefaultSkin=" + this._showDefaultSkin);
-			if (this._showBg || (this._touchNonePixel && this.touchEnabled)) {
-				this.addDefaultSkin();
-				if (this._bgImage) {
-					this._bgImage.visible = true;
-					if (this._touchNonePixel && !this._showBg) {//如果设置没有像素点能触发事件 并且没有设置默认样式 则设置alpha=0即可
-						this._bgImage.alpha = 0;
+			if (s._showBg || (s._touchNonePixel && s.touchEnabled)) {
+				s.addDefaultSkin();
+				if (s._bgImage) {
+					s._bgImage.visible = true;
+					if (s._touchNonePixel && !s._showBg) {//如果设置没有像素点能触发事件 并且没有设置默认样式 则设置alpha=0即可
+						s._bgImage.alpha = 0;
 					} else {
-						this._bgImage.alpha = 1;
+						s._bgImage.alpha = 1;
 					}
 				}
 			} else {
-				if (this._bgImage) {
-					this._bgImage.visible = false;
-					if (this._bgImage.parent) {
-						this._bgImage.parent.removeChild(this._bgImage);
+				if (s._bgImage) {
+					s._bgImage.visible = false;
+					if (s._bgImage.parent) {
+						s._bgImage.parent.removeChild(s._bgImage);
 					}
 				}
 			}
@@ -154,46 +155,47 @@ module codeBase {
          */
 		private addDefaultSkin(): void {
 			//console.log("Group addDefaultSkin this.width=" + this.width + ", this.height=" + this.height)
-			if (this.width > 0 && this.height > 0) {
-				if (this._bgImage == null) {
-					this._bgImage = new egret.Bitmap();
+			let s = this;
+			if (s.width > 0 && s.height > 0) {
+				if (s._bgImage == null) {
+					s._bgImage = new egret.Bitmap();
 				}
-				if (this._bgTexture == null) {//生成默认材质
-					this._bgImage.fillMode = egret.BitmapFillMode.SCALE;//拉伸放大方式铺满
+				if (s._bgTexture == null) {//生成默认材质
+					s._bgImage.fillMode = egret.BitmapFillMode.SCALE;//拉伸放大方式铺满
 					var shape: egret.Shape = new egret.Shape();
-					shape.width = this.width;
-					shape.height = this.height;
-					shape.graphics.beginFill(this._bgColor, 1);
-					shape.graphics.drawRect(0, 0, this.width, this.height);
+					shape.width = s.width;
+					shape.height = s.height;
+					shape.graphics.beginFill(s._bgColor, 1);
+					shape.graphics.drawRect(0, 0, s.width, s.height);
 					shape.graphics.endFill();
-					if (this._border) {
+					if (s._border) {
 						shape.graphics.lineStyle(1, 0x00ff00, 1);
-						shape.graphics.drawRect(0, 0, this.width, this.height);
+						shape.graphics.drawRect(0, 0, s.width, s.height);
 					}
 					var renderTexture: egret.RenderTexture = new egret.RenderTexture();
 					renderTexture.drawToTexture(shape);
-					this._bgTexture = renderTexture;
-					this._bgImage.texture = this._bgTexture;
+					s._bgTexture = renderTexture;
+					s._bgImage.texture = s._bgTexture;
 				} else {
-					this._bgImage.texture = this._bgTexture;
+					s._bgImage.texture = s._bgTexture;
 				}
 			}
 
-			if (this._bgImage && (this._showBg || (this._touchNonePixel && this.touchEnabled))) {
-				if (!this._bgImage.parent) this.addChildAt(this._bgImage, 0);
-				if (this.scale9RectData.length == 4) {
-					if(this._scale9GridRect == null) this._scale9GridRect = this.scale9Rect();
-					this._scale9GridRect.x = this.scale9RectData[0];
-					this._scale9GridRect.y = this.scale9RectData[2];
-					this._scale9GridRect.width = this._bgImage.texture.$getTextureWidth() - (this.scale9RectData[0] + this.scale9RectData[1]);
-					this._scale9GridRect.height = this._bgImage.texture.$getTextureHeight() - (this.scale9RectData[2] + this.scale9RectData[3]);
-					this._bgImage.scale9Grid = this._scale9GridRect;
+			if (s._bgImage && (s._showBg || (s._touchNonePixel && s.touchEnabled))) {
+				if (!s._bgImage.parent) s.addChildAt(s._bgImage, 0);
+				if (s.scale9RectData.length == 4) {
+					if(s._scale9GridRect == null) s._scale9GridRect = s.scale9Rect();
+					s._scale9GridRect.x = s.scale9RectData[0];
+					s._scale9GridRect.y = s.scale9RectData[2];
+					s._scale9GridRect.width = s._bgImage.texture.$getTextureWidth() - (s.scale9RectData[0] + s.scale9RectData[1]);
+					s._scale9GridRect.height = s._bgImage.texture.$getTextureHeight() - (s.scale9RectData[2] + s.scale9RectData[3]);
+					s._bgImage.scale9Grid = s._scale9GridRect;
 				} else {
-					this._bgImage.scale9Grid = null;
+					s._bgImage.scale9Grid = null;
 				}
-				this._bgImage.width = this.width;
-				this._bgImage.height = this.height;
-				this._bgImage.fillMode = this._fillMode;
+				s._bgImage.width = s.width;
+				s._bgImage.height = s.height;
+				s._bgImage.fillMode = s._fillMode;
 			}
 		}
 

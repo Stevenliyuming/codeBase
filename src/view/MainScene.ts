@@ -245,53 +245,64 @@ module codeBase {
 			// listGroup2.y = 0;
 			// listGroup2.scrollBar.sliderBarSkins(UICreator.createBitmap("slider_bar_v_png"), UICreator.createBitmap("slider_bar_h_png"));
 
-			// //let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
-			// // img.anchorX = 0.5;
-			// // img.anchorY = 0.5;
-			// // img.width = 300;
-			// // img.height = 200;
-			// // img.autoSize = false;
-			// //MoreTouch.start(img, true, 0.5, 5, true);
+			// let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
+			// img.anchorOffsetX = 0.5;
+			// img.anchorOffsetY = 0.5;
+			// img.width = 300;
+			// img.height = 200;
+			// img.autoSize = false;
+			// MoreTouch.start(img, true, 0.5, 5, true);
 
 			// let btn:egret.Bitmap = UICreator.createBitmap("A_png");
 			// s.group_play.addChild(btn);
 			// btn.x = 0;
 			// btn.y = 0;
 
-			let euiImage2: eui.Image = new eui.Image;
-			euiImage2.texture = RES.getRes("comRes_1_json.playSound");
-			s.group_play.addChild(euiImage2);
-			euiImage2.left = 350;
-			euiImage2.top = 600;
+			// let euiImage2: eui.Image = new eui.Image;
+			// euiImage2.texture = RES.getRes("comRes_1_json.playSound");
+			// s.group_play.addChild(euiImage2);
+			// euiImage2.left = 350;
+			// euiImage2.top = 600;
 
-			egret.setTimeout(() => {
-				let euiImage: eui.Image = new eui.Image;
-				euiImage.texture = RES.getRes("A_png");
-				s.group_play.addElement(euiImage);
-				euiImage.left = 0;
-				euiImage.top = 600;
-			}, s, 1000);
+			// egret.setTimeout(() => {
+			// 	let euiImage: eui.Image = new eui.Image;
+			// 	euiImage.texture = RES.getRes("A_png");
+			// 	s.group_play.addElement(euiImage);
+			// 	euiImage.left = 0;
+			// 	euiImage.top = 600;
+			// }, s, 1000);
 
-			let hxmSkeleton: Skeleton = new Skeleton;
-			hxmSkeleton.setDataByName("xilili", "", "xilili", "xilili");
-			hxmSkeleton.show(s.group_play, 500, 600);
-			hxmSkeleton.gotoAndPlay("daiji", -1);
-			//hxmSkeleton.setTimeScale(2);
+			// let hxmSkeleton: Skeleton = new Skeleton;
+			// hxmSkeleton.setDataByName("xilili", "", "xilili", "xilili");
+			// hxmSkeleton.show(s.group_play, 500, 600);
+			// hxmSkeleton.gotoAndPlay("daiji", -1);
+			// //hxmSkeleton.setTimeScale(2);
 
-			console.log(egret.getQualifiedClassName(s.group_play));
+			// console.log(egret.getQualifiedClassName(s.group_play));
 
-			let spineAni = UICreator.createSpineAnimation("spineboy");
-			s.group_play.addChild(spineAni);
-			spineAni.x = s.group_play.width / 2 + 300;
-			spineAni.y = s.group_play.height - 100;
-			let track: spine.Track = spineAni.play("portal", -1);
-			// track.add("jump");
-			// track.add("roar");
-			// track.add("gun-grab");
-			// track.add("gun-holster");
-			track.waitPlayEnd().then((resolve) => {
-				console.log("Finished!");
-			});
+			// let spineAni = UICreator.createSpineAnimation("spineboy");
+			// s.group_play.addChild(spineAni);
+			// spineAni.x = s.group_play.width / 2 + 300;
+			// spineAni.y = s.group_play.height - 100;
+			// let track: spine.Track = spineAni.play("portal", -1);
+			// // track.add("jump");
+			// // track.add("roar");
+			// // track.add("gun-grab");
+			// // track.add("gun-holster");
+			// track.waitPlayEnd().then((resolve) => {
+			// 	console.log("Finished!");
+			// });
+
+			for(let i=0; i<1; ++i) {
+				let text = UICreator.createLabel(s.group_play, 200 + i*60, 300, 30, i.toString());
+				//let textContainer = new egret.Sprite;
+				//textContainer.addChild(text);
+				s.group_play.addChild(text);
+				text.x = 200 + i * 100;
+				text.y = 300;
+				//text.size = 30;
+				text.text = i.toString();
+			}
 
 			//标题
 			// s.titleGroup = new BaseGroup;

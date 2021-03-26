@@ -34,6 +34,7 @@ module codeBase {
 			this._textField = new egret.TextField();
 			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
 			this.addChild(this._textField);
+			this.clip = false;
 		}
 
         /**
@@ -63,22 +64,23 @@ module codeBase {
 		}
 
 		public set text(value: string) {
-			if (this._text != value) {
-				this._text = value;
-				if (this._html) {
-					if (this._text == null) {
-						this._text = "";
-						this._initFlow = [];
+			let s = this;
+			if (s._text != value) {
+				s._text = value;
+				if (s._html) {
+					if (s._text == null) {
+						s._text = "";
+						s._initFlow = [];
 					} else {
-						if (this._htmlTextParser == null) this._htmlTextParser = new egret.HtmlTextParser();
-						this._initFlow = this._htmlTextParser.parser(this._text);
+						if (s._htmlTextParser == null) s._htmlTextParser = new egret.HtmlTextParser();
+						s._initFlow = s._htmlTextParser.parser(s._text);
 					}
 				} else {
-					if (this._text == null) {
-						this._text = "";
+					if (s._text == null) {
+						s._text = "";
 					}
 				}
-				this.draw();
+				s.draw();
 			}
 		}
 
@@ -93,43 +95,44 @@ module codeBase {
 		 * Draws the visual ui of the component.
 		 */
 		public draw(): void {
+			let s = this;
 			// super.draw();
-			if (this._textField == null) return;
+			if (s._textField == null) return;
 			//console.log("@@label draw text=" + this._text);
-			if (this._fontName != null) {
-				this._textField.fontFamily = this.fontName;
+			if (s._fontName != null) {
+				s._textField.fontFamily = s.fontName;
 			}
-			if (this._color >= 0) this._textField.textColor = this._color;
-			if (this._fontSize > 0) this._textField.size = this._fontSize;
-			this._textField.bold = this._bold;
-			this._textField.italic = this._italic;
-			this._textField.multiline = this._multiline;
-			this._textField.lineSpacing = this._lineSpacing;
-			this._textField.stroke = this._stroke;
-			this._textField.strokeColor = this._strokeColor;
-			this._textField.wordWrap = this._wordWrap;
+			if (s._color >= 0) s._textField.textColor = s._color;
+			if (s._fontSize > 0) s._textField.size = s._fontSize;
+			s._textField.bold = s._bold;
+			s._textField.italic = s._italic;
+			s._textField.multiline = s._multiline;
+			s._textField.lineSpacing = s._lineSpacing;
+			s._textField.stroke = s._stroke;
+			s._textField.strokeColor = s._strokeColor;
+			s._textField.wordWrap = s._wordWrap;
 
-			if (this._html) {
-				if (this._initFlow) this._textField.textFlow = this._initFlow;
-				this._initFlow = null;
+			if (s._html) {
+				if (s._initFlow) s._textField.textFlow = s._initFlow;
+				s._initFlow = null;
 			} else {
-				this._textField.text = this._text;
+				s._textField.text = s._text;
 			}
 
-			if (this._autoSize) {
-				this.setSize(this._textField.measuredWidth, this._textField.measuredHeight);
+			if (s._autoSize) {
+				s.setSize(s._textField.measuredWidth, s._textField.measuredHeight);
 			} else {
-				this._textField.width = this.width;
-				this._textField.height = this.height;
-				var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
-				var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
-				this._textField.width = newWidth;
-				this._textField.height = newHeight;
-				this._textField.x = this._paddingLeft;
-				this._textField.y = this._paddingTop;
+				s._textField.width = s.width;
+				s._textField.height = s.height;
+				var newWidth = s._textField.width - s._paddingLeft - s._paddingRight;
+				var newHeight = s._textField.height - s._paddingTop - s._paddingBottom;
+				s._textField.width = newWidth;
+				s._textField.height = newHeight;
+				s._textField.x = s._paddingLeft;
+				s._textField.y = s._paddingTop;
 			}
-			this._textField.textAlign = this._hAlign;
-			this._textField.verticalAlign = this._vAlign;
+			s._textField.textAlign = s._hAlign;
+			s._textField.verticalAlign = s._vAlign;
 			super.draw();
 		}
 
