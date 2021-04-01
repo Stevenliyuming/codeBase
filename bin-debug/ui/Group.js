@@ -19,8 +19,7 @@ var codeBase;
         function Group() {
             var _this = _super.call(this) || this;
             /**
-             * 是否显示默认样式 ,
-             * 默认为true,显示.
+             * 是否显示背景
              */
             _this._showBg = false;
             /**
@@ -33,7 +32,6 @@ var codeBase;
             _this._bgImage = null;
             _this._bgTexture = null; //背景材质
             //默认背景的显示对象九宫拉伸的设定
-            //private _scale9GridEnable: boolean = false;//九宫拉伸生效
             _this._scale9GridRect = null; //九宫拉伸的尺寸
             _this.scale9RectData = [];
             _this._fillMode = "scale"; //scale, repeat.
@@ -51,9 +49,8 @@ var codeBase;
             return _this;
         }
         /**
-         * 初始化主场景的组件
-         * 这个方法在对象new的时候就调用,因为有些ui必须在加入stage之前就准备好
-         * 子类覆写该方法,添加UI逻辑
+         * 加入到显示列表时调用
+         * 子类可覆写该方法,添加UI逻辑
          */
         Group.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);

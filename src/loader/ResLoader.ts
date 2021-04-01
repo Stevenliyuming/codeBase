@@ -139,7 +139,7 @@ module codeBase{
 			type: string;
 			/**引用计数，当引用计数为0时，资源会被释放,如非必要，勿修改此值*/
 			private _count;
-			/**资源，如BitmapData，直接调取并不增加应用计数count，不需调用relRes释放，如需增加计数，请调用getRes，释放请调用relRes*/
+			/**资源，如Texture、Sound、json对象、string字符串，直接调取并不增加应用计数count，不需调用relRes释放，如需增加计数，请调用getRes，释放请调用relRes*/
 			res: any;
 			/**资源加载的路径*/
 			pathKey: string;
@@ -534,11 +534,11 @@ module codeBase{
 		protected decodeTEXT(loadInfo: ResourceItem.LoadInfo) {
 			let s = this;
 			let data: string = loadInfo.loader.response || loadInfo.buffer;
-			let res = JSON.parse(data);
+			//let res = JSON.parse(data);
 			let obj: ResourceItem.ResObject = ResourceItem.ResObject.getResObject();
 			obj.pathKey = loadInfo.url;
 			obj.type = ResourceItem.TYPE_TEXT;
-			obj.res = res;
+			obj.res = data;
 			obj.buffer = data;
 			s.setRes(obj.pathKey, obj, loadInfo);
 		}

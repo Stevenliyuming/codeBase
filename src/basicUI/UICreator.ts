@@ -179,6 +179,9 @@ module codeBase {
             return result;
         }
 
+        /**
+         * 创建Spine动画
+         */
         public static createSpineAnimation(skeletonName: string, _path: string = null) {
             let json = RES.getRes(skeletonName + "_json");
             let atlas = RES.getRes(skeletonName + "_atlas");
@@ -198,6 +201,42 @@ module codeBase {
             let texAtlas = spine.createTextureAtlas(atlas, imgs);
             let skelData = spine.createSkeletonData(json, texAtlas);
             return new spine.SkeletonAnimation(skelData);
+        }
+
+        /**
+         * 创建进度条
+         * pr:添加到的容器
+         * px:x坐标
+         * py:y坐标
+         * bg:进度条背景
+		 * skin:进度条进度
+         */
+        public createProgress(bg: DisplayObject = null, skin: DisplayObject = null, pr: egret.DisplayObjectContainer = null, px: number = 0, py: number = 0, ) {
+            let progress = new Progress(bg, skin);
+            if (pr) {
+                pr.addChild(progress);
+                progress.x = px;
+                progress.y = py;
+            }
+            return progress;
+        }
+
+        /**
+         * 创建滑动条
+         * pr:添加到的容器
+         * px:x坐标
+         * py:y坐标
+         * bg:进度条背景
+         * skin:进度条进度
+         */
+        public createSlider(bg: DisplayObject = null, skin: DisplayObject = null, bar: DisplayObject = null, pr: egret.DisplayObjectContainer = null, px: number = 0, py: number = 0, ) {
+            let slider = new Slider(bg, skin, bar);
+            if (pr) {
+                pr.addChild(slider);
+                slider.x = px;
+                slider.y = py;
+            }
+            return slider;
         }
 
 		/**

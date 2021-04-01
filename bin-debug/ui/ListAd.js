@@ -43,6 +43,10 @@ var codeBase;
             _this._destroyIndex = 0;
             return _this;
         }
+        /**
+         * 加入到显示列表时调用
+         * 子类可覆写该方法,添加UI逻辑
+         */
         ListAd.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
             this.setSize(300, 300);

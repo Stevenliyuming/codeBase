@@ -36,9 +36,8 @@ var codeBase;
             return _this;
         }
         /**
-         * 初始化主场景的组件
-         * 这个方法在对象new的时候就调用,因为有些ui必须在加入stage之前就准备好
-         * 子类覆写该方法,添加UI逻辑
+         * 加入到显示列表时调用
+         * 子类可覆写该方法,添加UI逻辑
          */
         ScrollGroup.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);

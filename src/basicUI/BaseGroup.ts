@@ -18,7 +18,7 @@ module codeBase {
 		public _data: any = null;//可携带的数据
 		private _enabled: boolean = true;//不可用状态
 
-		private elements:egret.DisplayObject[] = [];
+		private elements: egret.DisplayObject[] = [];
 
 		public constructor() {
 			super();
@@ -29,7 +29,7 @@ module codeBase {
 		}
 
 		/**
-		 * 第一次加入场景的时候会运行该方法
+		 * 第一次加入场景的时候会调用该方法
 		 */
 		public onAddToStage(event: Event): void {
 			let s = this;
@@ -43,20 +43,20 @@ module codeBase {
 		}
 
 		/**
-		 * 初始化一些必要的逻辑数据
-		 * 这个方法是在第一次加入stage的时候,做调用
-		 */
-		public initData(): void {
-		}
-
-		/**
-		 * 初始化主场景的组件
+		 * 加入到显示列表时调用
 		 * 子类覆写该方法,添加UI逻辑
 		 */
 		public createChildren(): void {
 			let s = this;
 			s.touchEnabled = false;//默认不接受事件
 			//this.setSize(Style.BASEGROUP_WIDTH, Style.BASEGROUP_HEIGHT);
+		}
+
+		/**
+		 * 初始化一些必要的逻辑数据
+		 * 加入到显示列表的时候会调用
+		 */
+		public initData(): void {
 		}
 
 		/**
@@ -293,8 +293,8 @@ module codeBase {
 				// }
 
 				//添加具有约束布局的元素
-				if(s.elements.length > 0) {
-					for(let i=0; i<s.elements.length; ++i) {
+				if (s.elements.length > 0) {
+					for (let i = 0; i < s.elements.length; ++i) {
 						this.addChild(s.elements[i]);
 					}
 					s.elements.length = 0;
@@ -394,7 +394,7 @@ module codeBase {
 		/**
 		 * 添加实现了eui.UIComponent类约束布局的元素,例如：eui.Image
 		 */
-		public addElement(child:egret.DisplayObject) {
+		public addElement(child: egret.DisplayObject) {
 			let s = this;
 			if (s.elements.indexOf(child) >= 0) return;
 			if (egret.is(child, "eui.UIComponent")) {

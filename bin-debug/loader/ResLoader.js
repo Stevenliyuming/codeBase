@@ -544,11 +544,11 @@ var codeBase;
         ResLoader.prototype.decodeTEXT = function (loadInfo) {
             var s = this;
             var data = loadInfo.loader.response || loadInfo.buffer;
-            var res = JSON.parse(data);
+            //let res = JSON.parse(data);
             var obj = ResourceItem.ResObject.getResObject();
             obj.pathKey = loadInfo.url;
             obj.type = ResourceItem.TYPE_TEXT;
-            obj.res = res;
+            obj.res = data;
             obj.buffer = data;
             s.setRes(obj.pathKey, obj, loadInfo);
         };

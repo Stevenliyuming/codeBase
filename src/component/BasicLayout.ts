@@ -3,26 +3,26 @@ module codeBase {
 		private dataEvent: Object = new Object;
 		public constructor() {
 			super();
-			this.init();
+			//this.init();
 		}
 
-		/**加载到舞台之前调用 */
-		protected init(): void {
-		}
+		// /**加载到舞台之前调用 */
+		// protected init(): void {
+		// }
 
-		/**
-		 * 初始化一些必要的逻辑数据
-		 * 这个方法是在第一次加入stage的时候,做调用
-		 */
-		public initData(): void {
-		}
+		// /**
+		//  * 初始化主场景的组件
+		//  * 子类覆写该方法,添加UI逻辑
+		//  */
+		// public createChildren(): void {
+		// }
 
-		/**
-		 * 初始化主场景的组件
-		 * 子类覆写该方法,添加UI逻辑
-		 */
-		public createChildren(): void {
-		}
+		// /**
+		//  * 初始化一些必要的逻辑数据
+		//  * 这个方法是在第一次加入stage的时候,做调用
+		//  */
+		// public initData(): void {
+		// }
 
 		/**分发事件*/
 		public dispEvent(type: string, data: Object = null, dataType: Object = null): void {
@@ -80,7 +80,7 @@ module codeBase {
 		public removeChildIndex(index: number, dispose: boolean): void {
 			let s = this;
 			if (index >= 0 || index < s.numChildren) {
-				let basicContent:any = s.getChildAt(index);
+				let basicContent: any = s.getChildAt(index);
 				if (basicContent instanceof BasicLayout) {
 					basicContent.removeFromParent(dispose);
 				} else {

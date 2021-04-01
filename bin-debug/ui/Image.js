@@ -31,6 +31,10 @@ var codeBase;
             _this.addChild(_this._bitmap);
             return _this;
         }
+        /**
+         * 加入到显示列表时调用
+         * 子类可覆写该方法,添加UI逻辑
+         */
         Image.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
         };

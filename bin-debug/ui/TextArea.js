@@ -51,8 +51,8 @@ var codeBase;
             return _this;
         }
         /**
-         * 初始化主场景的组件,加入场景时,主动调用一次
-         * 子类覆写该方法,添加UI逻辑
+         * 加入到显示列表时调用
+         * 子类可覆写该方法,添加UI逻辑
          */
         TextArea.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);

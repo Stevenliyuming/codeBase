@@ -43,15 +43,18 @@ module codeBase {
         private _rollingEffect: EffectNumberRolling = null;//滚动对象
 
         private _step: number = 0;//每次滚动增量的值
+        //滚动回调的函数设置
+        private _callbackFunc: any = null;
+        private _callbackFuncThis: any = null;
 
         public constructor() {
             super();
         }
 
-        /**
-         * 初始化主场景的组件,加入场景时,主动调用一次
-         * 子类覆写该方法,添加UI逻辑
-         */
+		/**
+		 * 加入到显示列表时调用
+		 * 子类可覆写该方法,添加UI逻辑
+		 */
         public createChildren(): void {
             super.createChildren();
             this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
@@ -86,16 +89,16 @@ module codeBase {
         }
 
         /**
-         * 自己设置显示字符
+         * 设置显示字符
          * @param str
          */
         public setText(str: string): void {
-            this._text = "" + str;
-            if (this._text == null) this._text = "";
-            this.invalidate();
-            this.onPlaySound();
+            let s = this;
+            s._text = "" + str;
+            if (s._text == null) s._text = "";
+            s.invalidate();
+            s.onPlaySound();
         }
-
 
         public get texture(): egret.Texture {
             return this._texture;
@@ -178,7 +181,7 @@ module codeBase {
             return this._charSplit;
         }
         /**
-         * 切割符号,默认是,
+         * 切割符号,默认是","
          * @param value
          */
         public set charSplit(value: string) {
@@ -190,31 +193,32 @@ module codeBase {
         }
 
         /**
-         * Draws the visual ui of the component.
+         * 绘制
          */
         public draw(): void {
-            if (!this._initDisplayData) {
-                this.splitTextureSource();
+            let s = this;
+            if (!s._initDisplayData) {
+                s.splitTextureSource();
             }
-            if (this._bgImage && this._bgImage.parent) {
-                this._bgImage.parent.removeChild(this._bgImage);
+            if (s._bgImage && s._bgImage.parent) {
+                s._bgImage.parent.removeChild(s._bgImage);
             }
             //回收旧资源
             var bitmap: egret.Bitmap = null;
-            for (var i = this.numChildren - 1; i >= 0; i--) {
-                bitmap = <egret.Bitmap>this.getChildAt(i);
+            for (var i = s.numChildren - 1; i >= 0; --i) {
+                bitmap = <egret.Bitmap>s.getChildAt(i);
                 bitmap.texture = null;
                 bitmap.parent.removeChild(bitmap);
                 ObjectPool.recycleClass(bitmap, "labelimg");
             }
             //根据字符显示材质内容
             var texture: egret.Texture = null;
-            if (StringUtil.isUsage(this._text)) {
-                for (var i = 0; i < this._text.length; i++) {
-                    texture = this._textureDict[this._text.charAt(i)];
+            if (StringUtil.isUsage(s._text)) {
+                for (var i = 0; i < s._text.length; ++i) {
+                    texture = s._textureDict[s._text.charAt(i)];
                     if (texture) {
                         bitmap = ObjectPool.getByClass(egret.Bitmap, "labelimg");
-                        this.addChild(bitmap);
+                        s.addChild(bitmap);
                         bitmap.texture = texture;
                         bitmap.width = texture.textureWidth;
                         bitmap.height = texture.textureHeight;
@@ -227,17 +231,18 @@ module codeBase {
         }
 
         private splitTextureSource(): void {
-            if (this._texture && StringUtil.isUsage(this._chars)) {
-                var charArr: Array<string> = StringUtil.splitStrArr(this._chars, this._charSplit);
+            let s = this;
+            if (s._texture && StringUtil.isUsage(s._chars)) {
+                var charArr: Array<string> = StringUtil.splitStrArr(s._chars, s._charSplit);
                 if (charArr.length > 0) {
-                    this._initDisplayData = true;
-                    var spriteSheet: egret.SpriteSheet = new egret.SpriteSheet(this._texture);
+                    s._initDisplayData = true;
+                    var spriteSheet: egret.SpriteSheet = new egret.SpriteSheet(s._texture);
                     var splitWidth: number = 0;
                     var splitHeight: number = 0;
-                    var textureWidth: number = this._texture.textureWidth;
-                    var textureHeight: number = this._texture.textureHeight;
-                    if (this._horizontalSplit) {
-                        splitWidth = (textureWidth - charArr.length * this._gapSplit) / charArr.length;
+                    var textureWidth: number = s._texture.textureWidth;
+                    var textureHeight: number = s._texture.textureHeight;
+                    if (s._horizontalSplit) {
+                        splitWidth = (textureWidth - charArr.length * s._gapSplit) / charArr.length;
                         splitHeight = textureHeight;
                     } else {
                         splitWidth = textureWidth;
@@ -245,10 +250,10 @@ module codeBase {
                     }
                     //开始切割
                     for (var i = 0; i < charArr.length; i++) {
-                        if (this._horizontalSplit) {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splitWidth + i * this._gapSplit, 0, splitWidth, splitHeight);
+                        if (s._horizontalSplit) {
+                            s._textureDict[charArr[i]] = spriteSheet.createTexture(s.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splitWidth + i * s._gapSplit, 0, splitWidth, splitHeight);
                         } else {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splitHeight + i * this._gapSplit, splitWidth, splitHeight);
+                            s._textureDict[charArr[i]] = spriteSheet.createTexture(s.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splitHeight + i * s._gapSplit, splitWidth, splitHeight);
                         }
                     }
                 }
@@ -335,7 +340,6 @@ module codeBase {
                 this.addEventListener(egret.Event.ENTER_FRAME, this.resetPosition, this);
             }
         }
-        
 
         /**
          * 设置滚动结束的回调通知
@@ -356,10 +360,6 @@ module codeBase {
                 this._rollingEffect.callbackFuncThis = this._callbackFuncThis;
             }
         }
-
-        //滚动回调的函数设置
-        private _callbackFunc: any = null;
-        private _callbackFuncThis: any = null;
     }
 
     /**

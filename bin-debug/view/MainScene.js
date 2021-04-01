@@ -262,16 +262,30 @@ var codeBase;
             // track.waitPlayEnd().then((resolve) => {
             // 	console.log("Finished!");
             // });
-            for (var i = 0; i < 1; ++i) {
-                var text = codeBase.UICreator.createLabel(s.group_play, 200 + i * 60, 300, 30, i.toString());
-                //let textContainer = new egret.Sprite;
-                //textContainer.addChild(text);
-                s.group_play.addChild(text);
-                text.x = 200 + i * 100;
-                text.y = 300;
-                //text.size = 30;
-                text.text = i.toString();
+            var texNames = ["hand", "playSound", "restart"];
+            for (var i = 0; i < 3; ++i) {
+                // let text = UICreator.createLabel(s.group_play, 200 + i*60, 300, 30, i.toString());
+                // //let textContainer = new egret.Sprite;
+                // //textContainer.addChild(text);
+                // s.group_play.addChild(text);
+                // text.x = 200 + i * 100;
+                // text.y = 300;
+                // //text.size = 30;
+                // text.text = i.toString();
+                var img = codeBase.UICreator.createImage(s.group_play, 100 + i * 320, 200, RES.getRes("comRes_1_json." + texNames[i]));
+                //FilterUtil.getInstance.setGlowFilter(img, Color.random, 0.6);
+                // img.anchorOffsetX = 0.5;
+                // img.anchorOffsetY = 0.5;
+                // img.width = 300;
+                // img.height = 200;
+                // img.autoSize = false;
             }
+            // let img = UICreator.createImage(s.group_play, 1000, 200, RES.getRes("A点击_png"));
+            // // img.anchorOffsetX = 0.5;
+            // // img.anchorOffsetY = 0.5;
+            // UICreator.createImage(s.group_play, 1500, 200, RES.getRes("comRes_1_json.hand"));
+            // UICreator.createLabel(s.group_play, 200, 300, 30, "test1");
+            // UICreator.createLabel(s.group_play, 300, 300, 30, "test2");
             //标题
             // s.titleGroup = new BaseGroup;
             // s.titleGroup.touchEnabled = true;

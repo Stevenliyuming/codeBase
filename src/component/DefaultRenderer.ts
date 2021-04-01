@@ -9,10 +9,14 @@ module codeBase {
 		/**
 		 * 渲染项数据下标
 		 */
-		public dataIndex:number;
+		public dataIndex: number;
 
 		public constructor() {
 			super();
+		}
+
+		public createChildren(): void {
+			super.createChildren();
 		}
 
 		/**
@@ -20,10 +24,6 @@ module codeBase {
 		 * 这个方法是在第一次加入stage的时候,做调用
 		 */
 		public initData(): void {
-		}
-
-		public createChildren(): void {
-			super.createChildren();
 		}
 
 		public draw(): void {

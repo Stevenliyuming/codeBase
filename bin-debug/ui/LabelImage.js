@@ -60,8 +60,8 @@ var codeBase;
             return _this;
         }
         /**
-         * 初始化主场景的组件,加入场景时,主动调用一次
-         * 子类覆写该方法,添加UI逻辑
+         * 加入到显示列表时调用
+         * 子类可覆写该方法,添加UI逻辑
          */
         LabelImage.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
@@ -100,15 +100,16 @@ var codeBase;
             configurable: true
         });
         /**
-         * 自己设置显示字符
+         * 设置显示字符
          * @param str
          */
         LabelImage.prototype.setText = function (str) {
-            this._text = "" + str;
-            if (this._text == null)
-                this._text = "";
-            this.invalidate();
-            this.onPlaySound();
+            var s = this;
+            s._text = "" + str;
+            if (s._text == null)
+                s._text = "";
+            s.invalidate();
+            s.onPlaySound();
         };
         Object.defineProperty(LabelImage.prototype, "texture", {
             get: function () {
@@ -207,7 +208,7 @@ var codeBase;
                 return this._charSplit;
             },
             /**
-             * 切割符号,默认是,
+             * 切割符号,默认是","
              * @param value
              */
             set: function (value) {
@@ -221,31 +222,32 @@ var codeBase;
             configurable: true
         });
         /**
-         * Draws the visual ui of the component.
+         * 绘制
          */
         LabelImage.prototype.draw = function () {
-            if (!this._initDisplayData) {
-                this.splitTextureSource();
+            var s = this;
+            if (!s._initDisplayData) {
+                s.splitTextureSource();
             }
-            if (this._bgImage && this._bgImage.parent) {
-                this._bgImage.parent.removeChild(this._bgImage);
+            if (s._bgImage && s._bgImage.parent) {
+                s._bgImage.parent.removeChild(s._bgImage);
             }
             //回收旧资源
             var bitmap = null;
-            for (var i = this.numChildren - 1; i >= 0; i--) {
-                bitmap = this.getChildAt(i);
+            for (var i = s.numChildren - 1; i >= 0; --i) {
+                bitmap = s.getChildAt(i);
                 bitmap.texture = null;
                 bitmap.parent.removeChild(bitmap);
                 codeBase.ObjectPool.recycleClass(bitmap, "labelimg");
             }
             //根据字符显示材质内容
             var texture = null;
-            if (codeBase.StringUtil.isUsage(this._text)) {
-                for (var i = 0; i < this._text.length; i++) {
-                    texture = this._textureDict[this._text.charAt(i)];
+            if (codeBase.StringUtil.isUsage(s._text)) {
+                for (var i = 0; i < s._text.length; ++i) {
+                    texture = s._textureDict[s._text.charAt(i)];
                     if (texture) {
                         bitmap = codeBase.ObjectPool.getByClass(egret.Bitmap, "labelimg");
-                        this.addChild(bitmap);
+                        s.addChild(bitmap);
                         bitmap.texture = texture;
                         bitmap.width = texture.textureWidth;
                         bitmap.height = texture.textureHeight;
@@ -257,17 +259,18 @@ var codeBase;
             _super.prototype.draw.call(this);
         };
         LabelImage.prototype.splitTextureSource = function () {
-            if (this._texture && codeBase.StringUtil.isUsage(this._chars)) {
-                var charArr = codeBase.StringUtil.splitStrArr(this._chars, this._charSplit);
+            var s = this;
+            if (s._texture && codeBase.StringUtil.isUsage(s._chars)) {
+                var charArr = codeBase.StringUtil.splitStrArr(s._chars, s._charSplit);
                 if (charArr.length > 0) {
-                    this._initDisplayData = true;
-                    var spriteSheet = new egret.SpriteSheet(this._texture);
+                    s._initDisplayData = true;
+                    var spriteSheet = new egret.SpriteSheet(s._texture);
                     var splitWidth = 0;
                     var splitHeight = 0;
-                    var textureWidth = this._texture.textureWidth;
-                    var textureHeight = this._texture.textureHeight;
-                    if (this._horizontalSplit) {
-                        splitWidth = (textureWidth - charArr.length * this._gapSplit) / charArr.length;
+                    var textureWidth = s._texture.textureWidth;
+                    var textureHeight = s._texture.textureHeight;
+                    if (s._horizontalSplit) {
+                        splitWidth = (textureWidth - charArr.length * s._gapSplit) / charArr.length;
                         splitHeight = textureHeight;
                     }
                     else {
@@ -276,11 +279,11 @@ var codeBase;
                     }
                     //开始切割
                     for (var i = 0; i < charArr.length; i++) {
-                        if (this._horizontalSplit) {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splitWidth + i * this._gapSplit, 0, splitWidth, splitHeight);
+                        if (s._horizontalSplit) {
+                            s._textureDict[charArr[i]] = spriteSheet.createTexture(s.name + Math.round(Math.random() * 999999) + "_" + charArr[i], i * splitWidth + i * s._gapSplit, 0, splitWidth, splitHeight);
                         }
                         else {
-                            this._textureDict[charArr[i]] = spriteSheet.createTexture(this.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splitHeight + i * this._gapSplit, splitWidth, splitHeight);
+                            s._textureDict[charArr[i]] = spriteSheet.createTexture(s.name + Math.round(Math.random() * 999999) + "_" + charArr[i], 0, i * splitHeight + i * s._gapSplit, splitWidth, splitHeight);
                         }
                     }
                 }

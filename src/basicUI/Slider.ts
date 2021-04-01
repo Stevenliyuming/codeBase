@@ -5,11 +5,11 @@ module codeBase{
 		protected type: string;
 		/**
 		 * bg:滑动器背景
-		 * value:滑动器填充的滑动条
+		 * skin:滑动器填充的滑动条
 		 * bar:滑动器滑动按钮
 		 */
-		public constructor(bg: DisplayObject = null, value: DisplayObject = null, bar: DisplayObject = null) {
-			super(bg, value);
+		public constructor(bg: DisplayObject = null, skin: DisplayObject = null, bar: DisplayObject = null) {
+			super(bg, skin);
 			this.skinBar = bar || Skin.sliderBar;
 			this.addChild(this.skinBar);
 			this.skinBar.touchEnabled = true;
@@ -18,9 +18,9 @@ module codeBase{
 			this.value = 0;
 		}
 
-		protected setSkin(bg: DisplayObject = null, value: DisplayObject = null) {
+		protected setSkin(bg: DisplayObject = null, skin: DisplayObject = null) {
 			this.skinBg = bg || Skin.sliderBackground;
-			this.skinValue = value || Skin.sliderValue;
+			this.skinValue = skin || Skin.sliderValue;
 		}
 
 		protected onTouch(e: egret.TouchEvent): void {

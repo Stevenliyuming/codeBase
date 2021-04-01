@@ -5,8 +5,7 @@ module codeBase {
 	 */
 	export class Group extends BaseGroup {
 		/**
-		 * 是否显示默认样式 ,
-		 * 默认为true,显示.
+		 * 是否显示背景
 		 */
 		public _showBg: boolean = false;
 		/**
@@ -19,7 +18,6 @@ module codeBase {
 		public _bgImage: egret.Bitmap = null;
 		private _bgTexture: egret.Texture = null;//背景材质
 		//默认背景的显示对象九宫拉伸的设定
-		//private _scale9GridEnable: boolean = false;//九宫拉伸生效
 		private _scale9GridRect: egret.Rectangle = null;//九宫拉伸的尺寸
 		private scale9RectData:number[] = [];
 		private _fillMode: string = "scale";//scale, repeat.
@@ -41,9 +39,8 @@ module codeBase {
 		}
 
 		/**
-		 * 初始化主场景的组件
-		 * 这个方法在对象new的时候就调用,因为有些ui必须在加入stage之前就准备好
-		 * 子类覆写该方法,添加UI逻辑
+		 * 加入到显示列表时调用
+		 * 子类可覆写该方法,添加UI逻辑
 		 */
 		public createChildren(): void {
 			super.createChildren();

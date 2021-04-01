@@ -6,22 +6,21 @@ module codeBase{
 		protected text: Label;
 		protected _value: number = 0;
 		/**
-		 * bg:进度条背景显示对象
-		 * 
-		 * value:进度条进度显示对象
+		 * bg:进度条背景
+		 * skin:进度条进度
 		 */
-		public constructor(bg: DisplayObject = null, value: DisplayObject = null) {
+		public constructor(bg: DisplayObject = null, skin: DisplayObject = null) {
 			super();
-			this.setSkin(bg, value);
+			this.setSkin(bg, skin);
 			this.addChild(this.skinBg);
 			this.addChild(this.skinValue);
 			this.text = new Label;
 			this.addChild(this.text);
 		}
 
-		protected setSkin(bg: DisplayObject = null, value: DisplayObject = null) {
+		protected setSkin(bg: DisplayObject = null, skin: DisplayObject = null) {
 			this.skinBg = bg || Skin.progressBackground;
-			this.skinValue = value || Skin.progressValue;
+			this.skinValue = skin || Skin.progressValue;
 		}
 
 		/**值只能是0－1之间 */

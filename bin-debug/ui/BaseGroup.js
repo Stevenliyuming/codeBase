@@ -38,7 +38,7 @@ var codeBase;
             //console.log("this._drawDelay=" + this._drawDelay)
         }
         /**
-         * 第一次加入场景的时候会运行该方法
+         * 第一次加入场景的时候会调用该方法
          */
         BaseGroup.prototype.onAddToStage = function (event) {
             var s = this;
@@ -51,19 +51,19 @@ var codeBase;
             //console.log("222222this._drawDelay=" + this._drawDelay)
         };
         /**
-         * 初始化一些必要的逻辑数据
-         * 这个方法是在第一次加入stage的时候,做调用
-         */
-        BaseGroup.prototype.initData = function () {
-        };
-        /**
-         * 初始化主场景的组件
+         * 加入到显示列表时调用
          * 子类覆写该方法,添加UI逻辑
          */
         BaseGroup.prototype.createChildren = function () {
             var s = this;
             s.touchEnabled = false; //默认不接受事件
             //this.setSize(Style.BASEGROUP_WIDTH, Style.BASEGROUP_HEIGHT);
+        };
+        /**
+         * 初始化一些必要的逻辑数据
+         * 加入到显示列表的时候会调用
+         */
+        BaseGroup.prototype.initData = function () {
         };
         Object.defineProperty(BaseGroup.prototype, "width", {
             get: function () {

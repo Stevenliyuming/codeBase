@@ -36,6 +36,11 @@ module codeBase{
         public constructor(){
             super();
         }
+
+        /**
+		 * 加入到显示列表时调用
+		 * 子类可覆写该方法,添加UI逻辑
+		 */
         public createChildren():void{
             super.createChildren();
             this.setSize(300,300);
