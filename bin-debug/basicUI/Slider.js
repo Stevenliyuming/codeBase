@@ -15,15 +15,15 @@ var codeBase;
         __extends(Slider, _super);
         /**
          * bg:滑动器背景
-         * value:滑动器填充的滑动条
+         * skin:滑动器填充的滑动条
          * bar:滑动器滑动按钮
          */
-        function Slider(bg, value, bar) {
+        function Slider(bg, skin, bar) {
             if (bg === void 0) { bg = null; }
-            if (value === void 0) { value = null; }
+            if (skin === void 0) { skin = null; }
             if (bar === void 0) { bar = null; }
-            var _this = _super.call(this, bg, value) || this;
-            _this.skinBar = bar || codeBase.Skin.sliderBar;
+            var _this = _super.call(this, bg, skin) || this;
+            _this.skinBar = bar || codeBase.UISkin.sliderBar;
             _this.addChild(_this.skinBar);
             _this.skinBar.touchEnabled = true;
             _this.skinBar.addEventListener(egret.TouchEvent.TOUCH_BEGIN, _this.onTouch, _this);
@@ -31,27 +31,27 @@ var codeBase;
             _this.value = 0;
             return _this;
         }
-        Slider.prototype.setSkin = function (bg, value) {
+        Slider.prototype.setSkin = function (bg, skin) {
             if (bg === void 0) { bg = null; }
-            if (value === void 0) { value = null; }
-            this.skinBg = bg || codeBase.Skin.sliderBackground;
-            this.skinValue = value || codeBase.Skin.sliderValue;
+            if (skin === void 0) { skin = null; }
+            this.skinBg = bg || codeBase.UISkin.sliderBackground;
+            this.skinValue = skin || codeBase.UISkin.sliderSkin;
         };
         Slider.prototype.onTouch = function (e) {
             switch (e.type) {
                 case egret.TouchEvent.TOUCH_BEGIN:
                     this.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
                     this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
-                    this.dispEvent(codeBase.LayoutEvent.START);
+                    this.dispEvent(codeBase.BasicUIEvent.START);
                     break;
                 case egret.TouchEvent.TOUCH_MOVE:
                     this.moveDo(e.stageX, e.stageY);
-                    this.dispEvent(codeBase.LayoutEvent.MOVE);
+                    this.dispEvent(codeBase.BasicUIEvent.MOVE);
                     break;
                 case egret.TouchEvent.TOUCH_END:
                     this.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
                     this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
-                    this.dispEvent(codeBase.LayoutEvent.OVER);
+                    this.dispEvent(codeBase.BasicUIEvent.OVER);
                     break;
             }
         };

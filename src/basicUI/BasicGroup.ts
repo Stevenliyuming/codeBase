@@ -1,5 +1,5 @@
 module codeBase {
-	export class BaseGroup extends egret.DisplayObjectContainer {
+	export class BasicGroup extends egret.DisplayObjectContainer {
 		//是否已加入过显示列表中,可用来判断各组件是否已经具备显示赋值的作用
 		private _isAddedToStage: boolean = false;
 		private _top: number = NaN;
@@ -17,6 +17,8 @@ module codeBase {
 
 		public _data: any = null;//可携带的数据
 		private _enabled: boolean = true;//不可用状态
+
+		private dataEvent: Object = new Object;
 
 		private elements: egret.DisplayObject[] = [];
 
@@ -210,7 +212,7 @@ module codeBase {
 				let child: any;
 				for (var i: number = 0; i < s.numChildren; i++) {
 					child = s.getChildAt(i);
-					if (child instanceof BaseGroup) {
+					if (child instanceof BasicGroup) {
 						child.onInvalidatePosition();
 					}
 				}
@@ -303,11 +305,11 @@ module codeBase {
 				let child: any;
 				for (var i: number = 0; i < s.numChildren; i++) {
 					child = s.getChildAt(i);
-					if ((widthChanged || heightChanged) && child instanceof BaseGroup) {
+					if ((widthChanged || heightChanged) && child instanceof BasicGroup) {
 						child.onInvalidatePosition();
 					} else {
 						if (egret.is(child, "eui.UIComponent")) {
-							BaseGroup.resetChildPosition(child);
+							BasicGroup.resetChildPosition(child);
 						}
 					}
 				}
@@ -381,10 +383,10 @@ module codeBase {
 					let temp: any;
 					for (var i: number = 0; i < child.numChildren; i++) {
 						temp = child.getChildAt(i);
-						if (temp instanceof BaseGroup) {
+						if (temp instanceof BasicGroup) {
 							temp.onInvalidatePosition();
 						} else {
-							BaseGroup.resetChildPosition(temp);
+							BasicGroup.resetChildPosition(temp);
 						}
 					}
 				}
@@ -450,18 +452,11 @@ module codeBase {
 		}
 
 		/**
-		 * 从场景中移除对象
-		 */
-		public removeFromParent(): void {
-			if (this.parent) (<egret.DisplayObjectContainer>this.parent).removeChild(this);
-		}
-
-		/**
 		 * 返回全局x,y值
 		 * @returns {egret.Point}
 		 */
 		public getGlobalXY(): egret.Point {
-			var point: egret.Point = new egret.Point(0, 0);
+			var point: egret.Point = new egret.Point(this.anchorOffsetX, this.anchorOffsetY);
 			this.localToGlobal(point.x, point.y, point);
 			return point;
 		}
@@ -483,8 +478,6 @@ module codeBase {
 
 		/**
 		 * 获取注册点相对的偏移像素值
-		 * 官方很奇葩,修改了注册点后,子组件竟然不是以改注册点的值作为起始xy的0值
-		 * 这里计算出实际的偏移值,供大家使用
 		 */
 		public getRegPoint(): egret.Point {
 			var regPoint: egret.Point = new egret.Point(0, 0);
@@ -548,6 +541,77 @@ module codeBase {
 		 */
 		public get isAddedToStage(): boolean {
 			return this._isAddedToStage;
+		}
+
+		/**分发事件*/
+		public dispEvent(type: string, data: Object = null): void {
+			if (this.dataEvent) {
+				var fun: Function = this.dataEvent[type] as Function;
+				if (fun != null) {
+					var evt: BasicUIEvent = new BasicUIEvent;
+					evt.currentTarget = this;
+					evt.data = data;
+					evt.type = type;
+					if (fun["this"]) {
+						(<Function>fun).apply(fun["this"], [evt]);
+					} else {
+						fun(evt)
+					}
+				}
+			}
+		}
+
+		/**帧听事件*/
+		public addEvent(type: string, listener: Function, thisObj: any = null): void {
+			let s = this;
+			if (s.dataEvent && s.dataEvent[type] == null) {
+				listener["this"] = thisObj
+				s.dataEvent[type] = listener;
+			}
+		}
+
+		/**删除事件*/
+		public removeEvent(type: string, listener: Function): void {
+			let s = this;
+			if (s.dataEvent && s.dataEvent[type]) {
+				delete s.dataEvent[type];
+			}
+		}
+
+		/**把自己从父级删除*/
+		public removeFromParent(dispose: boolean = false): void {
+			let s = this;
+			let _parent = this.parent;
+			if (dispose) s.dispose();
+			if (_parent) _parent.removeChild(s);
+			_parent = null;
+		}
+
+		/**删除所有的子节点*/
+		public removeChildAll(dispose: boolean = false): void {
+			while (this.numChildren > 0) {
+				this.removeChildIndex(0, dispose);
+			}
+		}
+
+		/**删除index层的子节点*/
+		public removeChildIndex(index: number, dispose: boolean): void {
+			let s = this;
+			if (index >= 0 || index < s.numChildren) {
+				let child: any = s.getChildAt(index);
+				if (child instanceof BasicGroup) {
+					child.removeFromParent(dispose);
+				} else {
+					let display: DisplayObject = this.getChildAt(index);
+					if (display.parent) display.parent.removeChild(display);
+				}
+			}
+		}
+
+		/**销毁*/
+		public dispose(): void {
+			let s = this;
+			s.removeChildAll(true);
 		}
 	}
 }

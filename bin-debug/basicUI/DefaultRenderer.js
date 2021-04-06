@@ -21,14 +21,14 @@ var codeBase;
             _this.list = null;
             return _this;
         }
+        DefaultRenderer.prototype.createChildren = function () {
+            _super.prototype.createChildren.call(this);
+        };
         /**
          * 初始化一些必要的逻辑数据
          * 这个方法是在第一次加入stage的时候,做调用
          */
         DefaultRenderer.prototype.initData = function () {
-        };
-        DefaultRenderer.prototype.createChildren = function () {
-            _super.prototype.createChildren.call(this);
         };
         DefaultRenderer.prototype.draw = function () {
             _super.prototype.draw.call(this);

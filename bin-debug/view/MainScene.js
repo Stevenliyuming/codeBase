@@ -279,7 +279,48 @@ var codeBase;
                 // img.width = 300;
                 // img.height = 200;
                 // img.autoSize = false;
+                // let button = UICreator.createToggleButton([RES.getRes("A_png"), RES.getRes("A点击_png")], "answer");
+                // s.group_play.addChild(button);
+                // button.x = 100 + (i * (button.width + 20));
+                // button.y = 500;
             }
+            var checkBox = new codeBase.CheckBox();
+            s.group_play.addChild(checkBox);
+            checkBox.label = "这是一个复选框";
+            checkBox.x = 300;
+            checkBox.y = 600;
+            checkBox.addEventListener(codeBase.BasicUIEvent.CHANGE, function (e) {
+                console.log(e);
+            }, s);
+            for (var i = 0; i < 3; ++i) {
+                var radiobtn1 = new codeBase.RadioButton();
+                s.group_play.addChild(radiobtn1);
+                radiobtn1.label = "单选按钮 " + ("" + (i + 1));
+                radiobtn1.x = 300;
+                radiobtn1.y = 800 + 60 * i;
+                radiobtn1.groupName = "abc";
+                radiobtn1.addEventListener(codeBase.BasicUIEvent.CHANGE, function (e) {
+                    console.log(e);
+                }, s);
+                var tab1 = new codeBase.TabBar();
+                s.group_play.addChild(tab1);
+                tab1.label = "标签页 " + ("" + (i + 1));
+                tab1.x = 600;
+                tab1.y = 800 + 60 * i;
+                tab1.groupName = "biaoqian";
+                tab1.addEventListener(codeBase.BasicUIEvent.CHANGE, function (e) {
+                    console.log(e);
+                }, s);
+            }
+            //checkBox.currentState = Button.STATUS_DISABLE;
+            // let normalSpr: DisplayObject = UISkin.checkBoxOff;
+            // let normalRenderTex = new egret.RenderTexture;
+            // normalRenderTex.drawToTexture(normalSpr);
+            // let bitmap = UICreator.createImage(s.group_play, 300, 800, normalRenderTex);
+            // let radioBtn = UISkin.radioOn;
+            // s.group_play.addChild(radioBtn);
+            // radioBtn.x = 300;
+            // radioBtn.y = 600;
             // let img = UICreator.createImage(s.group_play, 1000, 200, RES.getRes("A点击_png"));
             // // img.anchorOffsetX = 0.5;
             // // img.anchorOffsetY = 0.5;

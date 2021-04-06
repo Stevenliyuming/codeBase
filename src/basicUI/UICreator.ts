@@ -41,8 +41,8 @@ module codeBase {
          */
         public static createButton(statusSkin: egret.Texture[], clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
             let button = new Button;
-            button.setStatus(statusSkin);
-            button.setClickFunction(clickFun, funObj);
+            button.setSkins(statusSkin);
+            button.setClick(clickFun, funObj);
             button.sound = clickSound;
             return button;
         }
@@ -54,10 +54,10 @@ module codeBase {
          */
         public static createToggleButton(statusSkin: egret.Texture[], toggleGroupName: string, clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
             let button = new Button;
-            button.setStatus(statusSkin);
-            button.setClickFunction(clickFun, funObj);
-            button.toggleGroup = toggleGroupName;
-            button.sound = clickSound;
+            // button.setStatus(statusSkin);
+            // button.setClick(clickFun, funObj);
+            // button.toggleGroup = toggleGroupName;
+            // button.sound = clickSound;
             return button;
         }
 

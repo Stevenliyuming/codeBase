@@ -1,6 +1,6 @@
 module codeBase{
 	/***滚动器，可以设置裁剪滚动的内容，分为横向和纵向滚动 */
-	export class Scroller extends BasicLayout implements ILayout {
+	export class Scroller extends BasicGroup implements ILayout {
 		protected sliderBarV: DisplayObject;
 		protected sliderBarH: DisplayObject;
 		protected _content: DisplayObject;
@@ -38,13 +38,13 @@ module codeBase{
 			s.content = content;
 			s.alignType = align;
 
-			s.sliderBarV = sliderSKin || Skin.scrollBar;
+			s.sliderBarV = sliderSKin || UISkin.scrollBar;
 			s.sliderBarV.alpha = 0;
 			s.barVisible = barVisible;
 			s.addChild(s.sliderBarV);
 			s.sliderBarV.visible = barVisible;
 
-			s.viewPort = LayoutUI.getRect(w, h, Color.white);
+			s.viewPort = UISkin.getRect(w, h, UIColor.white);
 			s.addChildAt(s.viewPort, 0);
 			s.viewPort.visible = false;
 
@@ -298,7 +298,7 @@ module codeBase{
 			let s = this;
 			if(s._content == value) return;
 			if(s._content && s._content.parent) {
-				if(s._content instanceof BasicLayout) s._content.removeFromParent(true);
+				if(s._content instanceof BasicGroup) s._content.removeFromParent(true);
 				else s._content.parent.removeChild(s._content);
 			}
 			s._content = value;

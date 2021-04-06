@@ -2,7 +2,7 @@ module codeBase {
     /**
      * 卷轴容器
      */
-    export class ScrollGroup extends BaseGroup {
+    export class ScrollGroup extends BasicGroup {
         public static SCROLL_UP: string = "up";
         public static SCROLL_DOWN: string = "down";
         public static SCROLL_LEFT: string = "left";
@@ -247,7 +247,7 @@ module codeBase {
     /**
      * 滚动项类
      */
-    class ScrollItemGroup extends BaseGroup {
+    class ScrollItemGroup extends BasicGroup {
         public speed: number = 0;//帧速度
         public gap: number = 0;//间隔
         public direction: string = ScrollGroup.SCROLL_DOWN;//卷轴的方向

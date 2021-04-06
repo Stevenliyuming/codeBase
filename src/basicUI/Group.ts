@@ -3,7 +3,7 @@ module codeBase {
 	 * 带有默认背景的容器
 	 * 可以设置裁剪区域
 	 */
-	export class Group extends BaseGroup {
+	export class Group extends BasicGroup {
 		/**
 		 * 是否显示背景
 		 */

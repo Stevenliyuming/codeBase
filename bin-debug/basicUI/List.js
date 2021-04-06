@@ -57,7 +57,7 @@ var codeBase;
             _super.prototype.createChildren.call(this);
             //this.setSize(100, 300);
             this.touchEnabled = true;
-            this._itemContainer = new codeBase.BaseGroup();
+            this._itemContainer = new codeBase.BasicGroup();
             this._itemContainer.touchEnabled = true;
             // this._itemContainer.setSize(this.width, this.height);
             this.addChild(this._itemContainer);

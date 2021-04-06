@@ -39,12 +39,12 @@ var codeBase;
             s._contentPos = new egret.Point;
             s.content = content;
             s.alignType = align;
-            s.sliderBarV = sliderSKin || codeBase.Skin.scrollBar;
+            s.sliderBarV = sliderSKin || codeBase.UISkin.scrollBar;
             s.sliderBarV.alpha = 0;
             s.barVisible = barVisible;
             s.addChild(s.sliderBarV);
             s.sliderBarV.visible = barVisible;
-            s.viewPort = codeBase.LayoutUI.getRect(w, h, codeBase.Color.white);
+            s.viewPort = codeBase.UISkin.getRect(w, h, codeBase.UIColor.white);
             s.addChildAt(s.viewPort, 0);
             s.viewPort.visible = false;
             s.layout(align);
@@ -302,7 +302,7 @@ var codeBase;
                 if (s._content == value)
                     return;
                 if (s._content && s._content.parent) {
-                    if (s._content instanceof codeBase.BasicLayout)
+                    if (s._content instanceof codeBase.BasicGroup)
                         s._content.removeFromParent(true);
                     else
                         s._content.parent.removeChild(s._content);
@@ -341,7 +341,7 @@ var codeBase;
             s.setSliderBarPos();
         };
         return Scroller;
-    }(codeBase.BasicLayout));
+    }(codeBase.BasicGroup));
     codeBase.Scroller = Scroller;
     __reflect(Scroller.prototype, "codeBase.Scroller", ["codeBase.ILayout"]);
 })(codeBase || (codeBase = {}));

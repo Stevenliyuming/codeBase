@@ -17,6 +17,9 @@ var codeBase;
         __extends(Button, _super);
         function Button() {
             var _this = _super.call(this) || this;
+            // protected static normalTexture: egret.Texture;
+            // protected static checkTexture: egret.Texture;
+            // protected static disableTexture: egret.Texture;
             _this._textureLabel = null; //文字图片
             _this._textureIcon = null; //图标
             _this._label = null; //文本
@@ -27,25 +30,16 @@ var codeBase;
             _this._imgIcon = null; //显示图标用的image
             _this._initDisplayData = false; //是否初始化显示对象
             _this._selected = false; //选择时为ture
-            _this._toggleGroup = null; //toggle分组名称
-            _this.stateArray = [Button.STATE_UP]; //正常的按钮,只有三态,第四态是禁用态,其他的态可以自己加入
-            _this._currentState = Button.STATE_UP; //当前态
+            _this.stateArray = [Button.STATUS_UP]; //正常的按钮,只有三态,第四态是禁用态,其他的态可以自己加入
+            _this._currentState = Button.STATUS_UP; //当前态
             _this._textureDict = {}; //各材质的映射,在给予img之前,保存在这个映射中
-            //private _scaleEnable:boolean = false;// 直接拉伸
             _this._verticalSplit = true; //bitmapdata采用竖直切割的方式
-            //public _gapSplit:number = 0;//3态切割间隔
-            //public _xOffsetSplit:number = 0;//切割x起始
-            //public _yOffsetSplit:number = 0;//切割y起始
             //文字部分的设定
             _this._labelMarginLeft = 0;
-            //private _labelMarginLeftEnable: boolean = false;
             _this._labelMarginTop = 0;
-            //private _labelMarginTopEnable: boolean = false;
             //icon设定
             _this._iconMarginLeft = 0;
-            //private _iconMarginLeftEnable: boolean = false;
             _this._iconMarginTop = 0;
-            //private _iconMarginTopEnable: boolean = false;
             /**
              * 适合材质的尺寸
              */
@@ -120,36 +114,22 @@ var codeBase;
                         return;
                     }
                 }
-                if (codeBase.StringUtil.isUsage(this._toggleGroup)) {
-                    if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
-                        this.selected = !this._selected;
-                        //this.callClickFunction();
-                    }
+                if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
+                    this._currentState = Button.STATUS_DOWN;
+                    this.onClick();
                     this.onPlaySound();
-                    // console.log("Button _toggleGroup=" + this._toggleGroup + ", _selected=" + this._selected);
+                }
+                else if (event.type == egret.TouchEvent.TOUCH_END) {
+                    this._currentState = Button.STATUS_UP;
+                }
+                else if (event.type == egret.TouchEvent.TOUCH_MOVE) {
+                    this._currentState = Button.STATUS_OVER;
+                }
+                if (this.statesLength == 1 && this._currentState == Button.STATUS_DOWN) {
+                    this.alpha = 0.8;
                 }
                 else {
-                    if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
-                        this._currentState = Button.STATE_DOWN;
-                        this.callClickFunction();
-                        this.onPlaySound();
-                    }
-                    else if (event.type == egret.TouchEvent.TOUCH_END) {
-                        this._currentState = Button.STATE_UP;
-                    }
-                    else if (event.type == egret.TouchEvent.TOUCH_MOVE) {
-                        this._currentState = Button.STATE_OVER;
-                    }
-                    if (this.statesLength == 1 && this._currentState == Button.STATE_DOWN) {
-                        // this.scaleX = 0.9;
-                        // this.scaleY = 0.9;
-                        this.alpha = 0.8;
-                    }
-                    else {
-                        // this.scaleX = 1;
-                        // this.scaleY = 1;
-                        this.alpha = 1;
-                    }
+                    this.alpha = 1;
                 }
             }
             this.invalidate();
@@ -159,22 +139,16 @@ var codeBase;
          * @param event
          */
         Button.prototype.onTouchRleaseOutside = function (event) {
-            if (!codeBase.StringUtil.isUsage(this._toggleGroup) || (codeBase.StringUtil.isUsage(this._toggleGroup) && !this._selected)) {
-                this._currentState = Button.STATE_UP;
-                this.invalidate();
-                this.scaleX = 1;
-                this.scaleY = 1;
-                this.alpha = 1;
-            }
+            this._currentState = Button.STATUS_UP;
         };
         /**
          * 设置点击按钮回调
          */
-        Button.prototype.setClickFunction = function (fun, obj) {
+        Button.prototype.setClick = function (fun, obj) {
             this.clickFun = fun;
             this.clickFunObj = obj;
         };
-        Button.prototype.callClickFunction = function () {
+        Button.prototype.onClick = function () {
             if (this.clickFun && this.clickFunObj) {
                 this.clickFun.call(this.clickFunObj, this);
             }
@@ -274,8 +248,8 @@ var codeBase;
             if (this._imgDisplay == null)
                 return;
             //只设置了一个状态的时候，第二态用第一态的资源
-            if (this.statesLength == 1 && this._currentState == Button.STATE_DOWN) {
-                this._imgDisplay.texture = this._textureDict[Button.STATE_UP];
+            if (this.statesLength == 1 && this._currentState == Button.STATUS_DOWN) {
+                this._imgDisplay.texture = this._textureDict[Button.STATUS_UP];
             }
             else {
                 this._imgDisplay.texture = this._textureDict[this._currentState];
@@ -433,16 +407,16 @@ var codeBase;
         };
         Object.defineProperty(Button.prototype, "upSkin", {
             get: function () {
-                return this._textureDict[Button.STATE_UP];
+                return this._textureDict[Button.STATUS_UP];
             },
             /**
              * 设置按钮弹起态皮肤
              */
             set: function (value) {
-                if (!this.isStateExist(Button.STATE_UP)) {
-                    this.stateArray.push(Button.STATE_UP);
+                if (!this.isStateExist(Button.STATUS_UP)) {
+                    this.stateArray.push(Button.STATUS_UP);
                 }
-                this._textureDict[Button.STATE_UP] = value;
+                this._textureDict[Button.STATUS_UP] = value;
                 this.invalidate();
             },
             enumerable: true,
@@ -450,16 +424,16 @@ var codeBase;
         });
         Object.defineProperty(Button.prototype, "overSkin", {
             get: function () {
-                return this._textureDict[Button.STATE_OVER];
+                return this._textureDict[Button.STATUS_OVER];
             },
             /**
              * 设置按钮悬停态皮肤
              */
             set: function (value) {
-                if (!this.isStateExist(Button.STATE_OVER)) {
-                    this.stateArray.push(Button.STATE_OVER);
+                if (!this.isStateExist(Button.STATUS_OVER)) {
+                    this.stateArray.push(Button.STATUS_OVER);
                 }
-                this._textureDict[Button.STATE_OVER] = value;
+                this._textureDict[Button.STATUS_OVER] = value;
                 this.invalidate();
             },
             enumerable: true,
@@ -467,16 +441,16 @@ var codeBase;
         });
         Object.defineProperty(Button.prototype, "downSkin", {
             get: function () {
-                return this._textureDict[Button.STATE_DOWN];
+                return this._textureDict[Button.STATUS_DOWN];
             },
             /**
              * 设置按钮按下态皮肤
              */
             set: function (value) {
-                if (!this.isStateExist(Button.STATE_DOWN)) {
-                    this.stateArray.push(Button.STATE_DOWN);
+                if (!this.isStateExist(Button.STATUS_DOWN)) {
+                    this.stateArray.push(Button.STATUS_DOWN);
                 }
-                this._textureDict[Button.STATE_DOWN] = value;
+                this._textureDict[Button.STATUS_DOWN] = value;
                 this.invalidate();
             },
             enumerable: true,
@@ -484,16 +458,16 @@ var codeBase;
         });
         Object.defineProperty(Button.prototype, "disableSkin", {
             get: function () {
-                return this._textureDict[Button.STATE_DISABLE];
+                return this._textureDict[Button.STATUS_DISABLE];
             },
             /**
              * 设置按钮禁用态皮肤
              */
             set: function (value) {
-                if (!this.isStateExist(Button.STATE_DISABLE)) {
-                    this.stateArray.push(Button.STATE_DISABLE);
+                if (!this.isStateExist(Button.STATUS_DISABLE)) {
+                    this.stateArray.push(Button.STATUS_DISABLE);
                 }
-                this._textureDict[Button.STATE_DISABLE] = value;
+                this._textureDict[Button.STATUS_DISABLE] = value;
                 this.invalidate();
             },
             enumerable: true,
@@ -528,46 +502,42 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Button.prototype, "selected", {
-            get: function () {
-                return this._selected;
-            },
-            set: function (value) {
-                this._selected = value;
-                this._currentState = (this._selected ? Button.STATE_DOWN : Button.STATE_UP);
-                //if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
-                if (this._selected && codeBase.StringUtil.isUsage(this._toggleGroup)) {
-                    var myevent = codeBase.MyEvent.getEvent(Button.TOGGLE_PREFIX + this._toggleGroup);
-                    myevent.addItem("caller", this);
-                    myevent.addItem("group", this._toggleGroup);
-                    myevent.send();
-                }
-                this.invalidate();
-            },
-            enumerable: true,
-            configurable: true
-        });
+        // public set selected(value: boolean) {
+        //     this._selected = value;
+        //     this._currentState = (this._selected ? Button.STATE_DOWN : Button.STATE_UP);
+        //     //if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
+        //     if (this._selected && StringUtil.isUsage(this._toggleGroup)) {
+        //         var myevent: MyEvent = MyEvent.getEvent(Button.TOGGLE_PREFIX + this._toggleGroup);
+        //         myevent.addItem("caller", this);
+        //         myevent.addItem("groupName", this._toggleGroup);
+        //         myevent.send();
+        //     }
+        //     this.invalidate();
+        // }
+        // public get selected(): boolean {
+        //     return this._selected;
+        // }
         /**
          * 设置按钮可用状态皮肤
          * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
          */
-        Button.prototype.setStatus = function (statusSkin) {
+        Button.prototype.setSkins = function (statusSkin) {
             if (statusSkin === void 0) { statusSkin = []; }
             var statusNum = statusSkin.length == 0 ? 1 : statusSkin.length;
             //if (this.stateArray.length == value) return;
             //this.stateArray.length = 0;
             switch (statusNum) {
                 case 1:
-                    this.stateArray = [Button.STATE_UP]; //设置只有一个状态的时候，第二态用第一态的资源
+                    this.stateArray = [Button.STATUS_UP]; //设置只有一个状态的时候，第二态用第一态的资源
                     break;
                 case 2:
-                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN];
+                    this.stateArray = [Button.STATUS_UP, Button.STATUS_DOWN];
                     break;
                 case 3:
-                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN, Button.STATE_OVER];
+                    this.stateArray = [Button.STATUS_UP, Button.STATUS_DOWN, Button.STATUS_OVER];
                     break;
                 case 4:
-                    this.stateArray = [Button.STATE_UP, Button.STATE_DOWN, Button.STATE_OVER, Button.STATE_DISABLE];
+                    this.stateArray = [Button.STATUS_UP, Button.STATUS_DOWN, Button.STATUS_OVER, Button.STATUS_DISABLE];
                     break;
             }
             //初始化按钮状态皮肤
@@ -756,37 +726,6 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Button.prototype, "toggleGroup", {
-            get: function () {
-                return this._toggleGroup;
-            },
-            set: function (value) {
-                if (codeBase.StringUtil.isUsage(this._toggleGroup)) {
-                    codeBase.EventManager.removeEventListener(Button.TOGGLE_PREFIX + this._toggleGroup, this.onEventToggle, this);
-                }
-                this._toggleGroup = value; //新的group
-                if (codeBase.StringUtil.isUsage(this._toggleGroup)) {
-                    codeBase.EventManager.addEventListener(Button.TOGGLE_PREFIX + this._toggleGroup, this.onEventToggle, this);
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Button.prototype.onEventToggle = function (event) {
-            if (codeBase.StringUtil.isUsage(this._toggleGroup) && event.getItem("group") == this._toggleGroup) {
-                //console.log("0000 onEventToggle group=" + this._toggleGroup + ", data=" + this._data.id);
-                if (event.getItem("caller") != this) {
-                    this._selected = false;
-                    this._currentState = Button.STATE_UP;
-                    this.invalidate();
-                }
-                else {
-                    if (this.clickFun && this.clickFunObj) {
-                        this.clickFun.call(this.clickFunObj, event);
-                    }
-                }
-            }
-        };
         Button.prototype.setSize = function (w, h) {
             _super.prototype.setSize.call(this, w, h);
             //this.autoSize = false;
@@ -993,14 +932,15 @@ var codeBase;
             }
             return false;
         };
-        Button.TOGGLE_PREFIX = "ui#button#toggle_"; //toggle事件的前缀,尽量避免受到其他事件名称的混淆
         Button.DEFAULT_TEXTURE = null; //默认材质
-        Button.STATE_UP = "up";
-        Button.STATE_DOWN = "down";
-        Button.STATE_OVER = "over";
-        Button.STATE_DISABLE = "disable";
+        Button.STATUS_UP = "status_up";
+        Button.STATUS_DOWN = "status_down";
+        Button.STATUS_OVER = "status_over";
+        Button.STATUS_DISABLE = "status_disable";
+        Button.STATUS_NORMAL = "status_normal";
+        Button.STATUS_CHECKED = "status_checked";
         return Button;
-    }(codeBase.BaseGroup));
+    }(codeBase.BasicGroup));
     codeBase.Button = Button;
     __reflect(Button.prototype, "codeBase.Button");
 })(codeBase || (codeBase = {}));

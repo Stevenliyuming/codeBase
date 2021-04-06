@@ -241,7 +241,7 @@ var codeBase;
             return false;
         };
         return Image;
-    }(codeBase.BaseGroup));
+    }(codeBase.BasicGroup));
     codeBase.Image = Image;
     __reflect(Image.prototype, "codeBase.Image");
 })(codeBase || (codeBase = {}));

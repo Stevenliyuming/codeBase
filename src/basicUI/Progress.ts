@@ -1,6 +1,6 @@
 module codeBase{
 	/***进度条 */
-	export class Progress extends BasicLayout {
+	export class Progress extends BasicGroup {
 		protected skinBg: DisplayObject;
 		protected skinValue: DisplayObject;
 		protected text: Label;
@@ -19,8 +19,8 @@ module codeBase{
 		}
 
 		protected setSkin(bg: DisplayObject = null, skin: DisplayObject = null) {
-			this.skinBg = bg || Skin.progressBackground;
-			this.skinValue = skin || Skin.progressValue;
+			this.skinBg = bg || UISkin.progressBackground;
+			this.skinValue = skin || UISkin.progressSkin;
 		}
 
 		/**值只能是0－1之间 */

@@ -24,7 +24,7 @@ var codeBase;
             var s = _this;
             s.alignType = type;
             s.itemInterval = interval;
-            s.contentView = new codeBase.BaseGroup();
+            s.contentView = new codeBase.BasicGroup();
             s.scrollBar = new codeBase.Scroller(w, h, s.contentView, type);
             s.addChild(s.scrollBar);
             s.width = w;
@@ -52,7 +52,7 @@ var codeBase;
                 s.contentView.removeChild(item);
                 item.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouch, s);
                 item.removeEventListener(egret.TouchEvent.TOUCH_END, s.onTouch, s);
-                if (item instanceof codeBase.BasicLayout && item["dispose"] && item["dispose"] instanceof Function) {
+                if (item instanceof codeBase.BasicGroup) {
                     item.dispose();
                 }
                 s.layout(s.alignType, s.itemInterval);
@@ -153,10 +153,10 @@ var codeBase;
                 s.itemSelected = item;
             }
             var param = { item: item, index: s.items.indexOf(item) };
-            s.dispEvent(codeBase.LayoutEvent.CLICK, param);
+            s.dispEvent(codeBase.BasicUIEvent.CLICK, param);
         };
         return ListGroup;
-    }(codeBase.BasicLayout));
+    }(codeBase.BasicGroup));
     codeBase.ListGroup = ListGroup;
     __reflect(ListGroup.prototype, "codeBase.ListGroup", ["codeBase.ILayout"]);
 })(codeBase || (codeBase = {}));

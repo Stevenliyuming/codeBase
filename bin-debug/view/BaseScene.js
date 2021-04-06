@@ -34,7 +34,7 @@ var codeBase;
             console.log("remove" + egret.getQualifiedClassName(this));
         };
         return BaseScene;
-    }(codeBase.BaseGroup));
+    }(codeBase.BasicGroup));
     codeBase.BaseScene = BaseScene;
     __reflect(BaseScene.prototype, "codeBase.BaseScene");
 })(codeBase || (codeBase = {}));

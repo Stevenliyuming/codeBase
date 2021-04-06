@@ -6,7 +6,7 @@ module codeBase{
         private METHOD_DEF: Object = {};
         public static ITEM_SELECTED:string = "ITEM_SELECTED";
         private _itemRenderer: any = DefaultRenderer;
-        private _itemContainer: BaseGroup = null;
+        private _itemContainer: BasicGroup = null;
         private _gap: number = 2;
         private _direction: string = Style.VERTICAL;//朝向
         private _dataIndexBegin: number = 0;//显示数据起始索引
@@ -53,7 +53,7 @@ module codeBase{
             super.createChildren();
             //this.setSize(100, 300);
             this.touchEnabled = true;
-            this._itemContainer = new BaseGroup();
+            this._itemContainer = new BasicGroup();
             this._itemContainer.touchEnabled = true;
            // this._itemContainer.setSize(this.width, this.height);
             this.addChild(this._itemContainer);

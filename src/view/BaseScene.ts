@@ -1,5 +1,5 @@
 module codeBase{
-	export class BaseScene extends BaseGroup {
+	export class BaseScene extends BasicGroup {
 		protected isClear: boolean = false;
 		protected modulePath: string;
 		protected skeletonPath: string;

@@ -205,7 +205,7 @@ module codeBase {
 		 */
 		public addKeyBoardListener(onkeydown: Function, onkeydownFunObj: any, onkeyup: Function, onkeyupFunObj: any, pr: any = null, x: number = 0, y: number = 0, type: number = 0) {
 			let s = this;
-			let virtualKeyBoardSprite: BaseGroup;
+			let virtualKeyBoardSprite: BasicGroup;
 			//移动端显示虚拟键盘
 			if (isMobile()) {
 				// let virtualKeyBoard = ui1Lib.VirtualKeyboard.getInstance();

@@ -14,27 +14,26 @@ var codeBase;
     var Progress = (function (_super) {
         __extends(Progress, _super);
         /**
-         * bg:进度条背景显示对象
-         *
-         * value:进度条进度显示对象
+         * bg:进度条背景
+         * skin:进度条进度
          */
-        function Progress(bg, value) {
+        function Progress(bg, skin) {
             if (bg === void 0) { bg = null; }
-            if (value === void 0) { value = null; }
+            if (skin === void 0) { skin = null; }
             var _this = _super.call(this) || this;
             _this._value = 0;
-            _this.setSkin(bg, value);
+            _this.setSkin(bg, skin);
             _this.addChild(_this.skinBg);
             _this.addChild(_this.skinValue);
             _this.text = new codeBase.Label;
             _this.addChild(_this.text);
             return _this;
         }
-        Progress.prototype.setSkin = function (bg, value) {
+        Progress.prototype.setSkin = function (bg, skin) {
             if (bg === void 0) { bg = null; }
-            if (value === void 0) { value = null; }
-            this.skinBg = bg || codeBase.Skin.progressBackground;
-            this.skinValue = value || codeBase.Skin.progressValue;
+            if (skin === void 0) { skin = null; }
+            this.skinBg = bg || codeBase.UISkin.progressBackground;
+            this.skinValue = skin || codeBase.UISkin.progressSkin;
         };
         Object.defineProperty(Progress.prototype, "value", {
             get: function () {
@@ -66,7 +65,7 @@ var codeBase;
                 this.text.y = y;
         };
         return Progress;
-    }(codeBase.BasicLayout));
+    }(codeBase.BasicGroup));
     codeBase.Progress = Progress;
     __reflect(Progress.prototype, "codeBase.Progress");
 })(codeBase || (codeBase = {}));

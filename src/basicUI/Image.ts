@@ -1,5 +1,5 @@
 module codeBase {
-    export class Image extends BaseGroup {
+    export class Image extends BasicGroup {
         private _bitmap: egret.Bitmap = null;
         private _texture: egret.Texture = null;
         /**

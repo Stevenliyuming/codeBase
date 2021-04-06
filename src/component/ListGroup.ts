@@ -1,7 +1,7 @@
 module codeBase {
 	/**列表组件 */
-	export class ListGroup extends BasicLayout implements ILayout {
-		protected contentView: BaseGroup;
+	export class ListGroup extends BasicGroup implements ILayout {
+		protected contentView: BasicGroup;
 		public scrollBar: Scroller;
 		protected posStart: Point;
 		protected alignType: string;
@@ -23,7 +23,7 @@ module codeBase {
 			let s = this;
 			s.alignType = type;
 			s.itemInterval = interval;
-			s.contentView = new BaseGroup();
+			s.contentView = new BasicGroup();
 			s.scrollBar = new Scroller(w, h, s.contentView, type);
 			s.addChild(s.scrollBar);
 			s.width = w;
@@ -53,7 +53,7 @@ module codeBase {
 				s.contentView.removeChild(item);
 				item.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouch, s);
 				item.removeEventListener(egret.TouchEvent.TOUCH_END, s.onTouch, s);
-				if (item instanceof BasicLayout && item["dispose"] && item["dispose"] instanceof Function) {
+				if (item instanceof BasicGroup) {
 					item.dispose();
 				}
 				s.layout(s.alignType, s.itemInterval);
@@ -155,7 +155,7 @@ module codeBase {
 				s.itemSelected = item;
 			}
 			var param: Object = { item: item, index: s.items.indexOf(item) };
-			s.dispEvent(LayoutEvent.CLICK, param)
+			s.dispEvent(BasicUIEvent.CLICK, param)
 		}
 	}
 }

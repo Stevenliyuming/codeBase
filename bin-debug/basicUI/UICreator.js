@@ -53,8 +53,8 @@ var codeBase;
             if (funObj === void 0) { funObj = null; }
             if (clickSound === void 0) { clickSound = null; }
             var button = new codeBase.Button;
-            button.setStatus(statusSkin);
-            button.setClickFunction(clickFun, funObj);
+            button.setSkins(statusSkin);
+            button.setClick(clickFun, funObj);
             button.sound = clickSound;
             return button;
         };
@@ -68,10 +68,10 @@ var codeBase;
             if (funObj === void 0) { funObj = null; }
             if (clickSound === void 0) { clickSound = null; }
             var button = new codeBase.Button;
-            button.setStatus(statusSkin);
-            button.setClickFunction(clickFun, funObj);
-            button.toggleGroup = toggleGroupName;
-            button.sound = clickSound;
+            // button.setStatus(statusSkin);
+            // button.setClick(clickFun, funObj);
+            // button.toggleGroup = toggleGroupName;
+            // button.sound = clickSound;
             return button;
         };
         /**
@@ -194,6 +194,9 @@ var codeBase;
             result.texture = texture;
             return result;
         };
+        /**
+         * 创建Spine动画
+         */
         UICreator.createSpineAnimation = function (skeletonName, _path) {
             if (_path === void 0) { _path = null; }
             var json = RES.getRes(skeletonName + "_json");
@@ -214,6 +217,51 @@ var codeBase;
             var skelData = spine.createSkeletonData(json, texAtlas);
             return new spine.SkeletonAnimation(skelData);
             var _a;
+        };
+        /**
+         * 创建进度条
+         * pr:添加到的容器
+         * px:x坐标
+         * py:y坐标
+         * bg:进度条背景
+         * skin:进度条进度
+         */
+        UICreator.prototype.createProgress = function (bg, skin, pr, px, py) {
+            if (bg === void 0) { bg = null; }
+            if (skin === void 0) { skin = null; }
+            if (pr === void 0) { pr = null; }
+            if (px === void 0) { px = 0; }
+            if (py === void 0) { py = 0; }
+            var progress = new codeBase.Progress(bg, skin);
+            if (pr) {
+                pr.addChild(progress);
+                progress.x = px;
+                progress.y = py;
+            }
+            return progress;
+        };
+        /**
+         * 创建滑动条
+         * pr:添加到的容器
+         * px:x坐标
+         * py:y坐标
+         * bg:进度条背景
+         * skin:进度条进度
+         */
+        UICreator.prototype.createSlider = function (bg, skin, bar, pr, px, py) {
+            if (bg === void 0) { bg = null; }
+            if (skin === void 0) { skin = null; }
+            if (bar === void 0) { bar = null; }
+            if (pr === void 0) { pr = null; }
+            if (px === void 0) { px = 0; }
+            if (py === void 0) { py = 0; }
+            var slider = new codeBase.Slider(bg, skin, bar);
+            if (pr) {
+                pr.addChild(slider);
+                slider.x = px;
+                slider.y = py;
+            }
+            return slider;
         };
         /**
          * 获取xy位置的像素值,xy是舞台值

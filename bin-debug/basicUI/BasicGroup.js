@@ -10,9 +10,9 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var codeBase;
 (function (codeBase) {
-    var BaseGroup = (function (_super) {
-        __extends(BaseGroup, _super);
-        function BaseGroup() {
+    var BasicGroup = (function (_super) {
+        __extends(BasicGroup, _super);
+        function BasicGroup() {
             var _this = _super.call(this) || this;
             //是否已加入过显示列表中,可用来判断各组件是否已经具备显示赋值的作用
             _this._isAddedToStage = false;
@@ -30,6 +30,7 @@ var codeBase;
             _this._hasInvalidate = false;
             _this._data = null; //可携带的数据
             _this._enabled = true; //不可用状态
+            _this.dataEvent = new Object;
             _this.elements = [];
             var s = _this;
             s._drawDelay = false;
@@ -40,7 +41,7 @@ var codeBase;
         /**
          * 第一次加入场景的时候会调用该方法
          */
-        BaseGroup.prototype.onAddToStage = function (event) {
+        BasicGroup.prototype.onAddToStage = function (event) {
             var s = this;
             s._isAddedToStage = true;
             s.removeEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
@@ -54,7 +55,7 @@ var codeBase;
          * 加入到显示列表时调用
          * 子类覆写该方法,添加UI逻辑
          */
-        BaseGroup.prototype.createChildren = function () {
+        BasicGroup.prototype.createChildren = function () {
             var s = this;
             s.touchEnabled = false; //默认不接受事件
             //this.setSize(Style.BASEGROUP_WIDTH, Style.BASEGROUP_HEIGHT);
@@ -63,9 +64,9 @@ var codeBase;
          * 初始化一些必要的逻辑数据
          * 加入到显示列表的时候会调用
          */
-        BaseGroup.prototype.initData = function () {
+        BasicGroup.prototype.initData = function () {
         };
-        Object.defineProperty(BaseGroup.prototype, "width", {
+        Object.defineProperty(BasicGroup.prototype, "width", {
             get: function () {
                 return this.$getWidth();
             },
@@ -84,7 +85,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "height", {
+        Object.defineProperty(BasicGroup.prototype, "height", {
             get: function () {
                 return this.$getHeight();
             },
@@ -108,7 +109,7 @@ var codeBase;
          * @param w The width of the component.
          * @param h The height of the component.
          */
-        BaseGroup.prototype.setSize = function (w, h) {
+        BasicGroup.prototype.setSize = function (w, h) {
             var s = this;
             if (s.width != w || s.height != h) {
                 s.width = w;
@@ -117,7 +118,7 @@ var codeBase;
                 s.invalidate();
             }
         };
-        Object.defineProperty(BaseGroup.prototype, "top", {
+        Object.defineProperty(BasicGroup.prototype, "top", {
             ///////////////////////////////////
             // 组件相对布局设置
             ///////////////////////////////////
@@ -137,7 +138,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "left", {
+        Object.defineProperty(BasicGroup.prototype, "left", {
             /**
              * 设置左距
              */
@@ -154,7 +155,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "bottom", {
+        Object.defineProperty(BasicGroup.prototype, "bottom", {
             get: function () {
                 return this._bottom;
             },
@@ -171,7 +172,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "right", {
+        Object.defineProperty(BasicGroup.prototype, "right", {
             get: function () {
                 return this._right;
             },
@@ -188,7 +189,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "horizontalCenter", {
+        Object.defineProperty(BasicGroup.prototype, "horizontalCenter", {
             get: function () {
                 return this._horizontalCenter;
             },
@@ -205,7 +206,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "verticalCenter", {
+        Object.defineProperty(BasicGroup.prototype, "verticalCenter", {
             get: function () {
                 return this._verticalCenter;
             },
@@ -225,7 +226,7 @@ var codeBase;
         /**
          * 设置是否下一帧计算相对位置
          */
-        BaseGroup.prototype.onInvalidatePosition = function () {
+        BasicGroup.prototype.onInvalidatePosition = function () {
             //console.log("onInvalidatePosition 000 name=" + this.name);
             //if (this._drawDelay) return;
             var s = this;
@@ -236,7 +237,7 @@ var codeBase;
                 var child = void 0;
                 for (var i = 0; i < s.numChildren; i++) {
                     child = s.getChildAt(i);
-                    if (child instanceof BaseGroup) {
+                    if (child instanceof BasicGroup) {
                         child.onInvalidatePosition();
                     }
                 }
@@ -245,7 +246,7 @@ var codeBase;
         /**
          * 容器相对位置刷新
          */
-        BaseGroup.prototype.resetPosition = function () {
+        BasicGroup.prototype.resetPosition = function () {
             var s = this;
             //console.log("resetPosition name=" + s.name);
             var pr = s.parent;
@@ -325,12 +326,12 @@ var codeBase;
                 var child = void 0;
                 for (var i = 0; i < s.numChildren; i++) {
                     child = s.getChildAt(i);
-                    if ((widthChanged || heightChanged) && child instanceof BaseGroup) {
+                    if ((widthChanged || heightChanged) && child instanceof BasicGroup) {
                         child.onInvalidatePosition();
                     }
                     else {
                         if (egret.is(child, "eui.UIComponent")) {
-                            BaseGroup.resetChildPosition(child);
+                            BasicGroup.resetChildPosition(child);
                         }
                     }
                 }
@@ -338,7 +339,7 @@ var codeBase;
             s.removeEventListener(egret.Event.ENTER_FRAME, s.resetPosition, s);
             s._hasInvalidatePosition = false;
         };
-        BaseGroup.resetChildPosition = function (child) {
+        BasicGroup.resetChildPosition = function (child) {
             var pr = child.parent;
             if (pr != null && child['top'] !== undefined && child['bottom'] !== undefined && child['left'] !== undefined && child['right'] !== undefined && child['horizontalCenter'] !== undefined && child['verticalCenter'] !== undefined) {
                 var parentWidth = pr.width;
@@ -403,11 +404,11 @@ var codeBase;
                     var temp = void 0;
                     for (var i = 0; i < child.numChildren; i++) {
                         temp = child.getChildAt(i);
-                        if (temp instanceof BaseGroup) {
+                        if (temp instanceof BasicGroup) {
                             temp.onInvalidatePosition();
                         }
                         else {
-                            BaseGroup.resetChildPosition(temp);
+                            BasicGroup.resetChildPosition(temp);
                         }
                     }
                 }
@@ -416,7 +417,7 @@ var codeBase;
         /**
          * 添加实现了eui.UIComponent类约束布局的元素,例如：eui.Image
          */
-        BaseGroup.prototype.addElement = function (child) {
+        BasicGroup.prototype.addElement = function (child) {
             var s = this;
             if (s.elements.indexOf(child) >= 0)
                 return;
@@ -428,7 +429,7 @@ var codeBase;
                 s.addChild(child);
             }
         };
-        Object.defineProperty(BaseGroup.prototype, "data", {
+        Object.defineProperty(BasicGroup.prototype, "data", {
             /**
              * 可设置的携带数据
              */
@@ -444,9 +445,9 @@ var codeBase;
         /**
          * 清理数据
          */
-        BaseGroup.prototype.clean = function () {
+        BasicGroup.prototype.clean = function () {
         };
-        Object.defineProperty(BaseGroup.prototype, "enabled", {
+        Object.defineProperty(BasicGroup.prototype, "enabled", {
             /**
             * 设置enabled状态
             * @return
@@ -460,7 +461,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "cx", {
+        Object.defineProperty(BasicGroup.prototype, "cx", {
             /**
              * 中心x位置
              * @returns {number}
@@ -471,7 +472,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "cy", {
+        Object.defineProperty(BasicGroup.prototype, "cy", {
             /**
              * 中心y位置
              * @returns {number}
@@ -483,22 +484,15 @@ var codeBase;
             configurable: true
         });
         /**
-         * 从场景中移除对象
-         */
-        BaseGroup.prototype.removeFromParent = function () {
-            if (this.parent)
-                this.parent.removeChild(this);
-        };
-        /**
          * 返回全局x,y值
          * @returns {egret.Point}
          */
-        BaseGroup.prototype.getGlobalXY = function () {
-            var point = new egret.Point(0, 0);
+        BasicGroup.prototype.getGlobalXY = function () {
+            var point = new egret.Point(this.anchorOffsetX, this.anchorOffsetY);
             this.localToGlobal(point.x, point.y, point);
             return point;
         };
-        Object.defineProperty(BaseGroup.prototype, "actualWidth", {
+        Object.defineProperty(BasicGroup.prototype, "actualWidth", {
             /**
              * 返回实际宽度
              * @returns {number}
@@ -509,7 +503,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "actualHeight", {
+        Object.defineProperty(BasicGroup.prototype, "actualHeight", {
             /**
              * 返回实际高度
              * @returns {number}
@@ -522,10 +516,8 @@ var codeBase;
         });
         /**
          * 获取注册点相对的偏移像素值
-         * 官方很奇葩,修改了注册点后,子组件竟然不是以改注册点的值作为起始xy的0值
-         * 这里计算出实际的偏移值,供大家使用
          */
-        BaseGroup.prototype.getRegPoint = function () {
+        BasicGroup.prototype.getRegPoint = function () {
             var regPoint = new egret.Point(0, 0);
             if (this.anchorOffsetX != 0) {
                 regPoint.x = this.anchorOffsetX;
@@ -535,7 +527,7 @@ var codeBase;
             }
             return regPoint;
         };
-        BaseGroup.prototype.invalidate = function () {
+        BasicGroup.prototype.invalidate = function () {
             //当前无效标识状态_hasInvalidate为flase(即还没有进行延时绘制)并且没有设置延迟绘制标识_drawDelay
             var s = this;
             if (!s._hasInvalidate && !s._drawDelay) {
@@ -547,16 +539,16 @@ var codeBase;
         /**
          * 重绘通知
          */
-        BaseGroup.prototype.onInvalidate = function (event) {
+        BasicGroup.prototype.onInvalidate = function (event) {
             var s = this;
             s.draw();
             s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
             s._hasInvalidate = false;
         };
-        BaseGroup.prototype.draw = function () {
+        BasicGroup.prototype.draw = function () {
             //console.log("draw name=" + this.name);
         };
-        Object.defineProperty(BaseGroup.prototype, "drawDelay", {
+        Object.defineProperty(BasicGroup.prototype, "drawDelay", {
             get: function () {
                 return this._drawDelay;
             },
@@ -579,7 +571,7 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(BaseGroup.prototype, "isAddedToStage", {
+        Object.defineProperty(BasicGroup.prototype, "isAddedToStage", {
             /**
              * 判断曾经加入过显示列表中
              * 可以用来判断各属性是否已经准备好显示和使用
@@ -591,8 +583,81 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        return BaseGroup;
+        /**分发事件*/
+        BasicGroup.prototype.dispEvent = function (type, data) {
+            if (data === void 0) { data = null; }
+            if (this.dataEvent) {
+                var fun = this.dataEvent[type];
+                if (fun != null) {
+                    var evt = new codeBase.BasicUIEvent;
+                    evt.currentTarget = this;
+                    evt.data = data;
+                    evt.type = type;
+                    if (fun["this"]) {
+                        fun.apply(fun["this"], [evt]);
+                    }
+                    else {
+                        fun(evt);
+                    }
+                }
+            }
+        };
+        /**帧听事件*/
+        BasicGroup.prototype.addEvent = function (type, listener, thisObj) {
+            if (thisObj === void 0) { thisObj = null; }
+            var s = this;
+            if (s.dataEvent && s.dataEvent[type] == null) {
+                listener["this"] = thisObj;
+                s.dataEvent[type] = listener;
+            }
+        };
+        /**删除事件*/
+        BasicGroup.prototype.removeEvent = function (type, listener) {
+            var s = this;
+            if (s.dataEvent && s.dataEvent[type]) {
+                delete s.dataEvent[type];
+            }
+        };
+        /**把自己从父级删除*/
+        BasicGroup.prototype.removeFromParent = function (dispose) {
+            if (dispose === void 0) { dispose = false; }
+            var s = this;
+            var _parent = this.parent;
+            if (dispose)
+                s.dispose();
+            if (_parent)
+                _parent.removeChild(s);
+            _parent = null;
+        };
+        /**删除所有的子节点*/
+        BasicGroup.prototype.removeChildAll = function (dispose) {
+            if (dispose === void 0) { dispose = false; }
+            while (this.numChildren > 0) {
+                this.removeChildIndex(0, dispose);
+            }
+        };
+        /**删除index层的子节点*/
+        BasicGroup.prototype.removeChildIndex = function (index, dispose) {
+            var s = this;
+            if (index >= 0 || index < s.numChildren) {
+                var child = s.getChildAt(index);
+                if (child instanceof BasicGroup) {
+                    child.removeFromParent(dispose);
+                }
+                else {
+                    var display = this.getChildAt(index);
+                    if (display.parent)
+                        display.parent.removeChild(display);
+                }
+            }
+        };
+        /**销毁*/
+        BasicGroup.prototype.dispose = function () {
+            var s = this;
+            s.removeChildAll(true);
+        };
+        return BasicGroup;
     }(egret.DisplayObjectContainer));
-    codeBase.BaseGroup = BaseGroup;
-    __reflect(BaseGroup.prototype, "codeBase.BaseGroup");
+    codeBase.BasicGroup = BasicGroup;
+    __reflect(BasicGroup.prototype, "codeBase.BasicGroup");
 })(codeBase || (codeBase = {}));

@@ -265,7 +265,7 @@ var codeBase;
         ScrollGroup.STATE_START = "start";
         ScrollGroup.STATE_STOP = "stop";
         return ScrollGroup;
-    }(codeBase.BaseGroup));
+    }(codeBase.BasicGroup));
     codeBase.ScrollGroup = ScrollGroup;
     __reflect(ScrollGroup.prototype, "codeBase.ScrollGroup");
     /**
@@ -561,6 +561,6 @@ var codeBase;
             configurable: true
         });
         return ScrollItemGroup;
-    }(codeBase.BaseGroup));
+    }(codeBase.BasicGroup));
     __reflect(ScrollItemGroup.prototype, "ScrollItemGroup");
 })(codeBase || (codeBase = {}));

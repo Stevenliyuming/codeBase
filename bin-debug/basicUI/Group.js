@@ -304,7 +304,7 @@ var codeBase;
             return rect;
         };
         return Group;
-    }(codeBase.BaseGroup));
+    }(codeBase.BasicGroup));
     codeBase.Group = Group;
     __reflect(Group.prototype, "codeBase.Group");
 })(codeBase || (codeBase = {}));

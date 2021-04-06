@@ -10,7 +10,7 @@ module codeBase{
 		 */
 		public constructor(bg: DisplayObject = null, skin: DisplayObject = null, bar: DisplayObject = null) {
 			super(bg, skin);
-			this.skinBar = bar || Skin.sliderBar;
+			this.skinBar = bar || UISkin.sliderBar;
 			this.addChild(this.skinBar);
 			this.skinBar.touchEnabled = true;
 			this.skinBar.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouch, this);
@@ -19,8 +19,8 @@ module codeBase{
 		}
 
 		protected setSkin(bg: DisplayObject = null, skin: DisplayObject = null) {
-			this.skinBg = bg || Skin.sliderBackground;
-			this.skinValue = skin || Skin.sliderValue;
+			this.skinBg = bg || UISkin.sliderBackground;
+			this.skinValue = skin || UISkin.sliderSkin;
 		}
 
 		protected onTouch(e: egret.TouchEvent): void {
@@ -28,16 +28,16 @@ module codeBase{
 				case egret.TouchEvent.TOUCH_BEGIN:
 					this.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
 					this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
-					this.dispEvent(LayoutEvent.START);
+					this.dispEvent(BasicUIEvent.START);
 					break;
 				case egret.TouchEvent.TOUCH_MOVE:
 					this.moveDo(e.stageX, e.stageY);
-					this.dispEvent(LayoutEvent.MOVE);
+					this.dispEvent(BasicUIEvent.MOVE);
 					break;
 				case egret.TouchEvent.TOUCH_END:
 					this.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
 					this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
-					this.dispEvent(LayoutEvent.OVER);
+					this.dispEvent(BasicUIEvent.OVER);
 					break;
 			}
 		}
