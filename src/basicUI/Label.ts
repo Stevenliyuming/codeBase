@@ -18,9 +18,6 @@ module codeBase {
 		private _stroke: number = 0;
 		private _strokeColor: number = 0x003350;
 		private _html: boolean = false;
-		/**
-		 * 根据文字自动调整Label的尺寸
-		 */
 		private _autoSize: boolean = true;
 
 		private _paddingLeft:number = 0;
@@ -50,10 +47,11 @@ module codeBase {
 		}
 
 		/**
-		 * Called when the text in the text field is manually changed.
+		 * 文本改变监听
 		 */
 		public onTextChange(event: Event): void {
-			this._text = this._textField.text;
+			let s = this;
+			s._text = s._textField.text;
 		}
 
         /**
@@ -91,12 +89,8 @@ module codeBase {
 			return this._textField;
 		}
 
-		/**
-		 * Draws the visual ui of the component.
-		 */
 		public draw(): void {
 			let s = this;
-			// super.draw();
 			if (s._textField == null) return;
 			//console.log("@@label draw text=" + this._text);
 			if (s._fontName != null) {
@@ -124,8 +118,8 @@ module codeBase {
 			} else {
 				s._textField.width = s.width;
 				s._textField.height = s.height;
-				var newWidth = s._textField.width - s._paddingLeft - s._paddingRight;
-				var newHeight = s._textField.height - s._paddingTop - s._paddingBottom;
+				let newWidth = s._textField.width - s._paddingLeft - s._paddingRight;
+				let newHeight = s._textField.height - s._paddingTop - s._paddingBottom;
 				s._textField.width = newWidth;
 				s._textField.height = newHeight;
 				s._textField.x = s._paddingLeft;

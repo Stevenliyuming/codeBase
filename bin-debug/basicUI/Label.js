@@ -31,9 +31,6 @@ var codeBase;
             _this._stroke = 0;
             _this._strokeColor = 0x003350;
             _this._html = false;
-            /**
-             * 根据文字自动调整Label的尺寸
-             */
             _this._autoSize = true;
             _this._paddingLeft = 0;
             _this._paddingRight = 0;
@@ -57,10 +54,11 @@ var codeBase;
             _super.prototype.initData.call(this);
         };
         /**
-         * Called when the text in the text field is manually changed.
+         * 文本改变监听
          */
         Label.prototype.onTextChange = function (event) {
-            this._text = this._textField.text;
+            var s = this;
+            s._text = s._textField.text;
         };
         Object.defineProperty(Label.prototype, "text", {
             /**
@@ -101,12 +99,8 @@ var codeBase;
         Label.prototype.getTextField = function () {
             return this._textField;
         };
-        /**
-         * Draws the visual ui of the component.
-         */
         Label.prototype.draw = function () {
             var s = this;
-            // super.draw();
             if (s._textField == null)
                 return;
             //console.log("@@label draw text=" + this._text);

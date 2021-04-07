@@ -2,32 +2,32 @@ module codeBase{
 	/***进度条 */
 	export class Progress extends BasicGroup {
 		protected skinBg: DisplayObject;
-		protected skinValue: DisplayObject;
+		protected skinProgress: DisplayObject;
 		protected text: Label;
 		protected _value: number = 0;
+
+		public constructor() {
+			super();
+		}
+
 		/**
 		 * bg:进度条背景
 		 * skin:进度条进度
 		 */
-		public constructor(bg: DisplayObject = null, skin: DisplayObject = null) {
-			super();
-			this.setSkin(bg, skin);
+		public setSkin(bg: DisplayObject, skin: DisplayObject) {
+			this.skinBg = bg || UISkin.progressBackground;
+			this.skinProgress = skin || UISkin.progressSkin;
 			this.addChild(this.skinBg);
-			this.addChild(this.skinValue);
+			this.addChild(this.skinProgress);
 			this.text = new Label;
 			this.addChild(this.text);
-		}
-
-		protected setSkin(bg: DisplayObject = null, skin: DisplayObject = null) {
-			this.skinBg = bg || UISkin.progressBackground;
-			this.skinValue = skin || UISkin.progressSkin;
 		}
 
 		/**值只能是0－1之间 */
 		public set value(v: number) {
 			v = v < 0 ? 0 : v > 1 ? 1 : v;
 			this._value = v;
-			this.skinValue.scaleX = v;
+			this.skinProgress.scaleX = v;
 		}
 
 		public get value(): number {

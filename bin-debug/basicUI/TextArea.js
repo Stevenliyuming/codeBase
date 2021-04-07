@@ -10,6 +10,9 @@ r.prototype = e.prototype, t.prototype = new r();
 };
 var codeBase;
 (function (codeBase) {
+    /**
+     * 文本显示域
+     */
     var TextArea = (function (_super) {
         __extends(TextArea, _super);
         function TextArea() {
@@ -134,7 +137,7 @@ var codeBase;
             this._isTouchBegin = false;
         };
         /**
-         * Called when the text in the text field is manually changed.
+         * 文本变化监听
          */
         TextArea.prototype.onTextChange = function (event) {
             this._text = this._textField.text;
@@ -315,74 +318,63 @@ var codeBase;
         TextArea.prototype.getTextField = function () {
             return this._textField;
         };
-        /**
-         * Draws the visual ui of the component.
-         */
         TextArea.prototype.draw = function () {
             _super.prototype.draw.call(this);
-            if (this._textField == null)
+            var s = this;
+            if (s._textField == null)
                 return;
             //console.log("@@label draw text=" + this._text);
-            if (this._fontName != null) {
-                this._textField.fontFamily = this.fontName;
+            if (s._fontName != null) {
+                s._textField.fontFamily = s.fontName;
             }
-            if (this._color >= 0)
-                this._textField.textColor = this._color;
-            if (this._fontSize > 0)
-                this._textField.size = this._fontSize;
-            this._textField.bold = this._bold;
-            this._textField.italic = this._italic;
-            if (this._html) {
-                if (this._initFlow)
-                    this._textField.textFlow = this._initFlow;
-                this._initFlow = null;
-            }
-            else {
-                this._textField.text = this._text;
-            }
-            if (this._editable) {
-                this.touchChildren = true;
-                this._textField.type = egret.TextFieldType.INPUT;
+            if (s._color >= 0)
+                s._textField.textColor = s._color;
+            if (s._fontSize > 0)
+                s._textField.size = s._fontSize;
+            s._textField.bold = s._bold;
+            s._textField.italic = s._italic;
+            if (s._html) {
+                if (s._initFlow)
+                    s._textField.textFlow = s._initFlow;
+                s._initFlow = null;
             }
             else {
-                this.touchChildren = false;
-                this._textField.type = egret.TextFieldType.DYNAMIC;
+                s._textField.text = s._text;
             }
-            this._textField.maxChars = this._maxChars;
-            if (codeBase.StringUtil.isUsage(this._restrict))
-                this._textField.restrict = this._restrict;
-            if (codeBase.StringUtil.isUsage(this._inputType))
-                this._textField.inputType = this._inputType;
-            this._textField.lineSpacing = this._lineSpacing;
-            this._textField.stroke = this._stroke;
-            this._textField.strokeColor = this._strokeColor;
-            if (this._textField.width != this.width)
-                this._textField.width = this.width;
-            if (this._textField.height != this.height)
-                this._textField.height = this.height;
-            var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
-            var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
-            this._textField.width = newWidth;
-            this._textField.height = newHeight;
-            this._textField.x = this._paddingLeft;
-            this._textField.y = this._paddingTop;
-            // this._textField.width = this.width;
-            // this._textField.height = this.height;
-            // if (this._vAlign == egret.VerticalAlign.MIDDLE) {
-            // 	this._textField.y = (this.height - this._textField.height) / 2;
-            // } else if (this._vAlign == egret.VerticalAlign.BOTTOM) {
-            // 	this._textField.y = this.height - this._textField.height;
-            // } else {
-            // 	this._textField.y = 0;
-            // }
-            this._textField.textAlign = this._hAlign;
-            this._textField.verticalAlign = this._vAlign;
+            if (s._editable) {
+                s.touchChildren = true;
+                s._textField.type = egret.TextFieldType.INPUT;
+            }
+            else {
+                s.touchChildren = false;
+                s._textField.type = egret.TextFieldType.DYNAMIC;
+            }
+            s._textField.maxChars = s._maxChars;
+            if (codeBase.StringUtil.isUsage(s._restrict))
+                s._textField.restrict = s._restrict;
+            if (codeBase.StringUtil.isUsage(s._inputType))
+                s._textField.inputType = s._inputType;
+            s._textField.lineSpacing = s._lineSpacing;
+            s._textField.stroke = s._stroke;
+            s._textField.strokeColor = s._strokeColor;
+            if (s._textField.width != s.width)
+                s._textField.width = s.width;
+            if (s._textField.height != s.height)
+                s._textField.height = s.height;
+            var newWidth = s._textField.width - s._paddingLeft - s._paddingRight;
+            var newHeight = s._textField.height - s._paddingTop - s._paddingBottom;
+            s._textField.width = newWidth;
+            s._textField.height = newHeight;
+            s._textField.x = s._paddingLeft;
+            s._textField.y = s._paddingTop;
+            s._textField.textAlign = s._hAlign;
+            s._textField.verticalAlign = s._vAlign;
             //console.log("textHeight=" + this._textField.textHeight + ", height=" + this.height);
-            if (this._textField.textHeight > this.height) {
-                this.onSetScrollText(true);
+            if (s._textField.textHeight > s.height) {
+                s.onSetScrollText(true);
             }
             else {
-                this.onSetScrollText(false);
+                s.onSetScrollText(false);
             }
         };
         Object.defineProperty(TextArea.prototype, "italic", {

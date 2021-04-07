@@ -1,4 +1,7 @@
 module codeBase {
+	/**
+	 * 文本输入框
+	 */
 	export class TextInput extends Group {
 		public _textField: egret.TextField = null;
 		public _text: string = "";
@@ -20,10 +23,10 @@ module codeBase {
 		private _restrict: string = null;//限制输入
 		private _inputType: string = null;//键盘输入类型
 
-		private _paddingLeft:number = 0;
-		private _paddingRight:number = 0;
-		private _paddingTop:number = 0;
-		private _paddingBottom:number = 0;
+		private _paddingLeft: number = 0;
+		private _paddingRight: number = 0;
+		private _paddingTop: number = 0;
+		private _paddingBottom: number = 0;
 
 		public constructor() {
 			super();
@@ -40,8 +43,8 @@ module codeBase {
 			this.clip = false;
 			this.touchEnabled = true;
 			this._textField = new egret.TextField();
-			this._textField.height = this.height;
 			this._textField.width = this.width;
+			this._textField.height = this.height;
 			this._textField.displayAsPassword = false;
 			this._textField.type = egret.TextFieldType.INPUT;
 			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
@@ -71,41 +74,42 @@ module codeBase {
 		public draw(): void {
 			super.draw();
 			//console.log("TextInput draw=" + this._textField + ", text=" + this._textField.type);
-			if (!this._textField) return;
-			if (this._fontName != null) {
-				this._textField.fontFamily = this._fontName;
+			let s = this;
+			if (!s._textField) return;
+			if (s._fontName != null) {
+				s._textField.fontFamily = s._fontName;
 			}
-			if(this._textField.width != this.width) this._textField.width = this.width;
-			if(this._textField.height != this.height) this._textField.height = this.height;
-			var newWidth = this._textField.width - this._paddingLeft - this._paddingRight;
-			var newHeight = this._textField.height - this._paddingTop - this._paddingBottom;
-			this._textField.width = newWidth;
-			this._textField.height = newHeight;
-			this._textField.x = this._paddingLeft;
-			this._textField.y = this._paddingTop;
-			if (this._fontColor >= 0) this._textField.textColor = this._fontColor;
-			if (this._fontSize > 0) this._textField.size = this._fontSize;
-			this._textField.textAlign = this._hAlign;
-			this._textField.verticalAlign = this._vAlign;
-			this._textField.bold = this._bold;
-			this._textField.italic = this._italic;
-			this._textField.multiline = this._multiline;
-			this._textField.lineSpacing = this._lineSpacing;
-			this._textField.stroke = this._stroke;
-			this._textField.strokeColor = this._strokeColor;
-			this._textField.displayAsPassword = this._password;
-			this._textField.text = this._text;
-			this._textField.wordWrap = this._wordWrap;
-			this._textField.maxChars = this._maxChars;
-			if (StringUtil.isUsage(this._restrict)) this._textField.restrict = this._restrict;
-			if (StringUtil.isUsage(this._inputType)) this._textField.inputType = this._inputType;
+			if (s._textField.width != s.width) s._textField.width = s.width;
+			if (s._textField.height != s.height) s._textField.height = s.height;
+			let newWidth = s._textField.width - s._paddingLeft - s._paddingRight;
+			let newHeight = s._textField.height - s._paddingTop - s._paddingBottom;
+			s._textField.width = newWidth;
+			s._textField.height = newHeight;
+			s._textField.x = s._paddingLeft;
+			s._textField.y = s._paddingTop;
+			if (s._fontColor >= 0) s._textField.textColor = s._fontColor;
+			if (s._fontSize > 0) s._textField.size = s._fontSize;
+			s._textField.textAlign = s._hAlign;
+			s._textField.verticalAlign = s._vAlign;
+			s._textField.bold = s._bold;
+			s._textField.italic = s._italic;
+			s._textField.multiline = s._multiline;
+			s._textField.lineSpacing = s._lineSpacing;
+			s._textField.stroke = s._stroke;
+			s._textField.strokeColor = s._strokeColor;
+			s._textField.displayAsPassword = s._password;
+			s._textField.text = s._text;
+			s._textField.wordWrap = s._wordWrap;
+			s._textField.maxChars = s._maxChars;
+			if (StringUtil.isUsage(s._restrict)) s._textField.restrict = s._restrict;
+			if (StringUtil.isUsage(s._inputType)) s._textField.inputType = s._inputType;
 		}
 
 		/**
 		 * 文本区域左边距偏移
 		 */
-		public set paddingLeft(value:number) {
-			if(this._paddingLeft != value) {
+		public set paddingLeft(value: number) {
+			if (this._paddingLeft != value) {
 				this._paddingLeft = value;
 				this.invalidate();
 			}
@@ -117,8 +121,8 @@ module codeBase {
 		/**
 		 * 文本区域右边距偏移
 		 */
-		public set paddingRight(value:number) {
-			if(this._paddingRight != value) {
+		public set paddingRight(value: number) {
+			if (this._paddingRight != value) {
 				this._paddingRight = value;
 				this.invalidate();
 			}
@@ -130,8 +134,8 @@ module codeBase {
 		/**
 		 * 文本区域顶部边距偏移
 		 */
-		public set paddingTop(value:number) {
-			if(this._paddingTop != value) {
+		public set paddingTop(value: number) {
+			if (this._paddingTop != value) {
 				this._paddingTop = value;
 				this.invalidate();
 			}
@@ -143,8 +147,8 @@ module codeBase {
 		/**
 		 * 文本区域底部边距偏移
 		 */
-		public set paddingBottom(value:number) {
-			if(this._paddingBottom != value) {
+		public set paddingBottom(value: number) {
+			if (this._paddingBottom != value) {
 				this._paddingBottom = value;
 				this.invalidate();
 			}

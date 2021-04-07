@@ -1,6 +1,6 @@
 module codeBase {
 	//图片字体类
-	export class ImageNumber extends egret.Sprite {
+	export class ImageNumber extends BasicGroup {
 		private numberImages: egret.Bitmap[] = [];
 		private numberImagePool: egret.Bitmap[] = [];
 		private numberTexture: any = {};

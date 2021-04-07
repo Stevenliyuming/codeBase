@@ -14,24 +14,22 @@ module codeBase {
 		private _drawDelay: boolean = false;
 		//是否下一帧重绘
 		private _hasInvalidate: boolean = false;
-
-		public _data: any = null;//可携带的数据
-		private _enabled: boolean = true;//不可用状态
-
+		//不可用状态
+		private _enabled: boolean = true;
+		//可携带的数据
+		public _data: any = null;
 		private dataEvent: Object = new Object;
-
 		private elements: egret.DisplayObject[] = [];
 
 		public constructor() {
 			super();
 			let s = this;
-			s._drawDelay = false;
 			s.addEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
 			//console.log("this._drawDelay=" + this._drawDelay)
 		}
 
 		/**
-		 * 第一次加入场景的时候会调用该方法
+		 * 加入场景的时候会调用该方法
 		 */
 		public onAddToStage(event: Event): void {
 			let s = this;
@@ -68,12 +66,10 @@ module codeBase {
 		public set width(w: number) {
 			if (w >= 0) {
 				super.$setWidth(w);
-				//if (this._anchorX != 0) this.anchorOffsetX = w * this._anchorX;
 				this.onInvalidatePosition();
 				this.invalidate();
 			}
 		}
-
 		public get width(): number {
 			return this.$getWidth();
 		}
@@ -85,20 +81,18 @@ module codeBase {
 		public set height(h: number) {
 			if (h >= 0) {
 				super.$setHeight(h);
-				//if (this._anchorY != 0) this.anchorOffsetY = h * this._anchorY;
 				this.onInvalidatePosition();
 				this.invalidate();
 			}
 		}
-
 		public get height(): number {
 			return this.$getHeight();
 		}
 
 		/**
-		 * Sets the size of the component.
-		 * @param w The width of the component.
-		 * @param h The height of the component.
+		 * 设置宽高
+		 * @param w 宽
+		 * @param h 高
 		 */
 		public setSize(w: number, h: number): void {
 			let s = this;
@@ -110,9 +104,6 @@ module codeBase {
 			}
 		}
 
-		///////////////////////////////////
-		// 组件相对布局设置
-		///////////////////////////////////
 		public get top(): number {
 			return this._top;
 		}
@@ -225,7 +216,7 @@ module codeBase {
 		public resetPosition(): void {
 			let s = this;
 			//console.log("resetPosition name=" + s.name);
-			var pr: egret.DisplayObject = s.parent;
+			var pr: egret.DisplayObjectContainer = s.parent;
 			if (pr != null) {
 				var parentWidth: number = pr.width;
 				var parentHeight: number = pr.height;
@@ -297,13 +288,13 @@ module codeBase {
 				//添加具有约束布局的元素
 				if (s.elements.length > 0) {
 					for (let i = 0; i < s.elements.length; ++i) {
-						this.addChild(s.elements[i]);
+						super.addChild(s.elements[i]);
 					}
 					s.elements.length = 0;
 				}
 
 				let child: any;
-				for (var i: number = 0; i < s.numChildren; i++) {
+				for (let i: number = 0, num = s.numChildren; i < num; i++) {
 					child = s.getChildAt(i);
 					if ((widthChanged || heightChanged) && child instanceof BasicGroup) {
 						child.onInvalidatePosition();
@@ -319,7 +310,8 @@ module codeBase {
 		}
 
 		private static resetChildPosition(child: egret.DisplayObjectContainer) {
-			var pr: egret.DisplayObject = child.parent;
+			var pr: egret.DisplayObjectContainer = child.parent;
+			//确保是白鹭具有布局约束的组件
 			if (pr != null && child['top'] !== undefined && child['bottom'] !== undefined && child['left'] !== undefined && child['right'] !== undefined && child['horizontalCenter'] !== undefined && child['verticalCenter'] !== undefined) {
 				var parentWidth: number = pr.width;
 				var parentHeight: number = pr.height;
@@ -381,7 +373,7 @@ module codeBase {
 				if (widthChanged || heightChanged) {
 					if (child.numChildren == undefined) return;
 					let temp: any;
-					for (var i: number = 0; i < child.numChildren; i++) {
+					for (let i: number = 0, num = child.numChildren; i < num; i++) {
 						temp = child.getChildAt(i);
 						if (temp instanceof BasicGroup) {
 							temp.onInvalidatePosition();
@@ -394,17 +386,40 @@ module codeBase {
 		}
 
 		/**
-		 * 添加实现了eui.UIComponent类约束布局的元素,例如：eui.Image
+		 * 添加实现了eui.UIComponent约束布局的元素
+		 * 例如：eui.Image
 		 */
 		public addElement(child: egret.DisplayObject) {
+			// let s = this;
+			// if (s.elements.indexOf(child) >= 0 || child.parent === s) {
+			// 	console.warn("子元素不能重复添加到同一个父级节点中");
+			// 	return;
+			// }
+			// if (egret.is(child, "eui.UIComponent")) {
+			// 	s.elements.push(child);
+			// } else {
+			// 	s.addChild(child);
+			// }
+			// s.onInvalidatePosition();
+		}
+
+		public addChild(child: DisplayObject): DisplayObject {
 			let s = this;
-			if (s.elements.indexOf(child) >= 0) return;
-			if (egret.is(child, "eui.UIComponent")) {
-				s.elements.push(child);
-				s.onInvalidatePosition();
-			} else {
-				s.addChild(child);
+			if (child.parent === s) {
+				console.warn("子元素不能重复添加到同一个父级节点中");
+				return;
 			}
+			if (egret.is(child, "eui.UIComponent")) {
+				if (s.elements.indexOf(child) >= 0) {
+					console.warn("子元素不能重复添加到同一个父级节点中");
+					return;
+				}
+				s.elements.push(child);
+			} else {
+				super.addChild(child);
+			}
+			//super.addChild(child);
+			s.onInvalidatePosition();
 		}
 
 		/**
@@ -413,7 +428,6 @@ module codeBase {
 		public get data(): any {
 			return this._data;
 		}
-
 		public set data(value: any) {
 			this._data = value;
 		}
@@ -431,7 +445,6 @@ module codeBase {
 		public get enabled(): boolean {
 			return this._enabled;
 		}
-
 		public set enabled(value: boolean) {
 			this._enabled = value;
 		}
@@ -456,7 +469,8 @@ module codeBase {
 		 * @returns {egret.Point}
 		 */
 		public getGlobalXY(): egret.Point {
-			var point: egret.Point = new egret.Point(this.anchorOffsetX, this.anchorOffsetY);
+			let s = this;
+			let point: egret.Point = new egret.Point(s.anchorOffsetX, s.anchorOffsetY);
 			this.localToGlobal(point.x, point.y, point);
 			return point;
 		}
@@ -468,6 +482,7 @@ module codeBase {
 		public get actualWidth(): number {
 			return this.width * this.scaleX;
 		}
+
 		/**
 		 * 返回实际高度
 		 * @returns {number}
@@ -477,19 +492,8 @@ module codeBase {
 		}
 
 		/**
-		 * 获取注册点相对的偏移像素值
+		 * 重绘通知
 		 */
-		public getRegPoint(): egret.Point {
-			var regPoint: egret.Point = new egret.Point(0, 0);
-			if (this.anchorOffsetX != 0) {
-				regPoint.x = this.anchorOffsetX;
-			}
-			if (this.anchorOffsetY != 0) {
-				regPoint.y = this.anchorOffsetY;
-			}
-			return regPoint;
-		}
-
 		public invalidate(): void {
 			//当前无效标识状态_hasInvalidate为flase(即还没有进行延时绘制)并且没有设置延迟绘制标识_drawDelay
 			let s = this;
@@ -501,7 +505,8 @@ module codeBase {
 		}
 
 		/**
-		 * 重绘通知
+		 * 重绘
+		 * 外部可以调用此接口立即执行重绘以达到一些数据的计算
 		 */
 		public onInvalidate(event: egret.Event): void {
 			let s = this;
@@ -589,8 +594,9 @@ module codeBase {
 
 		/**删除所有的子节点*/
 		public removeChildAll(dispose: boolean = false): void {
-			while (this.numChildren > 0) {
-				this.removeChildIndex(0, dispose);
+			let s = this;
+			while (s.numChildren > 0) {
+				s.removeChildIndex(0, dispose);
 			}
 		}
 

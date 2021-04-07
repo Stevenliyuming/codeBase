@@ -2,10 +2,6 @@ module codeBase {
     export class Image extends BasicGroup {
         private _bitmap: egret.Bitmap = null;
         private _texture: egret.Texture = null;
-        /**
-         * 根据外部设定的大小改变实际bitmap大小
-         */ 
-        private _autoSize: boolean = true;
         private _scale9GridRect: egret.Rectangle = null;//九宫拉伸的尺寸
         private scale9RectData: number[] = [];
         private _fillMode: string = egret.BitmapFillMode.SCALE;//scale, repeat, clip
@@ -29,7 +25,7 @@ module codeBase {
         }
 
         /**
-         * Sets/gets the fillMode of the scale9Grid bitmap.(scale|repeat)
+         * 设置填充模式
          */
         public get fillMode(): string {
             return this._fillMode;
@@ -42,20 +38,7 @@ module codeBase {
         }
 
         /**
-         *  Sets/gets the common scaleEnable of the bitmap.
-         */
-        public get autoSize(): boolean {
-            return this._autoSize;
-        }
-        public set autoSize(value: boolean) {
-            if (this._autoSize != value) {
-                this._autoSize = value;
-                this.invalidate();
-            }
-        }
-
-        /**
-         * Sets/gets the bitmapData of the bitmap.
+         * 设置贴图.
          */
         public get texture(): egret.Texture {
             return this._texture;
@@ -64,6 +47,7 @@ module codeBase {
             let s = this;
             if (s._texture != value) {
                 s._texture = value;
+                //立即执行绘制，相应数据（width、height等）在外部才有效
                 s.draw();
                 //s.invalidate();
                 s.onInvalidatePosition();
@@ -71,6 +55,7 @@ module codeBase {
         }
 
 		/**
+         * 九宫格
 		 * scale9Rectangle : [左边距,右边距,上边距,下边距]
 		 * 
 		 */
@@ -108,10 +93,10 @@ module codeBase {
         }
 
         /**
-		 * 覆写width方法,在width改变的时候,做逻辑运算
+		 * 覆写width方法,在width改变的时候,做位置变化的计算
 		 * @param w
 		 */
-		public set width(w: number) {
+        public set width(w: number) {
             if (w < 0 || w == this.explicitWidth) {
                 return;
             }
@@ -119,17 +104,16 @@ module codeBase {
             super.$setWidth(w);
             this.onInvalidatePosition();
             this.invalidate();
-		}
-
-		public get width(): number {
-			return this.$getWidth();
-		}
+        }
+        public get width(): number {
+            return this.$getWidth();
+        }
 
 		/**
-		 * 覆写height方法,在height改变的时候,做逻辑运算
+		 * 覆写height方法,在height改变的时候,做位置变化的计算
 		 * @param h
 		 */
-		public set height(h: number) {
+        public set height(h: number) {
             if (h < 0 || h == this.explicitHeight) {
                 return;
             }
@@ -137,12 +121,11 @@ module codeBase {
             super.$setHeight(h);
             this.onInvalidatePosition();
             this.invalidate();
-		}
+        }
+        public get height(): number {
+            return this.$getHeight();
+        }
 
-		public get height(): number {
-			return this.$getHeight();
-		}
-        
         public draw(): void {
             let s = this;
             if (!s._bitmap || s._texture == null) return;
@@ -150,13 +133,12 @@ module codeBase {
                 s._bitmap.texture = s._texture;
                 if (isNaN(s.explicitWidth)) {
                     s.width = s._bitmap.texture.textureWidth;
-                }                
+                }
                 if (isNaN(s.explicitHeight)) {
                     s.height = s._bitmap.texture.textureHeight;
                 }
             }
 
-            s._bitmap.fillMode = s._fillMode;
             if (s.scale9RectData.length == 4) {
                 if (s._scale9GridRect == null) s._scale9GridRect = s.scale9Rect();
                 s._scale9GridRect.x = s.scale9RectData[0];
@@ -169,12 +151,13 @@ module codeBase {
             } else {
                 s._bitmap.scale9Grid = null;
             }
+            s._bitmap.fillMode = s._fillMode;
             if (s._fillMode != egret.BitmapFillMode.SCALE) {
                 s._bitmap.width = s.width;
                 s._bitmap.height = s.height;
             } else {
                 s._bitmap.scaleX = s.width / s._bitmap.texture.textureWidth;
-                this._bitmap.scaleY = s.height / s._bitmap.texture.textureHeight;
+                s._bitmap.scaleY = s.height / s._bitmap.texture.textureHeight;
             }
             //this.setSize(this._bitmap.width, this._bitmap.height);
             // s.anchorOffsetX = s.anchorX * s.width;
@@ -191,9 +174,10 @@ module codeBase {
          * @param y
          */
         public getPixel32(x: number, y: number): Array<number> {
-            if (this._bitmap && this._bitmap.texture) {
-                var locolPoint: egret.Point = this.globalToLocal(x, y);
-                return this._bitmap.texture.getPixel32(locolPoint.x, locolPoint.y);
+            let s = this;
+            if (s._bitmap && s._bitmap.texture) {
+                var locolPoint: egret.Point = s.globalToLocal(x, y);
+                return s._bitmap.texture.getPixel32(locolPoint.x, locolPoint.y);
             }
             return [];
         }
@@ -205,7 +189,8 @@ module codeBase {
          * @return true:有像素值, false:无像素值
          */
         public testPixel32(x: number, y: number): boolean {
-            var datas: Array<number> = this.getPixel32(x, y);
+            let s = this;
+            var datas: Array<number> = s.getPixel32(x, y);
             for (var i: number = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {
                     return true;

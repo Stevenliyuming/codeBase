@@ -16,10 +16,6 @@ var codeBase;
             var _this = _super.call(this) || this;
             _this._bitmap = null;
             _this._texture = null;
-            /**
-             * 根据外部设定的大小改变实际bitmap大小
-             */
-            _this._autoSize = true;
             _this._scale9GridRect = null; //九宫拉伸的尺寸
             _this.scale9RectData = [];
             _this._fillMode = egret.BitmapFillMode.SCALE; //scale, repeat, clip
@@ -40,7 +36,7 @@ var codeBase;
         };
         Object.defineProperty(Image.prototype, "fillMode", {
             /**
-             * Sets/gets the fillMode of the scale9Grid bitmap.(scale|repeat)
+             * 设置填充模式
              */
             get: function () {
                 return this._fillMode;
@@ -54,25 +50,9 @@ var codeBase;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Image.prototype, "autoSize", {
-            /**
-             *  Sets/gets the common scaleEnable of the bitmap.
-             */
-            get: function () {
-                return this._autoSize;
-            },
-            set: function (value) {
-                if (this._autoSize != value) {
-                    this._autoSize = value;
-                    this.invalidate();
-                }
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(Image.prototype, "texture", {
             /**
-             * Sets/gets the bitmapData of the bitmap.
+             * 设置贴图.
              */
             get: function () {
                 return this._texture;
@@ -81,6 +61,7 @@ var codeBase;
                 var s = this;
                 if (s._texture != value) {
                     s._texture = value;
+                    //立即执行绘制，相应数据（width、height等）在外部才有效
                     s.draw();
                     //s.invalidate();
                     s.onInvalidatePosition();
@@ -90,6 +71,7 @@ var codeBase;
             configurable: true
         });
         /**
+         * 九宫格
          * scale9Rectangle : [左边距,右边距,上边距,下边距]
          *
          */
@@ -135,7 +117,7 @@ var codeBase;
                 return this.$getWidth();
             },
             /**
-             * 覆写width方法,在width改变的时候,做逻辑运算
+             * 覆写width方法,在width改变的时候,做位置变化的计算
              * @param w
              */
             set: function (w) {
@@ -155,7 +137,7 @@ var codeBase;
                 return this.$getHeight();
             },
             /**
-             * 覆写height方法,在height改变的时候,做逻辑运算
+             * 覆写height方法,在height改变的时候,做位置变化的计算
              * @param h
              */
             set: function (h) {
@@ -183,7 +165,6 @@ var codeBase;
                     s.height = s._bitmap.texture.textureHeight;
                 }
             }
-            s._bitmap.fillMode = s._fillMode;
             if (s.scale9RectData.length == 4) {
                 if (s._scale9GridRect == null)
                     s._scale9GridRect = s.scale9Rect();
@@ -198,13 +179,14 @@ var codeBase;
             else {
                 s._bitmap.scale9Grid = null;
             }
+            s._bitmap.fillMode = s._fillMode;
             if (s._fillMode != egret.BitmapFillMode.SCALE) {
                 s._bitmap.width = s.width;
                 s._bitmap.height = s.height;
             }
             else {
                 s._bitmap.scaleX = s.width / s._bitmap.texture.textureWidth;
-                this._bitmap.scaleY = s.height / s._bitmap.texture.textureHeight;
+                s._bitmap.scaleY = s.height / s._bitmap.texture.textureHeight;
             }
             //this.setSize(this._bitmap.width, this._bitmap.height);
             // s.anchorOffsetX = s.anchorX * s.width;
@@ -219,9 +201,10 @@ var codeBase;
          * @param y
          */
         Image.prototype.getPixel32 = function (x, y) {
-            if (this._bitmap && this._bitmap.texture) {
-                var locolPoint = this.globalToLocal(x, y);
-                return this._bitmap.texture.getPixel32(locolPoint.x, locolPoint.y);
+            var s = this;
+            if (s._bitmap && s._bitmap.texture) {
+                var locolPoint = s.globalToLocal(x, y);
+                return s._bitmap.texture.getPixel32(locolPoint.x, locolPoint.y);
             }
             return [];
         };
@@ -232,7 +215,8 @@ var codeBase;
          * @return true:有像素值, false:无像素值
          */
         Image.prototype.testPixel32 = function (x, y) {
-            var datas = this.getPixel32(x, y);
+            var s = this;
+            var datas = s.getPixel32(x, y);
             for (var i = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {
                     return true;

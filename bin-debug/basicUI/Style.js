@@ -63,24 +63,8 @@ var codeBase;
         Style.embedFonts = false;
         Style.fontName = null;
         Style.fontSize = 26;
-        /**
-         * 是否允许文本加载默认滤镜.
-         */
-        Style.allowDefaultLabelFilter = true;
         Style.DARK = "dark";
         Style.LIGHT = "light";
-        /**
-         * 是否允许按钮禁用态时的颜色矩阵.
-         */
-        Style.allowColorFilterButtonEnabled = false;
-        /**
-         * 是否允许默认按钮点击自动冷却.(在按钮本身设置无冷却的情况下生效.)
-         */
-        Style.allowButtonDefaultCoolDown = false;
-        /**
-         * allowButtonDefaultCoolDown == true 情况下生效.
-         */
-        Style.defaultCoolDownFrames = 2;
         Style.TEXTINPUT_HEIGHT = 25;
         Style.TEXTINPUT_WIDTH = 100;
         Style.TEXTINPUT_COLOR = 0xffffff;

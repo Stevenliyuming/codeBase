@@ -80,6 +80,7 @@ module codeBase {
 			s.group_play.height = 1080;
 			s.group_play.horizontalCenter = 0;
 			s.group_play.verticalCenter = 0;
+			s.group_play.clip = false;
 			//s.group_play.showBg = true;
 
 			// let proto = Object.getPrototypeOf(s.group_play);
@@ -145,16 +146,10 @@ module codeBase {
 			// // textArea.paddingRight = 10;
 			// // textArea.paddingBottom = 20;
 
-			// let button = new Button;
-			// s.group_play.addChild(button);
-			// button.setStatus([RES.getRes("A_png"), RES.getRes("A点击_png")]);
-			// button.setClickFunction(()=>{
-			// 	EffectUtil.playEffect(hand, 1);
-			// }, s);
-			// button.x = 0;
-			// button.y = s.group_play.height - button.height;
-			// console.log("button.width:" + button.width + "  button.height:" + button.height);
-			// EffectUtil.breatheEffect(button);
+			let buttonSkins: any[] = [RES.getRes("A_png"), RES.getRes("A点击_png")];
+
+			let btn = UICreator.createButton(buttonSkins, s.group_play, 0, s.group_play.height - 100);
+			//btn.label = "点我";
 
 			// let bitmap2 = UICreator.createBitmap("A点击_png");
 			// s.group_play.addChild(bitmap2);
@@ -163,7 +158,6 @@ module codeBase {
 			// EffectUtil.breatheEffect(bitmap2);
 
 			// let buttonGroup = new BaseGroup;
-			// let buttonSkins:any[] = [RES.getRes("A_png"), RES.getRes("A点击_png")];
 			// for(let i=0; i<3; ++i) {
 			// 	button = UICreator.createToggleButton(buttonSkins, "abc", (data:any)=>{
 			// 		console.log(i);
@@ -258,19 +252,25 @@ module codeBase {
 			// btn.x = 0;
 			// btn.y = 0;
 
-			// let euiImage2: eui.Image = new eui.Image;
-			// euiImage2.texture = RES.getRes("comRes_1_json.playSound");
-			// s.group_play.addChild(euiImage2);
-			// euiImage2.left = 350;
-			// euiImage2.top = 600;
+			let euiImage2: eui.Image = new eui.Image;
+			euiImage2.texture = RES.getRes("comRes_1_json.playSound");
+			s.group_play.addChild(euiImage2);
+			euiImage2.left = 350;
+			euiImage2.top = 600;
 
-			// egret.setTimeout(() => {
-			// 	let euiImage: eui.Image = new eui.Image;
-			// 	euiImage.texture = RES.getRes("A_png");
-			// 	s.group_play.addElement(euiImage);
-			// 	euiImage.left = 0;
-			// 	euiImage.top = 600;
-			// }, s, 1000);
+			let euiImage: eui.Image = new eui.Image;
+			euiImage.texture = RES.getRes("A_png");
+			s.group_play.addChild(euiImage);
+			euiImage.left = 1000;
+			euiImage.top = 300;
+
+			egret.setTimeout(() => {
+				let euiImage: eui.Image = new eui.Image;
+				euiImage.texture = RES.getRes("A_png");
+				s.group_play.addChild(euiImage);
+				euiImage.left = 0;
+				euiImage.top = 600;
+			}, s, 1000);
 
 			// let hxmSkeleton: Skeleton = new Skeleton;
 			// hxmSkeleton.setDataByName("xilili", "", "xilili", "xilili");
@@ -348,18 +348,6 @@ module codeBase {
 					console.log(e);
 				}, s);
 			}
-
-			//checkBox.currentState = Button.STATUS_DISABLE;
-
-			// let normalSpr: DisplayObject = UISkin.checkBoxOff;
-			// let normalRenderTex = new egret.RenderTexture;
-			// normalRenderTex.drawToTexture(normalSpr);
-			// let bitmap = UICreator.createImage(s.group_play, 300, 800, normalRenderTex);
-
-			// let radioBtn = UISkin.radioOn;
-			// s.group_play.addChild(radioBtn);
-			// radioBtn.x = 300;
-			// radioBtn.y = 600;
 
 			// let img = UICreator.createImage(s.group_play, 1000, 200, RES.getRes("A点击_png"));
 			// // img.anchorOffsetX = 0.5;

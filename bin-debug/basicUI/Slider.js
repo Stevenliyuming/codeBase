@@ -13,29 +13,25 @@ var codeBase;
     /***滑动器 */
     var Slider = (function (_super) {
         __extends(Slider, _super);
+        function Slider() {
+            return _super.call(this) || this;
+        }
         /**
          * bg:滑动器背景
          * skin:滑动器填充的滑动条
          * bar:滑动器滑动按钮
          */
-        function Slider(bg, skin, bar) {
+        Slider.prototype.setSkin = function (bg, skin, bar) {
             if (bg === void 0) { bg = null; }
             if (skin === void 0) { skin = null; }
             if (bar === void 0) { bar = null; }
-            var _this = _super.call(this, bg, skin) || this;
-            _this.skinBar = bar || codeBase.UISkin.sliderBar;
-            _this.addChild(_this.skinBar);
-            _this.skinBar.touchEnabled = true;
-            _this.skinBar.addEventListener(egret.TouchEvent.TOUCH_BEGIN, _this.onTouch, _this);
-            _this.layout();
-            _this.value = 0;
-            return _this;
-        }
-        Slider.prototype.setSkin = function (bg, skin) {
-            if (bg === void 0) { bg = null; }
-            if (skin === void 0) { skin = null; }
-            this.skinBg = bg || codeBase.UISkin.sliderBackground;
-            this.skinValue = skin || codeBase.UISkin.sliderSkin;
+            _super.prototype.setSkin.call(this, bg, skin);
+            this.skinBar = bar || codeBase.UISkin.sliderBar;
+            this.addChild(this.skinBar);
+            this.skinBar.touchEnabled = true;
+            this.skinBar.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouch, this);
+            this.layout();
+            this.value = 0;
         };
         Slider.prototype.onTouch = function (e) {
             switch (e.type) {
@@ -56,13 +52,14 @@ var codeBase;
             }
         };
         Slider.prototype.moveDo = function (x, y) {
-            var p = this.globalToLocal(x, y);
+            var s = this;
+            var p = s.globalToLocal(x, y);
             var v;
-            if (this.type == codeBase.Style.HORIZONTAL)
-                v = p.x / this.skinValue.width;
+            if (s.type == codeBase.Style.HORIZONTAL)
+                v = p.x / s.skinProgress.width;
             else
-                v = p.y / this.skinValue.width;
-            this.value = v;
+                v = p.y / s.skinProgress.width;
+            s.value = v;
         };
         Object.defineProperty(Slider.prototype, "value", {
             /**获取进度值 */
@@ -73,11 +70,11 @@ var codeBase;
             set: function (v) {
                 v = v < 0 ? 0 : v > 1 ? 1 : v;
                 this._value = v;
-                this.skinValue.scaleX = v;
+                this.skinProgress.scaleX = v;
                 if (this.type == codeBase.Style.HORIZONTAL)
-                    this.skinBar.x = this.skinValue.width * v;
+                    this.skinBar.x = this.skinProgress.width * v;
                 else
-                    this.skinBar.y = this.skinValue.width * v;
+                    this.skinBar.y = this.skinProgress.width * v;
             },
             enumerable: true,
             configurable: true
@@ -89,14 +86,14 @@ var codeBase;
             this.type = type;
             if (type == codeBase.Style.VERTICAL) {
                 var angle = 90;
-                this.skinBar.x = -this.skinValue.height >> 1;
+                this.skinBar.x = -this.skinProgress.height >> 1;
             }
             else {
                 var angle = 0;
-                this.skinBar.y = this.skinValue.height >> 1;
+                this.skinBar.y = this.skinProgress.height >> 1;
             }
             this.skinBg.rotation = angle;
-            this.skinValue.rotation = angle;
+            this.skinProgress.rotation = angle;
             this.value = this._value;
         };
         return Slider;

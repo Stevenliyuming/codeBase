@@ -1,73 +1,54 @@
-module codeBase{
-	export class Style{
-		public static TEXT_BACKGROUND:number = 0xFFFFFF;
-		public static BACKGROUND:number = 0xCCCCCC;
-		public static BUTTON_FACE:number = 0xFFFFFF;
-		public static BUTTON_DOWN:number = 0xEEEEEE;
-		public static INPUT_TEXT:number = 0x333333;
-		public static LABEL_TEXT:number = 0x000000;
-		public static BUTTON_TEXT:number = 0x666666;
-		public static DROPSHADOW:number = 0x000000;
-		public static PANEL:number = 0xF3F3F3;
-		public static PROGRESS_BAR:number = 0xFFFFFF;
-		public static LIST_DEFAULT:number = 0xFFFFFF;
-		public static LIST_ALTERNATE:number = 0xF3F3F3;
-		public static LIST_SELECTED:number = 0xCCCCCC;
-		public static LIST_ROLLOVER:number = 0XDDDDDD;
-		public static BUTTON_DEFAULT_WIDTH:number = 100;
-		public static BUTTON_DEFAULT_HEIGHT:number = 32;
-		public static VIDEO_DEFAULT_WIDTH:number = 320;
-		public static VIDEO_DEFAULT_HEIGHT:number = 250;
+module codeBase {
+	export class Style {
+		public static TEXT_BACKGROUND: number = 0xFFFFFF;
+		public static BACKGROUND: number = 0xCCCCCC;
+		public static BUTTON_FACE: number = 0xFFFFFF;
+		public static BUTTON_DOWN: number = 0xEEEEEE;
+		public static INPUT_TEXT: number = 0x333333;
+		public static LABEL_TEXT: number = 0x000000;
+		public static BUTTON_TEXT: number = 0x666666;
+		public static DROPSHADOW: number = 0x000000;
+		public static PANEL: number = 0xF3F3F3;
+		public static PROGRESS_BAR: number = 0xFFFFFF;
+		public static LIST_DEFAULT: number = 0xFFFFFF;
+		public static LIST_ALTERNATE: number = 0xF3F3F3;
+		public static LIST_SELECTED: number = 0xCCCCCC;
+		public static LIST_ROLLOVER: number = 0XDDDDDD;
+		public static BUTTON_DEFAULT_WIDTH: number = 100;
+		public static BUTTON_DEFAULT_HEIGHT: number = 32;
+		public static VIDEO_DEFAULT_WIDTH: number = 320;
+		public static VIDEO_DEFAULT_HEIGHT: number = 250;
 
+		public static embedFonts: boolean = false;
+		public static fontName: string = null;
+		public static fontSize: number = 26;
 
-		
-		public static embedFonts:boolean = false;
-		public static fontName:string = null;
-		public static fontSize:number = 26;
-		/**
-		 * 是否允许文本加载默认滤镜. 
-		 */		
-		public static allowDefaultLabelFilter:boolean = true;
-		public static DARK:string = "dark";
-		public static LIGHT:string = "light";
-		/**
-		 * 是否允许按钮禁用态时的颜色矩阵. 
-		 */		
-		public static allowColorFilterButtonEnabled:boolean = false;
-		/**
-		 * 是否允许默认按钮点击自动冷却.(在按钮本身设置无冷却的情况下生效.)
-		 */		
-		public static allowButtonDefaultCoolDown:boolean = false;
-		/**
-		 * allowButtonDefaultCoolDown == true 情况下生效.
-		 */	
-		public static defaultCoolDownFrames:number = 2;
-        
-		public static TEXTINPUT_HEIGHT:number = 25;
-		public static TEXTINPUT_WIDTH:number = 100;
-		public static TEXTINPUT_COLOR:number = 0xffffff;
-        
-        public static HORIZONTAL:string = "horizontal";
-        public static VERTICAL:string = "vertical";
-        
-        public static SLIDER_WIDTH:number = 300;
-        public static SLIDER_HEIGHT:number = 17;
-        
-        public static SCROLLBAR_WIDTH:number = 300;
-        public static SCROLLBAR_HEIGHT:number = 17;
+		public static DARK: string = "dark";
+		public static LIGHT: string = "light";
 
-		public static BASEGROUP_WIDTH:number = 100;
-		public static BASEGROUP_HEIGHT:number = 100;
-        
-		
-		public constructor(){
-			
+		public static TEXTINPUT_HEIGHT: number = 25;
+		public static TEXTINPUT_WIDTH: number = 100;
+		public static TEXTINPUT_COLOR: number = 0xffffff;
+
+		public static HORIZONTAL: string = "horizontal";
+		public static VERTICAL: string = "vertical";
+
+		public static SLIDER_WIDTH: number = 300;
+		public static SLIDER_HEIGHT: number = 17;
+
+		public static SCROLLBAR_WIDTH: number = 300;
+		public static SCROLLBAR_HEIGHT: number = 17;
+
+		public static BASEGROUP_WIDTH: number = 100;
+		public static BASEGROUP_HEIGHT: number = 100;
+
+		public constructor() {
 		}
 		/**
 		 * Applies a preset style as a list of color values. Should be called before creating any components.
 		 */
-		public static setStyle(style:string):void{
-			switch(style){
+		public static setStyle(style: string): void {
+			switch (style) {
 				case Style.DARK:
 					Style.BACKGROUND = 0x444444;
 					Style.BUTTON_FACE = 0x666666;

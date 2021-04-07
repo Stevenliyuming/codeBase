@@ -36,29 +36,63 @@ module codeBase {
 
         /**
          * 创建普通按钮
-         * statusSkin设置按钮可用状态皮肤
+         * skins设置按钮可用状态皮肤
 		 * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
          */
-        public static createButton(statusSkin: egret.Texture[], clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
+        public static createButton(skins: egret.Texture[], pr:egret.DisplayObjectContainer=null, px:number=0, py:number=0, clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
             let button = new Button;
-            button.setSkins(statusSkin);
+            button.setSkins(skins);
             button.setClick(clickFun, funObj);
             button.sound = clickSound;
+            if(pr) {
+                pr.addChild(button);
+                button.x = px;
+                button.y = py;
+            }
             return button;
         }
 
         /**
-         * 创建可选按钮
-         * statusSkin设置按钮可用状态皮肤
-		 * <p>[STATE_UP, STATE_DOWN, STATE_OVER, STATE_DISABLE]</p>
+         * 创建复选框
+         * skins设置按钮可用状态皮肤
+		 * <p>[STATE_NORMAL, STATE_CHECK, STATE_DISABLE]</p>
          */
-        public static createToggleButton(statusSkin: egret.Texture[], toggleGroupName: string, clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
-            let button = new Button;
-            // button.setStatus(statusSkin);
-            // button.setClick(clickFun, funObj);
-            // button.toggleGroup = toggleGroupName;
-            // button.sound = clickSound;
-            return button;
+        public static createCheckBox(skins: egret.Texture[], label: string, clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
+            let box = new CheckBox;
+            box.setSkins(skins);
+            box.setClick(clickFun, funObj);
+            box.label = label;
+            box.sound = clickSound;
+            return box;
+        }
+
+        /**
+         * 创建单选按钮
+		 * skins设置按钮可用状态皮肤
+		 * <p>[STATE_NORMAL, STATE_CHECK]</p>
+         */
+        public static createRadioButton(skins: egret.Texture[], groupName: string, label: string, clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
+            let radio = new RadioButton;
+            radio.setSkins(skins);
+            radio.setClick(clickFun, funObj);
+            radio.groupName = groupName;
+            radio.label = label;
+            radio.sound = clickSound;
+            return radio;
+        }
+
+        /**
+         * 创建标签页
+         * skins设置按钮可用状态皮肤
+         * <p>[STATE_NORMAL, STATE_CHECK]</p>
+         */
+        public static createTabBar(skins: egret.Texture[], groupName: string, label: string = null, clickFun: Function = null, funObj: any = null, clickSound: string = null): Button {
+            let tabBar = new TabBar;
+            tabBar.setSkins(skins);
+            tabBar.setClick(clickFun, funObj);
+            tabBar.label = label;
+            tabBar.sound = clickSound;
+            return tabBar;
         }
 
         /**
@@ -212,7 +246,8 @@ module codeBase {
 		 * skin:进度条进度
          */
         public createProgress(bg: DisplayObject = null, skin: DisplayObject = null, pr: egret.DisplayObjectContainer = null, px: number = 0, py: number = 0, ) {
-            let progress = new Progress(bg, skin);
+            let progress = new Progress();
+            progress.setSkin(bg, skin);
             if (pr) {
                 pr.addChild(progress);
                 progress.x = px;
@@ -230,7 +265,8 @@ module codeBase {
          * skin:进度条进度
          */
         public createSlider(bg: DisplayObject = null, skin: DisplayObject = null, bar: DisplayObject = null, pr: egret.DisplayObjectContainer = null, px: number = 0, py: number = 0, ) {
-            let slider = new Slider(bg, skin, bar);
+            let slider = new Slider();
+            slider.setSkin(bg, skin, bar);
             if (pr) {
                 pr.addChild(slider);
                 slider.x = px;

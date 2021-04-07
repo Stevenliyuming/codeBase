@@ -13,7 +13,9 @@ var codeBase;
     var CheckBox = (function (_super) {
         __extends(CheckBox, _super);
         function CheckBox() {
-            return _super.call(this) || this;
+            var _this = _super.call(this) || this;
+            _this.touchId = -1;
+            return _this;
         }
         CheckBox.prototype.createChildren = function () {
             //super.createChildren();
@@ -21,7 +23,7 @@ var codeBase;
             s._currentState = codeBase.Button.STATUS_NORMAL;
             s.touchEnabled = true; //事件接收
             s.touchChildren = false;
-            //背景图多态显示
+            //box显示
             s._imgDisplay = new egret.Bitmap;
             s.addChild(s._imgDisplay);
             // s._imgDisplay.width = s.width;
@@ -32,17 +34,18 @@ var codeBase;
             s._labelMarginLeft = NaN;
             s._labelMarginTop = NaN;
             s._label = new codeBase.Label;
+            s.fontSize = 15;
             s._label.autoSize = true;
             s._label.clip = false;
             s._label.hAlign = egret.HorizontalAlign.LEFT;
             s._label.vAlign = egret.VerticalAlign.MIDDLE;
             s._label.showBg = false;
             s.addChild(s._label);
-            s.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouchEvent, s);
+            s.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouchEvent, s, true);
             //this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchEvent, this);
-            s.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouchEvent, s);
-            s.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchRleaseOutside, s);
-            s.addEventListener(egret.TouchEvent.TOUCH_CANCEL, s.onTouchRleaseOutside, s);
+            s.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouchEvent, s, true);
+            s.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s, true);
+            s.addEventListener(egret.TouchEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s, true);
         };
         CheckBox.prototype.initData = function () {
             var s = this;
@@ -72,16 +75,18 @@ var codeBase;
             //console.log("Button onTouchEvent=" + event.type);
             if (event.currentTarget == s) {
                 //像素检测
-                if (s._testPixelEnable) {
-                    if (!s.testPixel32(event.localX, event.localY)) {
-                        event.stopImmediatePropagation();
-                        return;
-                    }
+                if (s._testPixelEnable && !s.testPixel32(event.localX, event.localY)) {
+                    event.stopImmediatePropagation();
+                    return;
                 }
                 if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
                     s.alpha = 0.8;
+                    s.touchId = event.touchPointID;
                 }
                 else if (event.type == egret.TouchEvent.TOUCH_END) {
+                    if (s.touchId == -1)
+                        return;
+                    s.touchId = -1;
                     s.alpha = 1;
                     s.selected = !s._selected;
                     s.onPlaySound();
@@ -94,9 +99,10 @@ var codeBase;
          * 在外释放
          * @param event
          */
-        CheckBox.prototype.onTouchRleaseOutside = function (event) {
+        CheckBox.prototype.onTouchReleaseOutside = function (event) {
             var s = this;
             s.alpha = 1;
+            s.touchId = -1;
         };
         Object.defineProperty(CheckBox.prototype, "selected", {
             get: function () {
@@ -114,7 +120,7 @@ var codeBase;
                 if (s.clickFun && s.clickFunObj) {
                     s.clickFun.call(s.clickFunObj, event);
                 }
-                this.invalidate();
+                s.invalidate();
             },
             enumerable: true,
             configurable: true

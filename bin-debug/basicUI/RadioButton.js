@@ -44,17 +44,19 @@ var codeBase;
             //console.log("Button onTouchEvent=" + event.type);
             if (event.currentTarget == s) {
                 //像素检测
-                if (s._testPixelEnable) {
-                    if (!s.testPixel32(event.localX, event.localY)) {
-                        event.stopImmediatePropagation();
-                        return;
-                    }
+                if (s._testPixelEnable && !s.testPixel32(event.localX, event.localY)) {
+                    event.stopImmediatePropagation();
+                    return;
                 }
                 if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
                     s.alpha = 0.8;
+                    s.touchId = event.touchPointID;
                 }
                 else if (event.type == egret.TouchEvent.TOUCH_END) {
                     s.alpha = 1;
+                    if (s.touchId == -1)
+                        return;
+                    s.touchId = -1;
                     if (s.selected)
                         return;
                     s.selected = !s._selected;
@@ -124,7 +126,7 @@ var codeBase;
         };
         /**
          * 设置按钮可用状态皮肤
-         * <p>[STATE_NORMAL, STATE_CHECK, STATE_DISABLE]</p>
+         * <p>[STATE_NORMAL, STATE_CHECK]</p>
          */
         RadioButton.prototype.setSkins = function (skins) {
             var s = this;

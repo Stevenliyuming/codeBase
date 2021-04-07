@@ -135,7 +135,7 @@ var codeBase;
             }
         };
         return ImageNumber;
-    }(egret.Sprite));
+    }(codeBase.BasicGroup));
     codeBase.ImageNumber = ImageNumber;
     __reflect(ImageNumber.prototype, "codeBase.ImageNumber");
 })(codeBase || (codeBase = {}));

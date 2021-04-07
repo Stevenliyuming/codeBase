@@ -28,18 +28,19 @@ var codeBase;
             _this._drawDelay = false;
             //是否下一帧重绘
             _this._hasInvalidate = false;
-            _this._data = null; //可携带的数据
-            _this._enabled = true; //不可用状态
+            //不可用状态
+            _this._enabled = true;
+            //可携带的数据
+            _this._data = null;
             _this.dataEvent = new Object;
             _this.elements = [];
             var s = _this;
-            s._drawDelay = false;
             s.addEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
             return _this;
             //console.log("this._drawDelay=" + this._drawDelay)
         }
         /**
-         * 第一次加入场景的时候会调用该方法
+         * 加入场景的时候会调用该方法
          */
         BasicGroup.prototype.onAddToStage = function (event) {
             var s = this;
@@ -77,7 +78,6 @@ var codeBase;
             set: function (w) {
                 if (w >= 0) {
                     _super.prototype.$setWidth.call(this, w);
-                    //if (this._anchorX != 0) this.anchorOffsetX = w * this._anchorX;
                     this.onInvalidatePosition();
                     this.invalidate();
                 }
@@ -96,7 +96,6 @@ var codeBase;
             set: function (h) {
                 if (h >= 0) {
                     _super.prototype.$setHeight.call(this, h);
-                    //if (this._anchorY != 0) this.anchorOffsetY = h * this._anchorY;
                     this.onInvalidatePosition();
                     this.invalidate();
                 }
@@ -105,9 +104,9 @@ var codeBase;
             configurable: true
         });
         /**
-         * Sets the size of the component.
-         * @param w The width of the component.
-         * @param h The height of the component.
+         * 设置宽高
+         * @param w 宽
+         * @param h 高
          */
         BasicGroup.prototype.setSize = function (w, h) {
             var s = this;
@@ -119,9 +118,6 @@ var codeBase;
             }
         };
         Object.defineProperty(BasicGroup.prototype, "top", {
-            ///////////////////////////////////
-            // 组件相对布局设置
-            ///////////////////////////////////
             get: function () {
                 return this._top;
             },
@@ -318,13 +314,13 @@ var codeBase;
                 // }
                 //添加具有约束布局的元素
                 if (s.elements.length > 0) {
-                    for (var i_1 = 0; i_1 < s.elements.length; ++i_1) {
-                        this.addChild(s.elements[i_1]);
+                    for (var i = 0; i < s.elements.length; ++i) {
+                        _super.prototype.addChild.call(this, s.elements[i]);
                     }
                     s.elements.length = 0;
                 }
                 var child = void 0;
-                for (var i = 0; i < s.numChildren; i++) {
+                for (var i = 0, num = s.numChildren; i < num; i++) {
                     child = s.getChildAt(i);
                     if ((widthChanged || heightChanged) && child instanceof BasicGroup) {
                         child.onInvalidatePosition();
@@ -341,6 +337,7 @@ var codeBase;
         };
         BasicGroup.resetChildPosition = function (child) {
             var pr = child.parent;
+            //确保是白鹭具有布局约束的组件
             if (pr != null && child['top'] !== undefined && child['bottom'] !== undefined && child['left'] !== undefined && child['right'] !== undefined && child['horizontalCenter'] !== undefined && child['verticalCenter'] !== undefined) {
                 var parentWidth = pr.width;
                 var parentHeight = pr.height;
@@ -402,7 +399,7 @@ var codeBase;
                     if (child.numChildren == undefined)
                         return;
                     var temp = void 0;
-                    for (var i = 0; i < child.numChildren; i++) {
+                    for (var i = 0, num = child.numChildren; i < num; i++) {
                         temp = child.getChildAt(i);
                         if (temp instanceof BasicGroup) {
                             temp.onInvalidatePosition();
@@ -415,19 +412,40 @@ var codeBase;
             }
         };
         /**
-         * 添加实现了eui.UIComponent类约束布局的元素,例如：eui.Image
+         * 添加实现了eui.UIComponent约束布局的元素
+         * 例如：eui.Image
          */
         BasicGroup.prototype.addElement = function (child) {
+            // let s = this;
+            // if (s.elements.indexOf(child) >= 0 || child.parent === s) {
+            // 	console.warn("子元素不能重复添加到同一个父级节点中");
+            // 	return;
+            // }
+            // if (egret.is(child, "eui.UIComponent")) {
+            // 	s.elements.push(child);
+            // } else {
+            // 	s.addChild(child);
+            // }
+            // s.onInvalidatePosition();
+        };
+        BasicGroup.prototype.addChild = function (child) {
             var s = this;
-            if (s.elements.indexOf(child) >= 0)
+            if (child.parent === s) {
+                console.warn("子元素不能重复添加到同一个父级节点中");
                 return;
+            }
             if (egret.is(child, "eui.UIComponent")) {
+                if (s.elements.indexOf(child) >= 0) {
+                    console.warn("子元素不能重复添加到同一个父级节点中");
+                    return;
+                }
                 s.elements.push(child);
-                s.onInvalidatePosition();
             }
             else {
-                s.addChild(child);
+                _super.prototype.addChild.call(this, child);
             }
+            //super.addChild(child);
+            s.onInvalidatePosition();
         };
         Object.defineProperty(BasicGroup.prototype, "data", {
             /**
@@ -488,7 +506,8 @@ var codeBase;
          * @returns {egret.Point}
          */
         BasicGroup.prototype.getGlobalXY = function () {
-            var point = new egret.Point(this.anchorOffsetX, this.anchorOffsetY);
+            var s = this;
+            var point = new egret.Point(s.anchorOffsetX, s.anchorOffsetY);
             this.localToGlobal(point.x, point.y, point);
             return point;
         };
@@ -515,18 +534,8 @@ var codeBase;
             configurable: true
         });
         /**
-         * 获取注册点相对的偏移像素值
+         * 重绘通知
          */
-        BasicGroup.prototype.getRegPoint = function () {
-            var regPoint = new egret.Point(0, 0);
-            if (this.anchorOffsetX != 0) {
-                regPoint.x = this.anchorOffsetX;
-            }
-            if (this.anchorOffsetY != 0) {
-                regPoint.y = this.anchorOffsetY;
-            }
-            return regPoint;
-        };
         BasicGroup.prototype.invalidate = function () {
             //当前无效标识状态_hasInvalidate为flase(即还没有进行延时绘制)并且没有设置延迟绘制标识_drawDelay
             var s = this;
@@ -537,7 +546,8 @@ var codeBase;
             }
         };
         /**
-         * 重绘通知
+         * 重绘
+         * 外部可以调用此接口立即执行重绘以达到一些数据的计算
          */
         BasicGroup.prototype.onInvalidate = function (event) {
             var s = this;
@@ -632,8 +642,9 @@ var codeBase;
         /**删除所有的子节点*/
         BasicGroup.prototype.removeChildAll = function (dispose) {
             if (dispose === void 0) { dispose = false; }
-            while (this.numChildren > 0) {
-                this.removeChildIndex(0, dispose);
+            var s = this;
+            while (s.numChildren > 0) {
+                s.removeChildIndex(0, dispose);
             }
         };
         /**删除index层的子节点*/

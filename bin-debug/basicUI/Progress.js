@@ -13,27 +13,22 @@ var codeBase;
     /***进度条 */
     var Progress = (function (_super) {
         __extends(Progress, _super);
+        function Progress() {
+            var _this = _super.call(this) || this;
+            _this._value = 0;
+            return _this;
+        }
         /**
          * bg:进度条背景
          * skin:进度条进度
          */
-        function Progress(bg, skin) {
-            if (bg === void 0) { bg = null; }
-            if (skin === void 0) { skin = null; }
-            var _this = _super.call(this) || this;
-            _this._value = 0;
-            _this.setSkin(bg, skin);
-            _this.addChild(_this.skinBg);
-            _this.addChild(_this.skinValue);
-            _this.text = new codeBase.Label;
-            _this.addChild(_this.text);
-            return _this;
-        }
         Progress.prototype.setSkin = function (bg, skin) {
-            if (bg === void 0) { bg = null; }
-            if (skin === void 0) { skin = null; }
             this.skinBg = bg || codeBase.UISkin.progressBackground;
-            this.skinValue = skin || codeBase.UISkin.progressSkin;
+            this.skinProgress = skin || codeBase.UISkin.progressSkin;
+            this.addChild(this.skinBg);
+            this.addChild(this.skinProgress);
+            this.text = new codeBase.Label;
+            this.addChild(this.text);
         };
         Object.defineProperty(Progress.prototype, "value", {
             get: function () {
@@ -43,7 +38,7 @@ var codeBase;
             set: function (v) {
                 v = v < 0 ? 0 : v > 1 ? 1 : v;
                 this._value = v;
-                this.skinValue.scaleX = v;
+                this.skinProgress.scaleX = v;
             },
             enumerable: true,
             configurable: true

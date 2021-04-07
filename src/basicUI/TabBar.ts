@@ -36,36 +36,6 @@ module codeBase {
 			s.setSkins([TabBar.normalTexture, TabBar.checkTexture]);
 		}
 
-
-		// public onTouchEvent(event: egret.TouchEvent): void {
-		// 	let s = this;
-		// 	if (!s.enabled || s.currentState == Button.STATUS_DISABLE) {
-		// 		event.stopImmediatePropagation();
-		// 		return;
-		// 	}
-		// 	//console.log("Button onTouchEvent=" + event.type);
-		// 	if (event.currentTarget == s) {
-		// 		//像素检测
-		// 		if (s._testPixelEnable) {
-		// 			if (!s.testPixel32(event.localX, event.localY)) {
-		// 				event.stopImmediatePropagation();
-		// 				return;
-		// 			}
-		// 		}
-		// 		if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
-		// 			s.alpha = 0.8;
-		// 		}
-		// 		else if (event.type == egret.TouchEvent.TOUCH_END) {
-		// 			s.alpha = 1;
-		// 			if (s.selected) return;
-		// 			s.selected = !s._selected;
-		// 			s.onPlaySound();
-		// 		}
-		// 		// console.log("Button _toggleGroup=" + this._toggleGroup + ", _selected=" + this._selected);
-		// 	}
-		// 	s.invalidate();
-		// }
-
 		/**
 		 * 绘制
 		 */
@@ -109,11 +79,6 @@ module codeBase {
 			}
 		}
 
-		// protected initDisplay() {
-		// 	let s = this;
-		// 	s.setSkins([RadioButton.normalTexture, RadioButton.checkTexture]);
-		// }
-
 		public set selected(value: boolean) {
 			let s = this;
 			s._selected = value;
@@ -133,7 +98,7 @@ module codeBase {
 
 		/**
 		 * 设置按钮可用状态皮肤
-		 * <p>[STATE_NORMAL, STATE_CHECK, STATE_DISABLE]</p>
+		 * <p>[STATE_NORMAL, STATE_CHECK]</p>
 		 */
 		public setSkins(skins: egret.Texture[]) {
 			let s = this;

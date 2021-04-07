@@ -1,26 +1,25 @@
-module codeBase{
+module codeBase {
 	/***滑动器 */
 	export class Slider extends Progress implements ILayout {
 		protected skinBar: DisplayObject;
 		protected type: string;
+		public constructor() {
+			super();
+		}
+
 		/**
 		 * bg:滑动器背景
 		 * skin:滑动器填充的滑动条
 		 * bar:滑动器滑动按钮
 		 */
-		public constructor(bg: DisplayObject = null, skin: DisplayObject = null, bar: DisplayObject = null) {
-			super(bg, skin);
+		public setSkin(bg: DisplayObject = null, skin: DisplayObject = null, bar: DisplayObject = null) {
+			super.setSkin(bg, skin);
 			this.skinBar = bar || UISkin.sliderBar;
 			this.addChild(this.skinBar);
 			this.skinBar.touchEnabled = true;
 			this.skinBar.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouch, this);
 			this.layout();
 			this.value = 0;
-		}
-
-		protected setSkin(bg: DisplayObject = null, skin: DisplayObject = null) {
-			this.skinBg = bg || UISkin.sliderBackground;
-			this.skinValue = skin || UISkin.sliderSkin;
 		}
 
 		protected onTouch(e: egret.TouchEvent): void {
@@ -43,20 +42,21 @@ module codeBase{
 		}
 
 		protected moveDo(x: number, y: number): void {
-			var p: Point = this.globalToLocal(x, y);
+			let s = this;
+			var p: Point = s.globalToLocal(x, y);
 			var v: number;
-			if (this.type == Style.HORIZONTAL) v = p.x / this.skinValue.width;
-			else v = p.y / this.skinValue.width;
-			this.value = v;
+			if (s.type == Style.HORIZONTAL) v = p.x / s.skinProgress.width;
+			else v = p.y / s.skinProgress.width;
+			s.value = v;
 		}
 
 		/**设置进度值，只能是0－1之间 */
 		public set value(v: number) {
 			v = v < 0 ? 0 : v > 1 ? 1 : v;
 			this._value = v;
-			this.skinValue.scaleX = v;
-			if (this.type == Style.HORIZONTAL) this.skinBar.x = this.skinValue.width * v;
-			else this.skinBar.y = this.skinValue.width * v;
+			this.skinProgress.scaleX = v;
+			if (this.type == Style.HORIZONTAL) this.skinBar.x = this.skinProgress.width * v;
+			else this.skinBar.y = this.skinProgress.width * v;
 		}
 
 		/**获取进度值 */
@@ -69,13 +69,13 @@ module codeBase{
 			this.type = type
 			if (type == Style.VERTICAL) {
 				var angle = 90;
-				this.skinBar.x = -this.skinValue.height >> 1;
+				this.skinBar.x = -this.skinProgress.height >> 1;
 			} else {
 				var angle = 0;
-				this.skinBar.y = this.skinValue.height >> 1;
+				this.skinBar.y = this.skinProgress.height >> 1;
 			}
 			this.skinBg.rotation = angle;
-			this.skinValue.rotation = angle;
+			this.skinProgress.rotation = angle;
 			this.value = this._value;
 		}
 	}

@@ -4,6 +4,7 @@ module codeBase {
      */
     export class Button extends BasicGroup {
         public static DEFAULT_TEXTURE: egret.RenderTexture = null;//默认材质
+        private _verticalSplit: boolean = true;//默认材质采用竖直切割的方式产生不同状态下的texture
 
         public static STATUS_UP: string = "status_up";
         public static STATUS_DOWN: string = "status_down";
@@ -12,21 +13,14 @@ module codeBase {
         public static STATUS_NORMAL: string = "status_normal";
         public static STATUS_CHECKED: string = "status_checked";
 
-        // protected static normalTexture: egret.Texture;
-        // protected static checkTexture: egret.Texture;
-        // protected static disableTexture: egret.Texture;
-
-        private _textureLabel: egret.Texture = null;//文字图片
-        private _textureIcon: egret.Texture = null;//图标
-        protected _label: Label = null;//文本
         protected _text: string = "";
-
-        protected _texture: egret.Texture = null;//外设的纹理
-        protected _imgDisplay: egret.Bitmap = null;//显示按钮up用的image
-
+        protected _label: Label = null;//文本
+        protected _texture: egret.Texture = null;//按钮贴图
+        protected _imgDisplay: egret.Bitmap = null;//按钮位图
+        private _textureLabel: egret.Texture = null;//文字图片
         public _imgLabel: egret.Bitmap = null;//显示文字图片的image
+        private _textureIcon: egret.Texture = null;//图标
         public _imgIcon: egret.Bitmap = null;//显示图标用的image
-
         protected _initDisplayData: boolean = false;//是否初始化显示对象
 
         public _selected: boolean = false;//选择时为ture
@@ -35,20 +29,16 @@ module codeBase {
         protected _currentState: string = Button.STATUS_UP;//当前态
         public _textureDict: any = {};//各材质的映射,在给予img之前,保存在这个映射中
 
-        private _verticalSplit: boolean = true;//bitmapdata采用竖直切割的方式
+        //文字偏移设定
+        protected _labelMarginLeft: number = NaN;
+        protected _labelMarginTop: number = NaN;
 
-        //文字部分的设定
-        protected _labelMarginLeft: number = 0;
-        protected _labelMarginTop: number = 0;
+        //icon偏移设定
+        private _iconMarginLeft: number = NaN;
+        private _iconMarginTop: number = NaN;
 
-        //icon设定
-        private _iconMarginLeft: number = 0;
-        private _iconMarginTop: number = 0;
-
-        /**
-         * 适合材质的尺寸
-         */
         private _autoSize: boolean = false;
+
         protected _labelColor: number = Style.BUTTON_TEXT;
         protected _labelBold: boolean = false;//label加粗
         protected _labelItalic: boolean = false;
@@ -56,18 +46,15 @@ module codeBase {
         protected _labelMultiline: boolean = false;//多行显示
         protected _labelStroke: number = 0;
         protected _labelStrokeColor: number = 0x003350;
-
-        //labe字体大小
-        protected _fontSize: number = 12;
-        //label字体
+        protected _fontSize: number = 30;
         protected _fontName: string = null;
 
         private _scale9GridEnable: boolean = false;
         private _scale9GridRect: egret.Rectangle = null;//九宫拉伸的尺寸
-        protected _fillMode: string = "scale";//scale, repeat.
+        protected _fillMode: string = "scale";//scale, repeat
 
         //声音播放
-        private _soundName: string = "sound_button";
+        private _soundName: string;
 
         //像素级检测
         protected _testPixelEnable: boolean = false;
@@ -85,76 +72,76 @@ module codeBase {
 		 */
         public createChildren(): void {
             super.createChildren();
-            //this.setSize(Style.BUTTON_DEFAULT_WIDTH, Style.BUTTON_DEFAULT_HEIGHT);
-            this.touchEnabled = true;//事件接收
-            this.touchChildren = false;
-            //背景图多态显示
-            this._imgDisplay = new egret.Bitmap();
-            this.addChild(this._imgDisplay);
-            this._imgDisplay.width = this.width;
-            this._imgDisplay.height = this.height;
-            this._imgDisplay.fillMode = this._fillMode;
-            this._imgDisplay.touchEnabled = false;
+            let s = this;
+            s.touchEnabled = true;//事件接收
+            s.touchChildren = false;
+            //按钮位图
+            s._imgDisplay = new egret.Bitmap();
+            s.addChild(s._imgDisplay);
+            s._imgDisplay.width = s.width;
+            s._imgDisplay.height = s.height;
+            s._imgDisplay.fillMode = s._fillMode;
+            s._imgDisplay.touchEnabled = false;
 
             //文字显示
-            this._label = new Label();
-            this._label.autoSize = true;
-            this._label.clip = false;
-            this._label.hAlign = egret.HorizontalAlign.CENTER;
-            this._label.vAlign = egret.VerticalAlign.MIDDLE;
-            this._label.showBg = false;
-            this.addChild(this._label);
+            s._label = new Label();
+            s._label.autoSize = true;
+            s._label.clip = false;
+            s._label.hAlign = egret.HorizontalAlign.CENTER;
+            s._label.vAlign = egret.VerticalAlign.MIDDLE;
+            s._label.showBg = false;
+            s.addChild(s._label);
 
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchEvent, this);
-            //this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchRleaseOutside, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchRleaseOutside, this);
+            s.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouchEvent, s);
+            //s.addEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouchEvent, s);
+            s.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouchEvent, s);
+            s.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s);
+            s.addEventListener(egret.TouchEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s);
         }
 
         public onTouchEvent(event: egret.TouchEvent): void {
-            if (!this.enabled) {
+            let s = this;
+            if (!s.enabled) {
                 event.stopImmediatePropagation();
                 return;
             }
-            if (GlobalSetting.STATS_BTN) {
-                //统计代码
-                var stateutils = egret.getDefinitionByName("StatsUtil")
-                if (stateutils) stateutils["trackEvent"]("btn", "touch", this.name, 0);
-            }
+            // if (GlobalSetting.STATS_BTN) {
+            //     //统计按钮点击
+            //     var stateutils = egret.getDefinitionByName("StatsUtil")
+            //     if (stateutils) stateutils["trackEvent"]("btn", "touch", s.name, 0);
+            // }
             //console.log("Button onTouchEvent=" + event.type);
-            if (event.currentTarget == this) {
+            if (event.currentTarget == s) {
                 //像素检测
-                if (this._testPixelEnable) {
-                    if (!this.testPixel32(event.localX, event.localY)) {
-                        event.stopImmediatePropagation();
-                        return;
-                    }
-                }
+				if (s._testPixelEnable && !s.testPixel32(event.localX, event.localY)) {
+					event.stopImmediatePropagation();
+					return;
+				}
                 if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
-                    this._currentState = Button.STATUS_DOWN;
-                    this.onClick();
-                    this.onPlaySound();
+                    s._currentState = Button.STATUS_DOWN;
+                    s.onClick();
+                    s.onPlaySound();
                 } else if (event.type == egret.TouchEvent.TOUCH_END) {
-                    this._currentState = Button.STATUS_UP;
+                    s._currentState = Button.STATUS_UP;
                 } else if (event.type == egret.TouchEvent.TOUCH_MOVE) {
-                    this._currentState = Button.STATUS_OVER;
+                    s._currentState = Button.STATUS_OVER;
                 }
-                if (this.statesLength == 1 && this._currentState == Button.STATUS_DOWN) {
-                    this.alpha = 0.8;
+                if (s.statesLength == 1 && s._currentState == Button.STATUS_DOWN) {
+                    s.alpha = 0.8;
                 } else {
-                    this.alpha = 1;
+                    s.alpha = 1;
                 }
             }
-            this.invalidate();
+            s.invalidate();
         }
 
         /**
          * 在外释放
          * @param event
          */
-        protected onTouchRleaseOutside(event: egret.TouchEvent): void {
+        protected onTouchReleaseOutside(event: egret.TouchEvent): void {
             this._currentState = Button.STATUS_UP;
+            this.invalidate();
         }
 
         /**
@@ -192,12 +179,13 @@ module codeBase {
             }
         }
 
-        /**
-         * Sets/gets the fillMode of the scale9Grid bitmap.(scale|repeat)
-         */
         public get fillMode(): string {
             return this._fillMode;
         }
+        /**
+         * 设置填充模式
+         * scale|repeat
+         */
         public set fillMode(value: string) {
             if (this._fillMode != value) {
                 this._fillMode = value;
@@ -245,104 +233,105 @@ module codeBase {
             //super.draw();
             //if (this._data)console.log("@@Button draw _text=" + this._text + ", selected=" + this.selected + ", data=" + this._data.id);
             //初始化显示对象和数据
-            if (!this._initDisplayData) {
-                if (!this._texture) {
+            let s = this;
+            if (!s._initDisplayData) {
+                if (!s._texture) {
                     if (Button.DEFAULT_TEXTURE == null) {
-                        this.initDefaultTexture();
+                        s.initDefaultTexture();
                     }
-                    this._texture = Button.DEFAULT_TEXTURE;
+                    s._texture = Button.DEFAULT_TEXTURE;
                 }
-                this.splitTextureSource();//切割成态数对应的材质
+                s.splitTextureSource();//切割成态数对应的材质
             }
 
-            if (this._imgDisplay == null) return;
+            if (s._imgDisplay == null) return;
             //只设置了一个状态的时候，第二态用第一态的资源
-            if (this.statesLength == 1 && this._currentState == Button.STATUS_DOWN) {
-                this._imgDisplay.texture = this._textureDict[Button.STATUS_UP];
+            if (s.statesLength == 1 && s._currentState == Button.STATUS_DOWN) {
+                s._imgDisplay.texture = s._textureDict[Button.STATUS_UP];
             } else {
-                this._imgDisplay.texture = this._textureDict[this._currentState];
+                s._imgDisplay.texture = s._textureDict[s._currentState];
             }
             //按钮图片九宫拉伸设置
-            if (this._scale9GridRect != null) {
-                this._imgDisplay.scale9Grid = this._scale9GridRect;
+            if (s._scale9GridRect != null) {
+                s._imgDisplay.scale9Grid = s._scale9GridRect;
             } else {
-                this._imgDisplay.scale9Grid = null;
+                s._imgDisplay.scale9Grid = null;
             }
-            this._imgDisplay.fillMode = this._fillMode;
-            this._imgDisplay.width = this.width;
-            this._imgDisplay.height = this.height;
-            this._imgDisplay.anchorOffsetX = this._imgDisplay.width / 2;
-            this._imgDisplay.anchorOffsetY = this._imgDisplay.height / 2;
-            this._imgDisplay.x = this.width / 2;
-            this._imgDisplay.y = this.height / 2;
+            s._imgDisplay.fillMode = s._fillMode;
+            s._imgDisplay.width = s.width;
+            s._imgDisplay.height = s.height;
+            // s._imgDisplay.anchorOffsetX = s._imgDisplay.width / 2;
+            // s._imgDisplay.anchorOffsetY = s._imgDisplay.height / 2;
+            // s._imgDisplay.x = s.width / 2;
+            // s._imgDisplay.y = s.height / 2;
             //console.log("Button.draw 1111 this.width=" + this.width + ", this.height=" + this.height);
 
             //文字图片显示
-            if (this._textureLabel != null) {
-                if (this._imgLabel == null) {
-                    this._imgLabel = new egret.Bitmap();
-                    this._imgLabel.touchEnabled = false;
-                    this.addChild(this._imgLabel);
+            if (s._textureLabel != null) {
+                if (s._imgLabel == null) {
+                    s._imgLabel = new egret.Bitmap();
+                    s._imgLabel.touchEnabled = false;
+                    s.addChild(s._imgLabel);
                 }
-                this._imgLabel.texture = this._textureLabel;
+                s._imgLabel.texture = s._textureLabel;
 
-                if (!isNaN(this._labelMarginLeft)) {
-                    this._imgLabel.x = this._labelMarginLeft;
+                if (!isNaN(s._labelMarginLeft)) {
+                    s._imgLabel.x = s._labelMarginLeft;
                 } else {
-                    this._imgLabel.x = (this.width - this._imgLabel.width) / 2;
+                    s._imgLabel.x = (s.width - s._imgLabel.width) / 2;
                 }
-                if (!isNaN(this._labelMarginTop)) {
-                    this._imgLabel.y = this._labelMarginTop;
+                if (!isNaN(s._labelMarginTop)) {
+                    s._imgLabel.y = s._labelMarginTop;
                 } else {
-                    this._imgLabel.y = (this.height - this._imgLabel.height) / 2;
+                    s._imgLabel.y = (s.height - s._imgLabel.height) / 2;
                 }
             }
 
             //图标显示
-            if (this._textureIcon != null) {
-                if (this._imgIcon == null) {
-                    this._imgIcon = new egret.Bitmap(null);
-                    this._imgIcon.touchEnabled = false;
-                    this.addChild(this._imgIcon);
+            if (s._textureIcon != null) {
+                if (s._imgIcon == null) {
+                    s._imgIcon = new egret.Bitmap(null);
+                    s._imgIcon.touchEnabled = false;
+                    s.addChild(s._imgIcon);
                 }
-                this._imgIcon.texture = this._textureIcon;
+                s._imgIcon.texture = s._textureIcon;
 
-                if (!isNaN(this._iconMarginLeft)) {
-                    this._imgIcon.x = this._iconMarginLeft;
+                if (!isNaN(s._iconMarginLeft)) {
+                    s._imgIcon.x = s._iconMarginLeft;
                 } else {
-                    this._imgIcon.x = (this.width - this._imgIcon.width) / 2;
+                    s._imgIcon.x = (s.width - s._imgIcon.width) / 2;
                 }
-                if (!isNaN(this._iconMarginTop)) {
-                    this._imgIcon.y = this._iconMarginTop;
+                if (!isNaN(s._iconMarginTop)) {
+                    s._imgIcon.y = s._iconMarginTop;
                 } else {
-                    this._imgIcon.y = (this.height - this._imgIcon.height) / 2;
+                    s._imgIcon.y = (s.height - s._imgIcon.height) / 2;
                 }
             }
 
             //文字标签
-            if (this._label) {
-                if (!this._label.parent) this.addChild(this._label);
-                this._label.text = this._text;
-                this._label.fontSize = this._fontSize;
-                this._label.fontName = this._fontName;
-                this._label.bold = this._labelBold;
-                this._label.italic = this._labelItalic;
-                this._label.lineSpacing = this._labelLineSpacing;
-                this._label.multiline = this._labelMultiline;
-                this._label.stroke = this._labelStroke;
-                this._label.strokeColor = this._labelStrokeColor;
-                this._label.onInvalidate(null);//立即生效,这样下面的数据才准
+            if (s._label) {
+                if (!s._label.parent) s.addChild(s._label);
+                s._label.text = s._text;
+                s._label.fontSize = s._fontSize;
+                s._label.fontName = s._fontName;
+                s._label.bold = s._labelBold;
+                s._label.italic = s._labelItalic;
+                s._label.lineSpacing = s._labelLineSpacing;
+                s._label.multiline = s._labelMultiline;
+                s._label.stroke = s._labelStroke;
+                s._label.strokeColor = s._labelStrokeColor;
+                s._label.onInvalidate(null);//立即生效,这样下面的数据才有效
 
-                if (!isNaN(this._labelMarginLeft)) {
-                    this._label.x = this._labelMarginLeft;
+                if (!isNaN(s._labelMarginLeft)) {
+                    s._label.x = s._labelMarginLeft;
                 } else {
-                    this._label.x = (this.width - this._label.width) / 2;
+                    s._label.x = (s.width - s._label.width) / 2;
                     //console.log("Button.draw 222 this.width=" +this.width + ", this._label.width=" + this._label.width);
                 }
-                if (!isNaN(this._labelMarginTop)) {
-                    this._label.y = this._labelMarginTop;
+                if (!isNaN(s._labelMarginTop)) {
+                    s._label.y = s._labelMarginTop;
                 } else {
-                    this._label.y = (this.height - this._label.height) / 2;
+                    s._label.y = (s.height - s._label.height) / 2;
                 }
             }
         }
@@ -416,11 +405,12 @@ module codeBase {
 		 * 设置按钮弹起态皮肤
 		 */
         public set upSkin(value: egret.Texture) {
-            if (!this.isStateExist(Button.STATUS_UP)) {
-                this.stateArray.push(Button.STATUS_UP);
+            let s = this;
+            if (!s.isStateExist(Button.STATUS_UP)) {
+                s.stateArray.push(Button.STATUS_UP);
             }
-            this._textureDict[Button.STATUS_UP] = value;
-            this.invalidate();
+            s._textureDict[Button.STATUS_UP] = value;
+            s.invalidate();
         }
         public get upSkin(): egret.Texture {
             return this._textureDict[Button.STATUS_UP];
@@ -430,11 +420,12 @@ module codeBase {
 		 * 设置按钮悬停态皮肤
 		 */
         public set overSkin(value: egret.Texture) {
-            if (!this.isStateExist(Button.STATUS_OVER)) {
-                this.stateArray.push(Button.STATUS_OVER);
+            let s = this;
+            if (!s.isStateExist(Button.STATUS_OVER)) {
+                s.stateArray.push(Button.STATUS_OVER);
             }
-            this._textureDict[Button.STATUS_OVER] = value;
-            this.invalidate();
+            s._textureDict[Button.STATUS_OVER] = value;
+            s.invalidate();
         }
         public get overSkin(): egret.Texture {
             return this._textureDict[Button.STATUS_OVER];
@@ -444,11 +435,12 @@ module codeBase {
 		 * 设置按钮按下态皮肤
 		 */
         public set downSkin(value: egret.Texture) {
-            if (!this.isStateExist(Button.STATUS_DOWN)) {
-                this.stateArray.push(Button.STATUS_DOWN);
+            let s = this;
+            if (!s.isStateExist(Button.STATUS_DOWN)) {
+                s.stateArray.push(Button.STATUS_DOWN);
             }
-            this._textureDict[Button.STATUS_DOWN] = value;
-            this.invalidate();
+            s._textureDict[Button.STATUS_DOWN] = value;
+            s.invalidate();
         }
         public get downSkin(): egret.Texture {
             return this._textureDict[Button.STATUS_DOWN];
@@ -458,21 +450,20 @@ module codeBase {
 		 * 设置按钮禁用态皮肤
 		 */
         public set disableSkin(value: egret.Texture) {
-            if (!this.isStateExist(Button.STATUS_DISABLE)) {
-                this.stateArray.push(Button.STATUS_DISABLE);
+            let s = this;
+            if (!s.isStateExist(Button.STATUS_DISABLE)) {
+                s.stateArray.push(Button.STATUS_DISABLE);
             }
-            this._textureDict[Button.STATUS_DISABLE] = value;
-            this.invalidate();
+            s._textureDict[Button.STATUS_DISABLE] = value;
+            s.invalidate();
         }
         public get disableSkin(): egret.Texture {
             return this._textureDict[Button.STATUS_DISABLE];
         }
 
 		/**
-		 * 
 		 * @param state
-		 * @return false,不存在;true,存在.
-		 * 
+		 * @return false,不存在;true,存在
 		 */
         private isStateExist(state: string): boolean {
             if (this.stateArray.indexOf(state) != -1) {
@@ -485,11 +476,12 @@ module codeBase {
 		 * 设置按钮文本
 		 */
         public set label(value: string) {
-            this._text = value;
-            if (this._label) {
-                this._label.text = this._text;
+            let s = this;
+            s._text = value;
+            if (s._label) {
+                s._label.text = s._text;
             }
-            this.invalidate();
+            s.invalidate();
         }
         public get label(): string {
             return this._text;
@@ -517,8 +509,6 @@ module codeBase {
 		 */
         public setSkins(statusSkin: egret.Texture[] = []) {
             let statusNum = statusSkin.length == 0 ? 1 : statusSkin.length;
-            //if (this.stateArray.length == value) return;
-            //this.stateArray.length = 0;
             switch (statusNum) {
                 case 1:
                     this.stateArray = [Button.STATUS_UP];//设置只有一个状态的时候，第二态用第一态的资源
@@ -556,7 +546,7 @@ module codeBase {
         }
 
 		/**
-		 * Sets the bitmapData of the bitmap.
+		 * 设置图片标签贴图
 		 */
         public set imgLabel(value: egret.Texture) {
             if (this._textureLabel != value) {
@@ -569,7 +559,7 @@ module codeBase {
         }
 
 		/**
-		 * Sets the bitmapData of the imgIcon.
+		 * 设置图标贴图
 		 */
         public set imgIcon(value: egret.Texture) {
             if (this._textureIcon != value) {
@@ -626,7 +616,7 @@ module codeBase {
         }
 
         /**
-        * 是否设置label显示左边距(即label在button中的x坐标)
+        * 设置label显示左边距
         */
         public set labelMarginLeft(value: number) {
             if (this._labelMarginLeft != value) {
@@ -638,6 +628,9 @@ module codeBase {
             return this._labelMarginLeft;
         }
 
+        /**
+        * 设置label显示顶部边距
+        */
         public set labelMarginTop(value: number) {
             if (this._labelMarginTop != value) {
                 this._labelMarginTop = value;
@@ -648,6 +641,9 @@ module codeBase {
             return this._labelMarginTop;
         }
 
+        /**
+        * 设置icon显示左边距
+        */
         public set iconMarginLeft(value: number) {
             if (this._iconMarginLeft != value) {
                 this._iconMarginLeft = value;
@@ -658,6 +654,9 @@ module codeBase {
             return this._iconMarginLeft;
         }
 
+        /**
+        * 设置icon显示顶部边距
+        */
         public set iconMarginTop(value: number) {
             if (this._iconMarginTop != value) {
                 this._iconMarginTop = value;
@@ -669,8 +668,8 @@ module codeBase {
         }
 
         /**
-         * 设置按钮是否按照材质的宽高设置
-         * true:按照切割后的材质,设置按钮的宽和高
+         * 设置按钮是否按照材质的宽高设置大小
+         * true:按照切割后的材质大小来设置按钮的宽和高
          * false:根据按钮本身的宽和高设置材质的宽高
          * @param value
          */
@@ -697,6 +696,7 @@ module codeBase {
                 Sound.play(this._soundName);
             }
         }
+
         /**
          * 设置播放的声音名称
          * @param value
@@ -711,6 +711,7 @@ module codeBase {
         public set drawDelay(delay: boolean) {
             if (this._label) this._label.drawDelay = delay;
         }
+
         /**
          * label 加粗
          * @param value
@@ -812,12 +813,13 @@ module codeBase {
          * @param y 舞台坐标
          */
         public getPixel32(x: number, y: number): Array<number> {
+            let s = this;
             //底图
             var locolPoint: egret.Point = this.globalToLocal(x, y);
             var found: boolean
             var datas: Array<number> = null;
-            if (this._imgDisplay && this._imgDisplay.texture) {
-                datas = this._imgDisplay.texture.getPixel32(locolPoint.x, locolPoint.y);
+            if (s._imgDisplay && s._imgDisplay.texture) {
+                datas = s._imgDisplay.texture.getPixel32(locolPoint.x, locolPoint.y);
             }
             for (var i: number = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {
@@ -827,8 +829,8 @@ module codeBase {
             }
 
             //label
-            if (this._imgLabel && this._imgLabel.texture) {
-                datas = this._imgLabel.texture.getPixel32(x, y);
+            if (s._imgLabel && s._imgLabel.texture) {
+                datas = s._imgLabel.texture.getPixel32(x, y);
             }
             for (var i: number = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {
@@ -838,8 +840,8 @@ module codeBase {
             }
 
             //icon
-            if (this._imgIcon && this._imgIcon.texture) {
-                datas = this._imgIcon.texture.getPixel32(x, y);
+            if (s._imgIcon && s._imgIcon.texture) {
+                datas = s._imgIcon.texture.getPixel32(x, y);
             }
             for (var i: number = 0; i < datas.length; i++) {
                 if (datas[i] > 0) {
