@@ -20,22 +20,23 @@ var codeBase;
         };
         TabBar.prototype.initData = function () {
             var s = this;
+            s.UI_PREFIX = "ui#TabBar#";
             s.stateArray = [codeBase.Button.STATUS_NORMAL, codeBase.Button.STATUS_CHECKED];
             //初始化默认的皮肤
-            if (!TabBar.normalTexture) {
-                var normalSpr = codeBase.UISkin.getRect(TabBar.tabWidth, TabBar.tabHeight, codeBase.UIColor.white);
-                var normalRenderTex = new egret.RenderTexture;
+            if (!TabBar.tabBar_normalTexture) {
+                var normalSpr = codeBase.UISkin.getRect(TabBar.tabDefaultWidth, TabBar.tabDefaultHeight, codeBase.UIColor.white);
+                var normalRenderTex = new codeBase.RenderTexture;
                 normalRenderTex.drawToTexture(normalSpr);
-                TabBar.normalTexture = normalRenderTex;
-                var checkSpr = codeBase.UISkin.getRect(TabBar.tabWidth, TabBar.tabHeight, codeBase.UIColor.gray);
-                var checkRenderTex = new egret.RenderTexture;
+                TabBar.tabBar_normalTexture = normalRenderTex;
+                var checkSpr = codeBase.UISkin.getRect(TabBar.tabDefaultWidth, TabBar.tabDefaultHeight, codeBase.UIColor.gray);
+                var checkRenderTex = new codeBase.RenderTexture;
                 checkRenderTex.drawToTexture(checkSpr);
-                TabBar.checkTexture = checkRenderTex;
+                TabBar.tabBar_checkTexture = checkRenderTex;
             }
         };
         TabBar.prototype.initDisplay = function () {
             var s = this;
-            s.setSkins([TabBar.normalTexture, TabBar.checkTexture]);
+            s.setSkins([TabBar.tabBar_normalTexture, TabBar.tabBar_checkTexture]);
         };
         /**
          * 绘制
@@ -80,55 +81,8 @@ var codeBase;
                 }
             }
         };
-        Object.defineProperty(TabBar.prototype, "selected", {
-            get: function () {
-                return this._selected;
-            },
-            set: function (value) {
-                var s = this;
-                s._selected = value;
-                s._currentState = (s._selected ? codeBase.Button.STATUS_CHECKED : codeBase.Button.STATUS_NORMAL);
-                //if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
-                if (s._selected && codeBase.StringUtil.isUsage(s._groupName)) {
-                    var myevent = codeBase.MyEvent.getEvent(codeBase.RadioButton.RadioButton_PREFIX + s._groupName);
-                    myevent.addItem("caller", s);
-                    myevent.addItem("groupName", s._groupName);
-                    myevent.send();
-                }
-                s.invalidate();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * 设置按钮可用状态皮肤
-         * <p>[STATE_NORMAL, STATE_CHECK]</p>
-         */
-        TabBar.prototype.setSkins = function (skins) {
-            var s = this;
-            if (!skins || skins.length < 1 || skins.length > 2) {
-                console.warn("CHECKBOX皮肤数量不能小于1或者大于2");
-                return;
-            }
-            //初始化按钮状态皮肤
-            s._initDisplayData = true;
-            for (var i = 0, len = s.stateArray.length; i < len; ++i) {
-                if (skins[i]) {
-                    s._textureDict[s.stateArray[i]] = skins[i];
-                }
-                else {
-                    s._initDisplayData = false;
-                    console.warn("指定的状态数和状态图片数不一致");
-                    break;
-                }
-            }
-            if (s._initDisplayData)
-                s.setSize(skins[0].textureWidth, skins[0].textureHeight);
-            s.invalidate();
-        };
-        TabBar.TabBar_PREFIX = "ui#TabBar#"; //TabBar事件的前缀,尽量避免受到其他事件名称的混淆
-        TabBar.tabWidth = 60;
-        TabBar.tabHeight = 30;
+        TabBar.tabDefaultWidth = 60;
+        TabBar.tabDefaultHeight = 30;
         return TabBar;
     }(codeBase.RadioButton));
     codeBase.TabBar = TabBar;

@@ -1,4 +1,4 @@
-module codeBase{
+module codeBase {
 
     //全局字体颜色表--可以扩展
     export var TextColors = {
@@ -30,23 +30,23 @@ module codeBase{
     export function isWeiXin(): boolean {
         var ua = window.navigator.userAgent.toLowerCase();
         var microStr = "" + ua.match(/MicroMessenger/i);
-        if(microStr == "null") {
+        if (microStr == "null") {
             return false;
-        } else if(microStr == "micromessenger") {
+        } else if (microStr == "micromessenger") {
             return true;
         }
-    } 
+    }
 
     //是不是大屏
     export function isBigScreen(): boolean {
         return (document.body.clientHeight / document.body.clientWidth > 1.32);
-    } 
+    }
 
     /**
      * 是否移动设备
      */
     export function isMobile() {
-        if(egret.Capabilities.isMobile) return true;
+        if (egret.Capabilities.isMobile) return true;
         return false;
     }
 
@@ -54,41 +54,41 @@ module codeBase{
     export function systemType(): string {
         var ua = window.navigator.userAgent.toLowerCase();
         var microStr = "" + ua.match(/MicroMessenger/i);
-        if(("" + ua.match(/windows nt/i)) == "windows nt") {
+        if (("" + ua.match(/windows nt/i)) == "windows nt") {
             return "windows";
-        } else if(("" + ua.match(/iphone/i)) == "iphone") {
+        } else if (("" + ua.match(/iphone/i)) == "iphone") {
             return "ios";
-        } else if(("" + ua.match(/android/i)) == "android") {
+        } else if (("" + ua.match(/android/i)) == "android") {
             return "android";
-        } else if(("" + ua.match(/ipad/i)) == "ipad") {
+        } else if (("" + ua.match(/ipad/i)) == "ipad") {
             return "ipad";
-        } else if(("" + ua.match(/linux/i)) == "linux") {
+        } else if (("" + ua.match(/linux/i)) == "linux") {
             return "linux";
-        } else if(("" + ua.match(/mac/i)) == "mac") {
+        } else if (("" + ua.match(/mac/i)) == "mac") {
             return "mac";
-        } else if(("" + ua.match(/ucbrower/i)) == "ucbrower") {
+        } else if (("" + ua.match(/ucbrower/i)) == "ucbrower") {
             return "ucbrower";
         } else {
             console.log("未知系统类型");
         }
-    }  
+    }
 
     //获得平台类型 如 微信、qqzone、qq、微博、校内、facebook
     export function platformType(): string {
         var ua = window.navigator.userAgent.toLowerCase();
-        if(("" + ua.match(/micromessenger/i)) == "micromessenger") {
+        if (("" + ua.match(/micromessenger/i)) == "micromessenger") {
             return "micromessenger";
-        } else if(("" + ua.match(/qzone/i)) == "qzone") {
+        } else if (("" + ua.match(/qzone/i)) == "qzone") {
             return "qzone";
-        } else if(("" + ua.match(/weibo/i)) == "weibo") {
+        } else if (("" + ua.match(/weibo/i)) == "weibo") {
             return "weibo";
-        } else if(("" + ua.match(/qq/i)) == "qq") {
+        } else if (("" + ua.match(/qq/i)) == "qq") {
             return "qq";
-        } else if(("" + ua.match(/renren/i)) == "renren") {
+        } else if (("" + ua.match(/renren/i)) == "renren") {
             return "renren";
-        } else if(("" + ua.match(/txmicroblog/i)) == "txmicroblog") {
+        } else if (("" + ua.match(/txmicroblog/i)) == "txmicroblog") {
             return "txmicroblog";
-        } else if(("" + ua.match(/douban/i)) == "douban") {
+        } else if (("" + ua.match(/douban/i)) == "douban") {
             return "douban";
         } else {
             return "other";
@@ -101,11 +101,11 @@ module codeBase{
 	 * @param {String} url - 指定 url，不指定默认为当前页面 url
 	 * @returns {String} - 参数的值，未找到则返回 null
 	 */
-  	export function getUrlParam(name: string, url ?: string): any {
-		const reg = new RegExp('(\\?|&)' + name + '=([^&#]*)')
-		const result = reg.exec(url ? url : window.location.href)
-		return result != null ? decodeURIComponent(result[2]) : null
-	}
+    export function getUrlParam(name: string, url?: string): any {
+        const reg = new RegExp('(\\?|&)' + name + '=([^&#]*)')
+        const result = reg.exec(url ? url : window.location.href)
+        return result != null ? decodeURIComponent(result[2]) : null
+    }
 
     //当前舞台
     export function curStage(): egret.Stage {
@@ -135,19 +135,32 @@ module codeBase{
         return egret.Capabilities.boundingClientHeight;
     }
 
-	//舞台画面
-	export function getScreen() {
-      let _renderTexture:egret.RenderTexture;
-	  let _stage = curStage();
-	  _renderTexture.drawToTexture(_stage, new egret.Rectangle(0, 0, _stage.stageWidth, _stage.stageHeight));
-	  return _renderTexture;
-    } 	
+    //舞台画面
+    export function getScreen() {
+        let _renderTexture: egret.RenderTexture;
+        let _stage = curStage();
+        _renderTexture.drawToTexture(_stage, new egret.Rectangle(0, 0, _stage.stageWidth, _stage.stageHeight));
+        return _renderTexture;
+    }
 
-	//获取当前地址
-	export function getCurUrl():string {
-		return window.location.href;
-    } 	
+    //获取当前地址
+    export function getCurUrl(): string {
+        return window.location.href;
+    }
 
-	//当前游戏角度
-	export var curAngle:number = Number(window["orientation"]);	
+    //判断一个对象是否是某一个类型
+    export function is(instance:any, typeName:string) {
+        if (!instance || typeof instance != "object") {
+            return false;
+        }
+        var prototype = Object.getPrototypeOf(instance);
+        var types = prototype ? prototype.__types__ : null;
+        if (!types) {
+            return false;
+        }
+        return (types.indexOf(typeName) !== -1);
+    }
+
+    //当前游戏角度
+    export var curAngle: number = Number(window["orientation"]);
 }

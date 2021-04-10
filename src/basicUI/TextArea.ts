@@ -6,7 +6,7 @@ module codeBase {
 		private _text: string = "";//文本内容
 		private _initFlow: Array<egret.ITextElement> = null;
 		private _htmlTextParser: egret.HtmlTextParser = null;
-		public _textField: egret.TextField = null;
+		public _textField: TextField = null;
 
 		private _fontSize: number = Style.fontSize;//字体大小
 		private _color: number = Style.LABEL_TEXT;//字体颜色
@@ -49,9 +49,9 @@ module codeBase {
 		public createChildren(): void {
 			super.createChildren();
 			//this.setSize(Style.SLIDER_WIDTH, Style.SLIDER_WIDTH);
-			this._textField = new egret.TextField();
+			this._textField = new TextField();
 			this._textField.multiline = true;
-			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
+			this._textField.addEventListener(BasicUIEvent.CHANGE, this.onTextChange, this);
 			this.addChild(this._textField);
 			this.touchChildren = false;
 		}
@@ -69,22 +69,22 @@ module codeBase {
 				this.touchNonePixel = true;
 				this.touchEnabled = true;
 				//滚动监听
-				this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-				this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-				this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-				this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
-				this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
+				this.addEventListener(BasicUIEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+				this.addEventListener(BasicUIEvent.TOUCH_END, this.onTouchEnd, this);
+				this.addEventListener(BasicUIEvent.TOUCH_MOVE, this.onTouchMove, this);
+				this.addEventListener(BasicUIEvent.TOUCH_CANCEL, this.onTouchCancel, this);
+				this.addEventListener(BasicUIEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
 				//console.log("onSetScrollText true");
 			} else if (!scroll && this.isAddScollListener) {
 				this.isAddScollListener = false;
 				this.touchNonePixel = false;
 				this.touchEnabled = false;
 				//滚动监听
-				this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-				this.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-				this.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-				this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
-				this.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
+				this.removeEventListener(BasicUIEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+				this.removeEventListener(BasicUIEvent.TOUCH_END, this.onTouchEnd, this);
+				this.removeEventListener(BasicUIEvent.TOUCH_MOVE, this.onTouchMove, this);
+				this.removeEventListener(BasicUIEvent.TOUCH_CANCEL, this.onTouchCancel, this);
+				this.removeEventListener(BasicUIEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
 				//console.log("onSetScrollText false");
 			}
 		}
@@ -94,20 +94,20 @@ module codeBase {
 		 * @param event
 		 */
 		private _isTouchBegin: boolean = false;
-		private _touchPoint: egret.Point = null;
+		private _touchPoint: Point = null;
 		private moveDelta:number = 0;
-		public onTouchBegin(event: egret.TouchEvent): void {
+		public onTouchBegin(event: TouchEvent): void {
 			//console.log("onTouchBegin numline=" + this._textField.numLines + ", scollv=" + this._textField.scrollV);
 			this._isTouchBegin = true;
 			this.moveDelta = 0;
-			if (this._touchPoint == null) this._touchPoint = new egret.Point();
+			if (this._touchPoint == null) this._touchPoint = new Point();
 			this._touchPoint.x = event.stageX;
 			this._touchPoint.y = event.stageY;
 		}
-		public onTouchEnd(event: egret.TouchEvent): void {
+		public onTouchEnd(event: TouchEvent): void {
 			this._isTouchBegin = false;
 		}
-		public onTouchMove(event: egret.TouchEvent): void {
+		public onTouchMove(event: TouchEvent): void {
 			if (this._isTouchBegin) {
 				//console.log("move");
 				this.moveDelta += Math.abs(event.stageY - this._touchPoint.y);
@@ -129,7 +129,7 @@ module codeBase {
 				this._touchPoint.y = event.stageY;
 			}
 		}
-		public onTouchCancel(event: egret.TouchEvent): void {
+		public onTouchCancel(event: TouchEvent): void {
 			this._isTouchBegin = false;
 		}
 
@@ -291,7 +291,7 @@ module codeBase {
         /**
          * 文本内容显示对象
          */
-		public getTextField(): egret.TextField {
+		public getTextField(): TextField {
 			return this._textField;
 		}
 

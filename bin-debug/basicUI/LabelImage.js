@@ -246,7 +246,7 @@ var codeBase;
                 for (var i = 0; i < s._text.length; ++i) {
                     texture = s._textureDict[s._text.charAt(i)];
                     if (texture) {
-                        bitmap = codeBase.ObjectPool.getByClass(egret.Bitmap, "labelimg");
+                        bitmap = codeBase.ObjectPool.getByClass(codeBase.Bitmap, "labelimg");
                         s.addChild(bitmap);
                         bitmap.texture = texture;
                         bitmap.width = texture.textureWidth;
@@ -383,7 +383,7 @@ var codeBase;
         LabelImage.prototype.onInvalidatePosition = function () {
             if (!this._hasInvalidatePosition) {
                 this._hasInvalidatePosition = true;
-                this.addEventListener(egret.Event.ENTER_FRAME, this.resetPosition, this);
+                this.addEventListener(codeBase.BasicUIEvent.ENTER_FRAME, this.resetPosition, this);
             }
         };
         /**

@@ -3,7 +3,7 @@ module codeBase {
 	 * 文本输入框
 	 */
 	export class TextInput extends Group {
-		public _textField: egret.TextField = null;
+		public _textField: TextField = null;
 		public _text: string = "";
 		public _password: boolean = false;
 		private _fontName: string = Style.fontName;//字体
@@ -42,12 +42,12 @@ module codeBase {
 			this.bgColor = Style.INPUT_TEXT;
 			this.clip = false;
 			this.touchEnabled = true;
-			this._textField = new egret.TextField();
+			this._textField = new TextField();
 			this._textField.width = this.width;
 			this._textField.height = this.height;
 			this._textField.displayAsPassword = false;
 			this._textField.type = egret.TextFieldType.INPUT;
-			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
+			this._textField.addEventListener(BasicUIEvent.CHANGE, this.onTextChange, this);
 			this._textField.touchEnabled = true;
 			this.addChild(this._textField);
 		}
@@ -55,7 +55,7 @@ module codeBase {
 		/**
 		 * 文字输入变化处理
 		 */
-		public onTextChange(event: egret.Event): void {
+		public onTextChange(event: Event): void {
 			this._text = this._textField.text;
 			//console.log("TextInput Change text=" + this._text);
 			//this.invalidate();
@@ -64,7 +64,7 @@ module codeBase {
 		/**
 		 * 返回文字输入对象
 		 */
-		public getTextField(): egret.TextField {
+		public getTextField(): TextField {
 			return this._textField;
 		}
 

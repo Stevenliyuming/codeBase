@@ -1,11 +1,10 @@
 module codeBase {
 	export class TabBar extends RadioButton {
-		public static TabBar_PREFIX: string = "ui#TabBar#";//TabBar事件的前缀,尽量避免受到其他事件名称的混淆
-		// private _tabBarGroup: string = null;//TabBar分组名称
-		protected static normalTexture: egret.Texture;
-		protected static checkTexture: egret.Texture;
-		private static tabWidth: number = 60;
-		private static tabHeight: number = 30;
+		//public static TabBar_PREFIX: string = "ui#TabBar#";//TabBar事件的前缀,避免受到其他事件名称的混淆
+		private static tabBar_normalTexture: Texture;
+		private static tabBar_checkTexture: Texture;
+		private static tabDefaultWidth: number = 60;
+		private static tabDefaultHeight: number = 30;
 		public constructor() {
 			super();
 		}
@@ -16,24 +15,25 @@ module codeBase {
 
 		public initData() {
 			let s = this;
+			s.UI_PREFIX = "ui#TabBar#";
 			s.stateArray = [Button.STATUS_NORMAL, Button.STATUS_CHECKED];
 			//初始化默认的皮肤
-			if (!TabBar.normalTexture) {
-				let normalSpr: DisplayObject = UISkin.getRect(TabBar.tabWidth, TabBar.tabHeight, UIColor.white);
-				let normalRenderTex = new egret.RenderTexture;
+			if (!TabBar.tabBar_normalTexture) {
+				let normalSpr: DisplayObject = UISkin.getRect(TabBar.tabDefaultWidth, TabBar.tabDefaultHeight, UIColor.white);
+				let normalRenderTex = new RenderTexture;
 				normalRenderTex.drawToTexture(normalSpr);
-				TabBar.normalTexture = <egret.Texture>normalRenderTex;
+				TabBar.tabBar_normalTexture = <Texture>normalRenderTex;
 
-				let checkSpr: DisplayObject = UISkin.getRect(TabBar.tabWidth, TabBar.tabHeight, UIColor.gray);
-				let checkRenderTex = new egret.RenderTexture;
+				let checkSpr: DisplayObject = UISkin.getRect(TabBar.tabDefaultWidth, TabBar.tabDefaultHeight, UIColor.gray);
+				let checkRenderTex = new RenderTexture;
 				checkRenderTex.drawToTexture(checkSpr);
-				TabBar.checkTexture = <egret.Texture>checkRenderTex;
+				TabBar.tabBar_checkTexture = <Texture>checkRenderTex;
 			}
 		}
 
 		protected initDisplay() {
 			let s = this;
-			s.setSkins([TabBar.normalTexture, TabBar.checkTexture]);
+			s.setSkins([TabBar.tabBar_normalTexture, TabBar.tabBar_checkTexture]);
 		}
 
 		/**
@@ -79,46 +79,46 @@ module codeBase {
 			}
 		}
 
-		public set selected(value: boolean) {
-			let s = this;
-			s._selected = value;
-			s._currentState = (s._selected ? Button.STATUS_CHECKED : Button.STATUS_NORMAL);
-			//if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
-			if (s._selected && StringUtil.isUsage(s._groupName)) {
-				var myevent: MyEvent = MyEvent.getEvent(RadioButton.RadioButton_PREFIX + s._groupName);
-				myevent.addItem("caller", s);
-				myevent.addItem("groupName", s._groupName);
-				myevent.send();
-			}
-			s.invalidate();
-		}
-		public get selected(): boolean {
-			return this._selected;
-		}
+		// public set selected(value: boolean) {
+		// 	let s = this;
+		// 	s._selected = value;
+		// 	s._currentState = (s._selected ? Button.STATUS_CHECKED : Button.STATUS_NORMAL);
+		// 	//if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
+		// 	if (s._selected && StringUtil.isUsage(s._groupName)) {
+		// 		var myevent: MyEvent = MyEvent.getEvent(s.UI_PREFIX + s._groupName);
+		// 		myevent.addItem("caller", s);
+		// 		myevent.addItem("groupName", s._groupName);
+		// 		myevent.send();//向内部tab组发送事件
+		// 	}
+		// 	s.invalidate();
+		// }
+		// public get selected(): boolean {
+		// 	return this._selected;
+		// }
 
 		/**
 		 * 设置按钮可用状态皮肤
 		 * <p>[STATE_NORMAL, STATE_CHECK]</p>
 		 */
-		public setSkins(skins: egret.Texture[]) {
-			let s = this;
-			if (!skins || skins.length < 1 || skins.length > 2) {
-				console.warn("CHECKBOX皮肤数量不能小于1或者大于2");
-				return;
-			}
-			//初始化按钮状态皮肤
-			s._initDisplayData = true;
-			for (let i = 0, len = s.stateArray.length; i < len; ++i) {
-				if (skins[i]) {
-					s._textureDict[s.stateArray[i]] = skins[i];
-				} else {
-					s._initDisplayData = false;
-					console.warn("指定的状态数和状态图片数不一致");
-					break;
-				}
-			}
-			if (s._initDisplayData) s.setSize(skins[0].textureWidth, skins[0].textureHeight);
-			s.invalidate();
-		}
+		// public setSkins(skins: Texture[]) {
+		// 	let s = this;
+		// 	if (!skins || skins.length < 1 || skins.length > 2) {
+		// 		console.warn("TabBar皮肤数量不能小于1或者大于2");
+		// 		return;
+		// 	}
+		// 	//初始化按钮状态皮肤
+		// 	s._initDisplayData = true;
+		// 	for (let i = 0, len = s.stateArray.length; i < len; ++i) {
+		// 		if (skins[i]) {
+		// 			s._textureDict[s.stateArray[i]] = skins[i];
+		// 		} else {
+		// 			s._initDisplayData = false;
+		// 			console.warn("指定的状态数和状态图片数不一致");
+		// 			break;
+		// 		}
+		// 	}
+		// 	if (s._initDisplayData) s.setSize(skins[0].textureWidth, skins[0].textureHeight);
+		// 	s.invalidate();
+		// }
 	}
 }

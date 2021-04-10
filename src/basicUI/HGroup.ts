@@ -79,8 +79,8 @@ module codeBase {
 		 */
 		public updateLayout(): void {
 			var i: number = 0;
-			var child: egret.DisplayObject = null;
-			var childLast: egret.DisplayObject = null;
+			var child: DisplayObject = null;
+			var childLast: DisplayObject = null;
 			var wElements: number = 0;
 			//console.log("@@@@@HGroup numChildren=" + this.numChildren);
 			for (i = 0; i < this.numChildren; i++) {

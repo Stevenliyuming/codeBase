@@ -1,8 +1,8 @@
 module codeBase {
 	//图片字体类
 	export class ImageNumber extends BasicGroup {
-		private numberImages: egret.Bitmap[] = [];
-		private numberImagePool: egret.Bitmap[] = [];
+		private numberImages: Image[] = [];
+		private numberImagePool: Image[] = [];
 		private numberTexture: any = {};
 		/**图片字名称，如：num0、num1等表示0、1两张图，则imageAlias设置为num */
 		private imageAlias: string;
@@ -41,7 +41,7 @@ module codeBase {
 			s.horizontalAlign = horizontalAlign.toLowerCase();
 		}
 
-		public show(pr: egret.DisplayObjectContainer, px: number, py: number, defaultText: string = null) {
+		public show(pr: DisplayObjectContainer, px: number, py: number, defaultText: string = null) {
 			let s = this;
 			if (s.parent != pr) {
 				pr.addChild(s);
@@ -78,8 +78,8 @@ module codeBase {
 			}
 			if (s.numberValue && s.numberValue.length > 0) {
 				let num = s.numberValue.length;
-				let numberBitmap: egret.Bitmap;
-				let tex: egret.Texture;
+				let numberBitmap: Image;
+				let tex: Texture;
 				let name;
 				let spriteWidth: number = 0;
 				let spriteHeight: number = 0;
@@ -89,7 +89,7 @@ module codeBase {
 					if (s.numberImagePool.length > 0) {
 						numberBitmap = s.numberImagePool.pop();
 					} else {
-						numberBitmap = new egret.Bitmap;
+						numberBitmap = new Image;
 					}
 					tex = s.numberTexture[s.imageAlias + name];
 					if (!tex) {

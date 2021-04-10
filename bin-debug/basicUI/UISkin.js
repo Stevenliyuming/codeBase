@@ -74,7 +74,7 @@ var codeBase;
             configurable: true
         });
         ;
-        Object.defineProperty(UISkin, "checkBoxDisabel", {
+        Object.defineProperty(UISkin, "checkBoxDisable", {
             get: function () { return UISkin.getCheckBoxRect(codeBase.UIColor.gray, codeBase.UIColor.white); },
             enumerable: true,
             configurable: true

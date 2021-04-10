@@ -93,6 +93,26 @@ var codeBase;
     codeBase.Bitmap = Bitmap;
     __reflect(Bitmap.prototype, "codeBase.Bitmap");
     ;
+    var Texture = (function (_super) {
+        __extends(Texture, _super);
+        function Texture() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return Texture;
+    }(egret.Texture));
+    codeBase.Texture = Texture;
+    __reflect(Texture.prototype, "codeBase.Texture");
+    ;
+    var RenderTexture = (function (_super) {
+        __extends(RenderTexture, _super);
+        function RenderTexture() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return RenderTexture;
+    }(egret.RenderTexture));
+    codeBase.RenderTexture = RenderTexture;
+    __reflect(RenderTexture.prototype, "codeBase.RenderTexture");
+    ;
     var BitmapData = (function (_super) {
         __extends(BitmapData, _super);
         function BitmapData() {
@@ -132,6 +152,26 @@ var codeBase;
     }(egret.Ease));
     codeBase.Ease = Ease;
     __reflect(Ease.prototype, "codeBase.Ease");
+    ;
+    var Event = (function (_super) {
+        __extends(Event, _super);
+        function Event() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return Event;
+    }(egret.Event));
+    codeBase.Event = Event;
+    __reflect(Event.prototype, "codeBase.Event");
+    ;
+    var TouchEvent = (function (_super) {
+        __extends(TouchEvent, _super);
+        function TouchEvent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return TouchEvent;
+    }(egret.TouchEvent));
+    codeBase.TouchEvent = TouchEvent;
+    __reflect(TouchEvent.prototype, "codeBase.TouchEvent");
     ;
     /**
      * 简单的布局

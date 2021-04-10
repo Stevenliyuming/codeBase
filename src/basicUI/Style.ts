@@ -42,6 +42,10 @@ module codeBase {
 		public static BASEGROUP_WIDTH: number = 100;
 		public static BASEGROUP_HEIGHT: number = 100;
 
+		public static REPEAT = egret.BitmapFillMode.REPEAT;
+		public static SCALE = egret.BitmapFillMode.SCALE;
+		public static CLIP = egret.BitmapFillMode.CLIP;
+
 		public constructor() {
 		}
 		/**

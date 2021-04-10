@@ -26,6 +26,15 @@ module codeBase {
 		public static readonly OPEN: string = "open";//开启
 		public static readonly CLOSE: string = "close";//关闭
 
+		//egret event
+		public static readonly ADDED_TO_STAGE = egret.Event.ADDED_TO_STAGE;
+		public static readonly ENTER_FRAME = egret.Event.ENTER_FRAME;
+		public static readonly TOUCH_BEGIN = egret.TouchEvent.TOUCH_BEGIN;
+		public static readonly TOUCH_MOVE = egret.TouchEvent.TOUCH_MOVE;
+		public static readonly TOUCH_END = egret.TouchEvent.TOUCH_END;
+		public static readonly TOUCH_RELEASE_OUTSIDE = egret.TouchEvent.TOUCH_RELEASE_OUTSIDE;
+		public static readonly TOUCH_CANCEL = egret.TouchEvent.TOUCH_CANCEL;
+
 		public currentTarget: Object;
 		public type: string;
 		public data: Object;

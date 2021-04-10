@@ -195,7 +195,7 @@ var codeBase;
                 return;
             if (this._clip) {
                 if (this.scrollRect == null) {
-                    this.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
+                    this.scrollRect = new codeBase.Rectangle(0, 0, this.width, this.height);
                 }
                 else {
                     this.scrollRect.width = this.width;
@@ -354,7 +354,7 @@ var codeBase;
             }
             //console.log("totalNum = " + this._totalBitmapLength);
             for (var i = 0; i < this._totalBitmapLength; i++) {
-                var bitmap = codeBase.ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                var bitmap = codeBase.ObjectPool.getByClass(codeBase.Image, "scroll_group");
                 this._scrollBitmapArr.push(bitmap);
             }
             for (var j = 0; j < this._scrollBitmapArr.length; j++) {
@@ -421,7 +421,7 @@ var codeBase;
         };
         /**
          * 获取当前卷轴材质
-         * @returns {egret.Texture}
+         * @returns {Texture}
          */
         ScrollItemGroup.prototype.getTexture = function (img) {
             var texture = this._textures[this._scrollTextureIndex];
@@ -452,7 +452,7 @@ var codeBase;
                 }
                 //补充显示项
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y <= (this.height - this._scrollBitmapArr[this._scrollBitmapArr.length - 1].texture.textureHeight - this.speed)) {
-                    var image = codeBase.ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image = codeBase.ObjectPool.getByClass(codeBase.Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.x = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x;
@@ -471,7 +471,7 @@ var codeBase;
                     this._scrollBitmapArr[i].y += this.speed;
                 }
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y >= -this.speed) {
-                    var image = codeBase.ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image = codeBase.ObjectPool.getByClass(codeBase.Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.x = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x;
@@ -490,7 +490,7 @@ var codeBase;
                     this._scrollBitmapArr[i].x -= this.speed;
                 }
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x <= (this.width - this._scrollBitmapArr[this._scrollBitmapArr.length - 1].texture.textureWidth - this.speed)) {
-                    var image = codeBase.ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image = codeBase.ObjectPool.getByClass(codeBase.Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.y = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y;
@@ -509,7 +509,7 @@ var codeBase;
                     this._scrollBitmapArr[i].x += this.speed;
                 }
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x >= -this.speed) {
-                    var image = codeBase.ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image = codeBase.ObjectPool.getByClass(codeBase.Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.y = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y;
@@ -532,7 +532,7 @@ var codeBase;
                 return;
             if (this._clip) {
                 if (this.scrollRect == null) {
-                    this.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
+                    this.scrollRect = new codeBase.Rectangle(0, 0, this.width, this.height);
                 }
                 else {
                     this.scrollRect.width = this.width;

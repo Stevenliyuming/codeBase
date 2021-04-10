@@ -48,8 +48,8 @@ var codeBase;
             _this._fontSize = 30;
             _this._fontName = null;
             _this._scale9GridEnable = false;
-            _this._scale9GridRect = null; //九宫拉伸的尺寸
-            _this._fillMode = "scale"; //scale, repeat
+            _this._scale9GridRect = []; //九宫拉伸的尺寸
+            _this._fillMode = codeBase.Style.SCALE; //scale, repeat, clip
             //像素级检测
             _this._testPixelEnable = false;
             return _this;
@@ -64,7 +64,7 @@ var codeBase;
             s.touchEnabled = true; //事件接收
             s.touchChildren = false;
             //按钮位图
-            s._imgDisplay = new egret.Bitmap();
+            s._imgDisplay = new codeBase.Image;
             s.addChild(s._imgDisplay);
             s._imgDisplay.width = s.width;
             s._imgDisplay.height = s.height;
@@ -78,11 +78,11 @@ var codeBase;
             s._label.vAlign = egret.VerticalAlign.MIDDLE;
             s._label.showBg = false;
             s.addChild(s._label);
-            s.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouchEvent, s);
-            //s.addEventListener(egret.TouchEvent.TOUCH_MOVE, s.onTouchEvent, s);
-            s.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouchEvent, s);
-            s.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s);
-            s.addEventListener(egret.TouchEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_BEGIN, s.onTouchEvent, s);
+            //s.addEventListener(BasicUIEvent.TOUCH_MOVE, s.onTouchEvent, s);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_END, s.onTouchEvent, s);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s);
         };
         Button.prototype.onTouchEvent = function (event) {
             var s = this;
@@ -102,15 +102,15 @@ var codeBase;
                     event.stopImmediatePropagation();
                     return;
                 }
-                if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
+                if (event.type == codeBase.BasicUIEvent.TOUCH_BEGIN) {
                     s._currentState = Button.STATUS_DOWN;
                     s.onClick();
                     s.onPlaySound();
                 }
-                else if (event.type == egret.TouchEvent.TOUCH_END) {
+                else if (event.type == codeBase.BasicUIEvent.TOUCH_END) {
                     s._currentState = Button.STATUS_UP;
                 }
-                else if (event.type == egret.TouchEvent.TOUCH_MOVE) {
+                else if (event.type == codeBase.BasicUIEvent.TOUCH_MOVE) {
                     s._currentState = Button.STATUS_OVER;
                 }
                 if (s.statesLength == 1 && s._currentState == Button.STATUS_DOWN) {
@@ -188,7 +188,7 @@ var codeBase;
         });
         /**
          * 九宫设置的区域
-         * @returns {egret.Rectangle}
+         * @returns {Rectangle}
          */
         Button.prototype.scale9GridRect = function () {
             return this._scale9GridRect;
@@ -202,17 +202,19 @@ var codeBase;
         Button.prototype.scale9Grid = function (scale9Rectangle) {
             if (scale9Rectangle === void 0) { scale9Rectangle = []; }
             if (scale9Rectangle.length == 4) {
-                if (this._scale9GridRect == null) {
-                    this._scale9GridRect = new egret.Rectangle;
-                }
-                var x = scale9Rectangle[0];
-                var y = scale9Rectangle[2];
-                var width = this.width - (scale9Rectangle[0] + scale9Rectangle[1]);
-                var height = this.height - (scale9Rectangle[2] + scale9Rectangle[3]);
-                this._scale9GridRect.x = x;
-                this._scale9GridRect.y = y;
-                this._scale9GridRect.width = width;
-                this._scale9GridRect.height = height;
+                this._scale9GridRect.length = 0;
+                this._scale9GridRect = scale9Rectangle.concat();
+                // if (this._scale9GridRect == null) {
+                //     this._scale9GridRect = new Rectangle;
+                // }
+                // let x = scale9Rectangle[0];
+                // let y = scale9Rectangle[2];
+                // let width = this.width - (scale9Rectangle[0] + scale9Rectangle[1]);
+                // let height = this.height - (scale9Rectangle[2] + scale9Rectangle[3]);
+                // this._scale9GridRect.x = x;
+                // this._scale9GridRect.y = y;
+                // this._scale9GridRect.width = width;
+                // this._scale9GridRect.height = height;
             }
             else {
                 this._scale9GridRect = null;
@@ -246,11 +248,11 @@ var codeBase;
                 s._imgDisplay.texture = s._textureDict[s._currentState];
             }
             //按钮图片九宫拉伸设置
-            if (s._scale9GridRect != null) {
-                s._imgDisplay.scale9Grid = s._scale9GridRect;
+            if (s._scale9GridRect.length == 4) {
+                s._imgDisplay.scale9Grid(s._scale9GridRect);
             }
             else {
-                s._imgDisplay.scale9Grid = null;
+                s._imgDisplay.scale9Grid();
             }
             s._imgDisplay.fillMode = s._fillMode;
             s._imgDisplay.width = s.width;
@@ -263,7 +265,7 @@ var codeBase;
             //文字图片显示
             if (s._textureLabel != null) {
                 if (s._imgLabel == null) {
-                    s._imgLabel = new egret.Bitmap();
+                    s._imgLabel = new codeBase.Image;
                     s._imgLabel.touchEnabled = false;
                     s.addChild(s._imgLabel);
                 }
@@ -284,7 +286,7 @@ var codeBase;
             //图标显示
             if (s._textureIcon != null) {
                 if (s._imgIcon == null) {
-                    s._imgIcon = new egret.Bitmap(null);
+                    s._imgIcon = new codeBase.Image;
                     s._imgIcon.touchEnabled = false;
                     s.addChild(s._imgIcon);
                 }
@@ -337,7 +339,7 @@ var codeBase;
         Button.prototype.initDefaultTexture = function () {
             if (Button.DEFAULT_TEXTURE == null) {
                 this.setSize(codeBase.Style.BUTTON_DEFAULT_WIDTH, codeBase.Style.BUTTON_DEFAULT_HEIGHT);
-                var shape = new egret.Shape();
+                var shape = new codeBase.Shape();
                 shape.width = this.width;
                 shape.height = this.height;
                 shape.graphics.beginFill(codeBase.Style.BUTTON_FACE);
@@ -346,7 +348,7 @@ var codeBase;
                 //boder
                 shape.graphics.lineStyle(1, 0x000000);
                 shape.graphics.drawRect(0, 0, this.width - 1, this.height - 1);
-                var renderTexture = new egret.RenderTexture();
+                var renderTexture = new codeBase.RenderTexture();
                 renderTexture.drawToTexture(shape);
                 Button.DEFAULT_TEXTURE = renderTexture;
             }

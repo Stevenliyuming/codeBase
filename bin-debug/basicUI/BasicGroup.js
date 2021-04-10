@@ -35,7 +35,7 @@ var codeBase;
             _this.dataEvent = new Object;
             _this.elements = [];
             var s = _this;
-            s.addEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
+            s.addEventListener(codeBase.BasicUIEvent.ADDED_TO_STAGE, s.onAddToStage, s);
             return _this;
             //console.log("this._drawDelay=" + this._drawDelay)
         }
@@ -45,7 +45,7 @@ var codeBase;
         BasicGroup.prototype.onAddToStage = function (event) {
             var s = this;
             s._isAddedToStage = true;
-            s.removeEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
+            s.removeEventListener(codeBase.BasicUIEvent.ADDED_TO_STAGE, s.onAddToStage, s);
             s.createChildren();
             s.initData();
             s.onInvalidatePosition();
@@ -229,7 +229,7 @@ var codeBase;
             if (!s._hasInvalidatePosition) {
                 //console.log("onInvalidatePosition 111 name=" + this.name);
                 s._hasInvalidatePosition = true;
-                s.addEventListener(egret.Event.ENTER_FRAME, s.resetPosition, s);
+                s.addEventListener(codeBase.BasicUIEvent.ENTER_FRAME, s.resetPosition, s);
                 var child = void 0;
                 for (var i = 0; i < s.numChildren; i++) {
                     child = s.getChildAt(i);
@@ -326,13 +326,13 @@ var codeBase;
                         child.onInvalidatePosition();
                     }
                     else {
-                        if (egret.is(child, "eui.UIComponent")) {
+                        if (codeBase.is(child, "eui.UIComponent")) {
                             BasicGroup.resetChildPosition(child);
                         }
                     }
                 }
             }
-            s.removeEventListener(egret.Event.ENTER_FRAME, s.resetPosition, s);
+            s.removeEventListener(codeBase.BasicUIEvent.ENTER_FRAME, s.resetPosition, s);
             s._hasInvalidatePosition = false;
         };
         BasicGroup.resetChildPosition = function (child) {
@@ -411,30 +411,13 @@ var codeBase;
                 }
             }
         };
-        /**
-         * 添加实现了eui.UIComponent约束布局的元素
-         * 例如：eui.Image
-         */
-        BasicGroup.prototype.addElement = function (child) {
-            // let s = this;
-            // if (s.elements.indexOf(child) >= 0 || child.parent === s) {
-            // 	console.warn("子元素不能重复添加到同一个父级节点中");
-            // 	return;
-            // }
-            // if (egret.is(child, "eui.UIComponent")) {
-            // 	s.elements.push(child);
-            // } else {
-            // 	s.addChild(child);
-            // }
-            // s.onInvalidatePosition();
-        };
         BasicGroup.prototype.addChild = function (child) {
             var s = this;
             if (child.parent === s) {
                 console.warn("子元素不能重复添加到同一个父级节点中");
                 return;
             }
-            if (egret.is(child, "eui.UIComponent")) {
+            if (codeBase.is(child, "eui.UIComponent")) {
                 if (s.elements.indexOf(child) >= 0) {
                     console.warn("子元素不能重复添加到同一个父级节点中");
                     return;
@@ -446,6 +429,15 @@ var codeBase;
             }
             //super.addChild(child);
             s.onInvalidatePosition();
+        };
+        BasicGroup.prototype.addEventListener = function (type, listener, thisObject, useCapture, priority) {
+            return _super.prototype.$addListener.call(this, type, listener, thisObject, useCapture, priority);
+        };
+        BasicGroup.prototype.removeEventListener = function (type, listener, thisObject, useCapture) {
+            return _super.prototype.removeEventListener.call(this, type, listener, thisObject, useCapture);
+        };
+        BasicGroup.prototype.dispatchEventWith = function (type, bubbles, data, cancelable) {
+            return _super.prototype.dispatchEventWith.call(this, type, bubbles, data, cancelable);
         };
         Object.defineProperty(BasicGroup.prototype, "data", {
             /**
@@ -503,11 +495,11 @@ var codeBase;
         });
         /**
          * 返回全局x,y值
-         * @returns {egret.Point}
+         * @returns {Point}
          */
         BasicGroup.prototype.getGlobalXY = function () {
             var s = this;
-            var point = new egret.Point(s.anchorOffsetX, s.anchorOffsetY);
+            var point = new codeBase.Point(s.anchorOffsetX, s.anchorOffsetY);
             this.localToGlobal(point.x, point.y, point);
             return point;
         };
@@ -541,7 +533,7 @@ var codeBase;
             var s = this;
             if (!s._hasInvalidate && !s._drawDelay) {
                 //console.log("add invalidate draw")
-                s.addEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+                s.addEventListener(codeBase.BasicUIEvent.ENTER_FRAME, s.onInvalidate, s);
                 s._hasInvalidate = true;
             }
         };
@@ -552,7 +544,7 @@ var codeBase;
         BasicGroup.prototype.onInvalidate = function (event) {
             var s = this;
             s.draw();
-            s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+            s.removeEventListener(codeBase.BasicUIEvent.ENTER_FRAME, s.onInvalidate, s);
             s._hasInvalidate = false;
         };
         BasicGroup.prototype.draw = function () {
@@ -571,7 +563,7 @@ var codeBase;
                 var s = this;
                 s._drawDelay = delay;
                 if (s._drawDelay) {
-                    s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+                    s.removeEventListener(codeBase.BasicUIEvent.ENTER_FRAME, s.onInvalidate, s);
                     s._hasInvalidate = false;
                 }
                 else {
@@ -668,7 +660,7 @@ var codeBase;
             s.removeChildAll(true);
         };
         return BasicGroup;
-    }(egret.DisplayObjectContainer));
+    }(codeBase.Sprite));
     codeBase.BasicGroup = BasicGroup;
     __reflect(BasicGroup.prototype, "codeBase.BasicGroup");
 })(codeBase || (codeBase = {}));

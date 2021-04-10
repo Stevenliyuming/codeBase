@@ -14,9 +14,6 @@ var codeBase;
         __extends(List, _super);
         function List() {
             var _this = _super.call(this) || this;
-            /**
-             * 消息和方法的映射关系表
-             */
             _this.METHOD_DEF = {};
             _this._itemRenderer = codeBase.DefaultRenderer;
             _this._itemContainer = null;
@@ -61,12 +58,12 @@ var codeBase;
             this._itemContainer.touchEnabled = true;
             // this._itemContainer.setSize(this.width, this.height);
             this.addChild(this._itemContainer);
-            this._itemContainer.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMoveEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchReleaseOutsideEvent, this);
-            this._dragBeginPoint = new egret.Point();
+            this._itemContainer.scrollRect = new codeBase.Rectangle(0, 0, this.width, this.height);
+            this.addEventListener(codeBase.BasicUIEvent.TOUCH_BEGIN, this.onTouchBeginEvent, this);
+            this.addEventListener(codeBase.BasicUIEvent.TOUCH_MOVE, this.onTouchMoveEvent, this);
+            this.addEventListener(codeBase.BasicUIEvent.TOUCH_END, this.onTouchEndEvent, this);
+            this.addEventListener(codeBase.BasicUIEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchReleaseOutsideEvent, this);
+            this._dragBeginPoint = new codeBase.Point();
             this.touchNonePixel = true;
         };
         /**

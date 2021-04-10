@@ -10,10 +10,14 @@ module codeBase {
 	export class Point extends egret.Point { };
 	export class Rectangle extends egret.Rectangle { };
 	export class Bitmap extends egret.Bitmap { };
+	export class Texture extends egret.Texture { };
+	export class RenderTexture extends egret.RenderTexture { };
 	export class BitmapData extends egret.BitmapData { };
 	export class Stage extends egret.Stage { };
 	export class Tween extends egret.Tween { };
 	export class Ease extends egret.Ease { };
+	export class Event extends egret.Event { };
+	export class TouchEvent extends egret.TouchEvent { };
 
 	export interface ILayout {
 		layout(type: string, interval: number): void;
@@ -30,7 +34,7 @@ module codeBase {
 	export class SimpleLayout {
 		/**参数：数组,X轴个数,X轴距离,Y轴距离,X轴位置,Y轴位置,正排/反排 */
 		public static displayRank(array: any[], xNum: number = 1, xDis: number = 0, yDis: number = 0, x: number = 0, y: number = 0, sign: number = 1): void {
-			var display: egret.DisplayObject;
+			var display: DisplayObject;
 			for (var i: number = 0; i < array.length; i++) {
 				display = array[i];
 				display.x = x + Math.floor(i % xNum) * (display.width + xDis) * sign;

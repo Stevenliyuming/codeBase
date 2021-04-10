@@ -1,10 +1,10 @@
 module codeBase {
 	export class RadioButton extends CheckBox {
-		public static RadioButton_PREFIX: string = "ui#radioButton#";//RadioButton事件的前缀,尽量避免受到其他事件名称的混淆
-		//private _radioButtonGroup: string = null;//RadioButton分组名称
+		//public static RadioButton_PREFIX: string = "ui#radioButton#";//RadioButton事件的前缀,避免受到其他事件名称的混淆
+		protected UI_PREFIX: string = "ui#radioButton#";
 		protected _groupName: string;
-		// protected static normalTexture: egret.Texture;
-		// protected static checkTexture: egret.Texture;
+		private static radio_normalTexture: Texture;
+		private static radio_checkTexture: Texture;
 		public constructor() {
 			super();
 		}
@@ -17,20 +17,20 @@ module codeBase {
 			let s = this;
 			s.stateArray = [Button.STATUS_NORMAL, Button.STATUS_CHECKED];
 			//初始化默认的皮肤
-			if (!RadioButton.normalTexture) {
+			if (!RadioButton.radio_normalTexture) {
 				let normalSpr: DisplayObject = UISkin.radioOff;
-				let normalRenderTex = new egret.RenderTexture;
+				let normalRenderTex = new RenderTexture;
 				normalRenderTex.drawToTexture(normalSpr);
-				RadioButton.normalTexture = <egret.Texture>normalRenderTex;
+				RadioButton.radio_normalTexture = <Texture>normalRenderTex;
 
 				let checkSpr: DisplayObject = UISkin.radioOn;
-				let checkRenderTex = new egret.RenderTexture;
+				let checkRenderTex = new RenderTexture;
 				checkRenderTex.drawToTexture(checkSpr);
-				RadioButton.checkTexture = <egret.Texture>checkRenderTex;
+				RadioButton.radio_checkTexture = <Texture>checkRenderTex;
 			}
 		}
 
-		public onTouchEvent(event: egret.TouchEvent): void {
+		public onTouchEvent(event: TouchEvent): void {
 			let s = this;
 			if (!s.enabled || s.currentState == Button.STATUS_DISABLE) {
 				event.stopImmediatePropagation();
@@ -43,11 +43,11 @@ module codeBase {
 					event.stopImmediatePropagation();
 					return;
 				}
-				if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
+				if (event.type == BasicUIEvent.TOUCH_BEGIN) {
 					s.alpha = 0.8;
 					s.touchId = event.touchPointID;
 				}
-				else if (event.type == egret.TouchEvent.TOUCH_END) {
+				else if (event.type == BasicUIEvent.TOUCH_END) {
 					s.alpha = 1;
 					if (s.touchId == -1) return;
 					s.touchId = -1;
@@ -62,7 +62,7 @@ module codeBase {
 
 		protected initDisplay() {
 			let s = this;
-			s.setSkins([RadioButton.normalTexture, RadioButton.checkTexture]);
+			s.setSkins([RadioButton.radio_normalTexture, RadioButton.radio_checkTexture]);
 		}
 
 		public set selected(value: boolean) {
@@ -71,10 +71,10 @@ module codeBase {
 			s._currentState = (s._selected ? Button.STATUS_CHECKED : Button.STATUS_NORMAL);
 			//if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
 			if (s._selected && StringUtil.isUsage(s._groupName)) {
-				var myevent: MyEvent = MyEvent.getEvent(RadioButton.RadioButton_PREFIX + s._groupName);
+				var myevent: MyEvent = MyEvent.getEvent(s.UI_PREFIX + s._groupName);
 				myevent.addItem("caller", s);
 				myevent.addItem("groupName", s._groupName);
-				myevent.send();
+				myevent.send();//向内部单选按钮组发送事件
 			}
 			s.invalidate();
 		}
@@ -85,11 +85,11 @@ module codeBase {
 		public set groupName(value: string) {
 			let s = this;
 			if (StringUtil.isUsage(s._groupName)) {//旧的group
-				EventManager.removeEventListener(RadioButton.RadioButton_PREFIX + s._groupName, s.onEventToggle, s);
+				EventManager.removeEventListener(s.UI_PREFIX + s._groupName, s.onEventToggle, s);
 			}
 			s._groupName = value;//新的group
 			if (StringUtil.isUsage(s._groupName)) {
-				EventManager.addEventListener(RadioButton.RadioButton_PREFIX + s._groupName, s.onEventToggle, s);
+				EventManager.addEventListener(s.UI_PREFIX + s._groupName, s.onEventToggle, s);//添加单选按钮组内部事件监听
 			}
 		}
 		public get groupName(): string {
@@ -99,17 +99,15 @@ module codeBase {
 		private onEventToggle(event: MyEvent): void {
 			let s = this;
 			if (StringUtil.isUsage(s._groupName) && event.getItem("groupName") == s._groupName) {
-				s.dispatchEventWith(BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState });
 				//console.log("0000 onEventToggle group=" + this._toggleGroup + ", data=" + this._data.id);
 				if (event.getItem("caller") != s) {
 					s.selected = false;
-					//this._currentState = Button.STATE_UP;
-					s.invalidate();
 				} else {
 					if (s.clickFun && s.clickFunObj) {
 						s.clickFun.call(s.clickFunObj, event);
 					}
 				}
+				s.dispatchEventWith(BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState });//向外部监听发送事件
 			}
 		}
 
@@ -117,10 +115,10 @@ module codeBase {
 		 * 设置按钮可用状态皮肤
 		 * <p>[STATE_NORMAL, STATE_CHECK]</p>
 		 */
-		public setSkins(skins: egret.Texture[]) {
+		public setSkins(skins: Texture[]) {
 			let s = this;
 			if (!skins || skins.length < 1 || skins.length > 2) {
-				console.warn("CHECKBOX皮肤数量不能小于1或者大于2");
+				console.warn("RadioButton皮肤数量不能小于1或者大于2");
 				return;
 			}
 			//初始化按钮状态皮肤

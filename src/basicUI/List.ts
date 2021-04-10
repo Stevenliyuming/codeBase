@@ -1,8 +1,5 @@
 module codeBase{
     export class List extends Group {
-        /**
-         * 消息和方法的映射关系表
-         */
         private METHOD_DEF: Object = {};
         public static ITEM_SELECTED:string = "ITEM_SELECTED";
         private _itemRenderer: any = DefaultRenderer;
@@ -26,7 +23,7 @@ module codeBase{
         private _isDragBegin: boolean = false;//点击开始
         private _isMoveBegin: boolean = false;//滑动开始
         private _moveCount: number = 0;//移动的通知次数
-        private _dragBeginPoint: egret.Point = null;
+        private _dragBeginPoint: Point = null;
         private _dragLastTime: number = 0;
         private bounceBack:boolean = false;//列表项回弹
 
@@ -57,12 +54,12 @@ module codeBase{
             this._itemContainer.touchEnabled = true;
            // this._itemContainer.setSize(this.width, this.height);
             this.addChild(this._itemContainer);
-            this._itemContainer.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMoveEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndEvent, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchReleaseOutsideEvent, this)
-            this._dragBeginPoint = new egret.Point();
+            this._itemContainer.scrollRect = new Rectangle(0, 0, this.width, this.height);
+            this.addEventListener(BasicUIEvent.TOUCH_BEGIN, this.onTouchBeginEvent, this);
+            this.addEventListener(BasicUIEvent.TOUCH_MOVE, this.onTouchMoveEvent, this);
+            this.addEventListener(BasicUIEvent.TOUCH_END, this.onTouchEndEvent, this);
+            this.addEventListener(BasicUIEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchReleaseOutsideEvent, this)
+            this._dragBeginPoint = new Point();
             this.touchNonePixel = true;
         }
 
@@ -84,7 +81,7 @@ module codeBase{
          * @param event
          */
         public receiveEvent(event: MyEvent): void {
-            var sp: egret.DisplayObject = null;
+            var sp: DisplayObject = null;
             for (var i: number = 0; i < this._itemContainer.numChildren; i++) {
                 sp = this._itemContainer.getChildAt(i);
                 if (sp["refresh"]) {
@@ -97,7 +94,7 @@ module codeBase{
          * 点击开始
          * @param event
          */
-        public onTouchBeginEvent(event: egret.TouchEvent): void {
+        public onTouchBeginEvent(event: TouchEvent): void {
             if (!this._itemDatas || this._itemDatas.length == 0) return;
             this._isDragBegin = true;
             this._isMoveBegin = false;
@@ -114,7 +111,7 @@ module codeBase{
          * 点击移动
          * @param event
          */
-        public onTouchMoveEvent(event: egret.TouchEvent): void {
+        public onTouchMoveEvent(event: TouchEvent): void {
             //if (!this._isDragBegin || !this._itemDatas || this._itemDatas.length == 0) return;
             if (!this._itemDatas || this._itemDatas.length == 0 || this.bounceBack) return;
             //console.log("onTouchMoveEvent x=" + event.stageX + ", y=" + event.stageY)
@@ -142,7 +139,7 @@ module codeBase{
             this._dragLastTime = egret.getTimer();
         }
 
-        public onTouchReleaseOutsideEvent(event: egret.TouchEvent): void {
+        public onTouchReleaseOutsideEvent(event: TouchEvent): void {
             //this._isDragBegin = false;
             //this._isMoveBegin = false;
             //if (!this._fixed)this.checkUIFreeback();
@@ -154,14 +151,14 @@ module codeBase{
          * 点击结束
          * @param event
          */
-        public onTouchEndEvent(event: egret.TouchEvent): void {
+        public onTouchEndEvent(event: TouchEvent): void {
             let s = this;
             console.log("onTouchEndEvent this._dataIndexBegin=" + s._dataIndexBegin + ", this._dataIndexEnd=" + s._dataIndexEnd);
             //单击处理
             if (s._isDragBegin && (!s._isMoveBegin || (s._moveCount < 4 && Math.abs(event.stageX - s._dragBeginPoint.x) < 5 && Math.abs(event.stageY - s._dragBeginPoint.y) < 5))) {
                 //console.log("onTouchEndEvent tap!!");
-                var sp: egret.DisplayObject = null;
-                var spPoint: egret.Point = s._itemContainer.globalToLocal(event.stageX, event.stageY);
+                var sp: DisplayObject = null;
+                var spPoint: Point = s._itemContainer.globalToLocal(event.stageX, event.stageY);
                 for (var i: number = 0; i < s._itemContainer.numChildren; i++) {
                     sp = s._itemContainer.getChildAt(i);
                     //spPoint = sp.localToGlobal(0, 0);
@@ -280,7 +277,7 @@ module codeBase{
          * 移出render显示
          * @param render
          */
-        private removeRender(render: egret.DisplayObject): void {
+        private removeRender(render: DisplayObject): void {
             if (!render) return;
             for (var key in this._dataIndexToRender) {
                 if (this._dataIndexToRender[key] === render) {
@@ -305,10 +302,10 @@ module codeBase{
          */
         private moveItemUIPosition(xv: number, yv: number): void {
             //console.log("moveItemUIPosition this._dataIndexBegin=" + this._dataIndexBegin + ", this._dataIndexEnd=" + this._dataIndexEnd + ", x=" + xv + ", y=" + yv)
-            var itemRenderer: egret.DisplayObject = null;
+            var itemRenderer: DisplayObject = null;
             var addNum: number = 0;
             for (var i: number = this._itemContainer.numChildren - 1; i >= 0; i--) {
-                itemRenderer = <egret.DisplayObject>this._itemContainer.getChildAt(i);
+                itemRenderer = <DisplayObject>this._itemContainer.getChildAt(i);
                 if (this._direction == Style.VERTICAL) {//yv值
                     if (!this._fixed) itemRenderer.y += yv;
                     //补充一个
@@ -486,7 +483,7 @@ module codeBase{
                 this._dataIndexToRender = {};
                 this.setItemContainerSize();
                 //清空显示
-                var displayItemUI: egret.DisplayObject = null;
+                var displayItemUI: DisplayObject = null;
                 while (this._itemContainer.numChildren > 0) {
                     displayItemUI = this._itemContainer.removeChildAt(0);
                     if (displayItemUI instanceof this._itemRenderer) {
@@ -569,7 +566,7 @@ module codeBase{
          */
         public set selected(item: any) {
             //console.log("selectedItem item=" + item)
-            var sp: egret.DisplayObject = null;
+            var sp: DisplayObject = null;
             this._selected = item;
             for (var i: number = 0; i < this._itemContainer.numChildren; i++) {
                 sp = this._itemContainer.getChildAt(i);

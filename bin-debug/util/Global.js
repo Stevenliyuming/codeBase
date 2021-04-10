@@ -159,6 +159,19 @@ var codeBase;
         return window.location.href;
     }
     codeBase.getCurUrl = getCurUrl;
+    //判断一个对象是否是某一个类型
+    function is(instance, typeName) {
+        if (!instance || typeof instance != "object") {
+            return false;
+        }
+        var prototype = Object.getPrototypeOf(instance);
+        var types = prototype ? prototype.__types__ : null;
+        if (!types) {
+            return false;
+        }
+        return (types.indexOf(typeName) !== -1);
+    }
+    codeBase.is = is;
     //当前游戏角度
     codeBase.curAngle = Number(window["orientation"]);
 })(codeBase || (codeBase = {}));

@@ -1,7 +1,7 @@
 module codeBase {
 	export class Label extends Group {
 		private _text: string = "";//文本内容
-		public _textField: egret.TextField = null;
+		public _textField: TextField = null;
 		private _initFlow: Array<egret.ITextElement> = null;
 		private _htmlTextParser: egret.HtmlTextParser = null;
 
@@ -28,8 +28,8 @@ module codeBase {
 		public constructor() {
 			super();
 			//if (!this._autoSize) this.setSize(Style.TEXTINPUT_WIDTH, Style.TEXTINPUT_HEIGHT);
-			this._textField = new egret.TextField();
-			this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
+			this._textField = new TextField();
+			this._textField.addEventListener(BasicUIEvent.CHANGE, this.onTextChange, this);
 			this.addChild(this._textField);
 			this.clip = false;
 		}
@@ -85,7 +85,7 @@ module codeBase {
         /**
          * 文本内容显示对象
          */
-		public getTextField(): egret.TextField {
+		public getTextField(): TextField {
 			return this._textField;
 		}
 

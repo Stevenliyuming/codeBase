@@ -46,7 +46,7 @@ module codeBase {
          * @param textures
          * @param speed
          */
-        public setScrollData(textures: Array<egret.Texture>, speed: number = 3, direction: string = ScrollGroup.SCROLL_DOWN, gap: number = 0): void {
+        public setScrollData(textures: Array<Texture>, speed: number = 3, direction: string = ScrollGroup.SCROLL_DOWN, gap: number = 0): void {
             var item: ScrollItemGroup = ObjectPool.getByClass(ScrollItemGroup);
             this.addChild(item);
             this._scrollItemArr.push(item);
@@ -185,7 +185,7 @@ module codeBase {
             if (this.width == 0 || this.height == 0) return;
             if (this._clip) {//剪裁
                 if (this.scrollRect == null) {
-                    this.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
+                    this.scrollRect = new Rectangle(0, 0, this.width, this.height);
                 } else {
                     this.scrollRect.width = this.width;
                     this.scrollRect.height = this.height;
@@ -251,10 +251,10 @@ module codeBase {
         public speed: number = 0;//帧速度
         public gap: number = 0;//间隔
         public direction: string = ScrollGroup.SCROLL_DOWN;//卷轴的方向
-        private _textures: Array<egret.Texture> = null;//卷轴的背景材料
+        private _textures: Array<Texture> = null;//卷轴的背景材料
 
         private _scrollTextureIndex: number = 0;///卷轴的下标
-        private _scrollBitmapArr: Array<egret.Bitmap> = null;//卷轴图像
+        private _scrollBitmapArr: Array<Image> = null;//卷轴图像
 
         public _state: String = ScrollGroup.STATE_STOP;
         public _initData: boolean = false;//初始化数据
@@ -288,7 +288,7 @@ module codeBase {
          * @param speed
          */
         private _textureIndex: number = 0;
-        public setScrollData(textures: Array<egret.Texture>, speed: number = 3, direction: string, gap = 0): void {
+        public setScrollData(textures: Array<Texture>, speed: number = 3, direction: string, gap = 0): void {
             this._initData = false;
             this.gap = gap;
             this.direction = direction;
@@ -299,7 +299,7 @@ module codeBase {
             this.speed = speed;
             var textureLength: number = this._textures.length;
             if (this._scrollBitmapArr && this._scrollBitmapArr.length > 0) {
-                var image: egret.Bitmap = null;
+                var image: Image = null;
                 while (this._scrollBitmapArr.length > 0) {
                     image = this._scrollBitmapArr.pop();
                     if (image.parent) image.parent.removeChild(image);
@@ -330,7 +330,7 @@ module codeBase {
             }
             //console.log("totalNum = " + this._totalBitmapLength);
             for (var i: number = 0; i < this._totalBitmapLength; i++) {
-                var bitmap: egret.Bitmap = ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                var bitmap: Image = ObjectPool.getByClass(Image, "scroll_group");
                 this._scrollBitmapArr.push(bitmap);
             }
             for (var j: number = 0; j < this._scrollBitmapArr.length; j++) {
@@ -391,10 +391,10 @@ module codeBase {
 
         /**
          * 获取当前卷轴材质
-         * @returns {egret.Texture}
+         * @returns {Texture}
          */
-        private getTexture(img: egret.Bitmap): egret.Texture {
-            var texture: egret.Texture = this._textures[this._scrollTextureIndex];
+        private getTexture(img: Image): Texture {
+            var texture: Texture = this._textures[this._scrollTextureIndex];
             this._scrollTextureIndex++;
             if (this._scrollTextureIndex >= this._textures.length) {
                 this._scrollTextureIndex = 0;
@@ -421,7 +421,7 @@ module codeBase {
                 }
                 //补充显示项
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y <= (this.height - this._scrollBitmapArr[this._scrollBitmapArr.length - 1].texture.textureHeight - this.speed)) {
-                    var image: egret.Bitmap = ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image: Image = ObjectPool.getByClass(Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.x = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x;
@@ -430,7 +430,7 @@ module codeBase {
                 }
 
                 if (this._scrollBitmapArr[0].y + this._scrollBitmapArr[0].texture.textureHeight <= 0) {//已经移出界
-                    var image: egret.Bitmap = this._scrollBitmapArr.splice(0, 1)[0];
+                    var image: Image = this._scrollBitmapArr.splice(0, 1)[0];
                     if (image.parent) image.parent.removeChild(image);
                     ObjectPool.recycleClass(image, "scroll_group");
                 }
@@ -439,7 +439,7 @@ module codeBase {
                     this._scrollBitmapArr[i].y += this.speed;
                 }
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y >= -this.speed) {
-                    var image: egret.Bitmap = ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image: Image = ObjectPool.getByClass(Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.x = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x;
@@ -447,7 +447,7 @@ module codeBase {
                     this._scrollBitmapArr.push(image);
                 }
                 if (this._scrollBitmapArr[0].y >= this.height) {//已经移出界
-                    var image: egret.Bitmap = this._scrollBitmapArr.splice(0, 1)[0];
+                    var image: Image = this._scrollBitmapArr.splice(0, 1)[0];
                     if (image.parent) image.parent.removeChild(image);
                     ObjectPool.recycleClass(image, "scroll_group");
                 }
@@ -456,7 +456,7 @@ module codeBase {
                     this._scrollBitmapArr[i].x -= this.speed;
                 }
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x <= (this.width - this._scrollBitmapArr[this._scrollBitmapArr.length - 1].texture.textureWidth - this.speed)) {
-                    var image: egret.Bitmap = ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image: Image = ObjectPool.getByClass(Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.y = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y;
@@ -465,7 +465,7 @@ module codeBase {
                 }
 
                 if (this._scrollBitmapArr[0].x + this._scrollBitmapArr[0].texture.textureWidth <= 0) {//已经移出界
-                    var image: egret.Bitmap = this._scrollBitmapArr.splice(0, 1)[0];
+                    var image: Image = this._scrollBitmapArr.splice(0, 1)[0];
                     if (image.parent) image.parent.removeChild(image);
                     ObjectPool.recycleClass(image, "scroll_group");
                 }
@@ -474,7 +474,7 @@ module codeBase {
                     this._scrollBitmapArr[i].x += this.speed;
                 }
                 if (this._scrollBitmapArr[this._scrollBitmapArr.length - 1].x >= - this.speed) {
-                    var image: egret.Bitmap = ObjectPool.getByClass(egret.Bitmap, "scroll_group");
+                    var image: Image = ObjectPool.getByClass(Image, "scroll_group");
                     this.addChild(image);
                     this.getTexture(image);
                     image.y = this._scrollBitmapArr[this._scrollBitmapArr.length - 1].y;
@@ -482,7 +482,7 @@ module codeBase {
                     this._scrollBitmapArr.push(image);
                 }
                 if (this._scrollBitmapArr[0].x >= this.width) {//已经移出界
-                    var image: egret.Bitmap = this._scrollBitmapArr.splice(0, 1)[0];
+                    var image: Image = this._scrollBitmapArr.splice(0, 1)[0];
                     if (image.parent) image.parent.removeChild(image);
                     ObjectPool.recycleClass(image, "scroll_group");
                 }
@@ -496,7 +496,7 @@ module codeBase {
             if (this.width == 0 || this.height == 0) return;
             if (this._clip) {//剪裁
                 if (this.scrollRect == null) {
-                    this.scrollRect = new egret.Rectangle(0, 0, this.width, this.height);
+                    this.scrollRect = new Rectangle(0, 0, this.width, this.height);
                 } else {
                     this.scrollRect.width = this.width;
                     this.scrollRect.height = this.height;

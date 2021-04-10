@@ -1,4 +1,4 @@
-module codeBase{
+module codeBase {
 	export namespace ResourceItem {
 		/**
 		 * EXML file.
@@ -376,6 +376,7 @@ module codeBase{
 				//读取文件路径
 				resBuffer.endian = egret.Endian.BIG_ENDIAN;
 				let fileLocalPath: string = resBuffer.readUTFBytes(pathLength);
+				fileLocalPath = fileLocalPath.split("\\").join("/");
 				console.log(fileLocalPath);
 
 				//读取文件内容
@@ -672,20 +673,20 @@ module codeBase{
 			let s = this;
 		}
 
-		public getResGroup(key:string):ResourceItem.ResObject[] {
+		public getResGroup(key: string): ResourceItem.ResObject[] {
 			let s = this;
-			let resGroup:ResourceItem.ResObject[] = [];
-			if(key == null) {
+			let resGroup: ResourceItem.ResObject[] = [];
+			if (key == null) {
 				console.log("key为空");
 				return resGroup;
 			};
-            let ind;
-            for (let key2 in s.resDict) {
-                ind = key2.indexOf(key);
-                if (ind > -1) {
-                    resGroup.push(s.resDict[key2]);
-                }
-            }
+			let ind;
+			for (let key2 in s.resDict) {
+				ind = key2.indexOf(key);
+				if (ind > -1) {
+					resGroup.push(s.resDict[key2]);
+				}
+			}
 			return resGroup;
 		}
 

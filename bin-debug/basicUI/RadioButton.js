@@ -12,10 +12,11 @@ var codeBase;
 (function (codeBase) {
     var RadioButton = (function (_super) {
         __extends(RadioButton, _super);
-        // protected static normalTexture: egret.Texture;
-        // protected static checkTexture: egret.Texture;
         function RadioButton() {
-            return _super.call(this) || this;
+            var _this = _super.call(this) || this;
+            //public static RadioButton_PREFIX: string = "ui#radioButton#";//RadioButton事件的前缀,避免受到其他事件名称的混淆
+            _this.UI_PREFIX = "ui#radioButton#";
+            return _this;
         }
         RadioButton.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
@@ -24,15 +25,15 @@ var codeBase;
             var s = this;
             s.stateArray = [codeBase.Button.STATUS_NORMAL, codeBase.Button.STATUS_CHECKED];
             //初始化默认的皮肤
-            if (!RadioButton.normalTexture) {
+            if (!RadioButton.radio_normalTexture) {
                 var normalSpr = codeBase.UISkin.radioOff;
-                var normalRenderTex = new egret.RenderTexture;
+                var normalRenderTex = new codeBase.RenderTexture;
                 normalRenderTex.drawToTexture(normalSpr);
-                RadioButton.normalTexture = normalRenderTex;
+                RadioButton.radio_normalTexture = normalRenderTex;
                 var checkSpr = codeBase.UISkin.radioOn;
-                var checkRenderTex = new egret.RenderTexture;
+                var checkRenderTex = new codeBase.RenderTexture;
                 checkRenderTex.drawToTexture(checkSpr);
-                RadioButton.checkTexture = checkRenderTex;
+                RadioButton.radio_checkTexture = checkRenderTex;
             }
         };
         RadioButton.prototype.onTouchEvent = function (event) {
@@ -48,11 +49,11 @@ var codeBase;
                     event.stopImmediatePropagation();
                     return;
                 }
-                if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
+                if (event.type == codeBase.BasicUIEvent.TOUCH_BEGIN) {
                     s.alpha = 0.8;
                     s.touchId = event.touchPointID;
                 }
-                else if (event.type == egret.TouchEvent.TOUCH_END) {
+                else if (event.type == codeBase.BasicUIEvent.TOUCH_END) {
                     s.alpha = 1;
                     if (s.touchId == -1)
                         return;
@@ -68,7 +69,7 @@ var codeBase;
         };
         RadioButton.prototype.initDisplay = function () {
             var s = this;
-            s.setSkins([RadioButton.normalTexture, RadioButton.checkTexture]);
+            s.setSkins([RadioButton.radio_normalTexture, RadioButton.radio_checkTexture]);
         };
         Object.defineProperty(RadioButton.prototype, "selected", {
             get: function () {
@@ -80,10 +81,10 @@ var codeBase;
                 s._currentState = (s._selected ? codeBase.Button.STATUS_CHECKED : codeBase.Button.STATUS_NORMAL);
                 //if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
                 if (s._selected && codeBase.StringUtil.isUsage(s._groupName)) {
-                    var myevent = codeBase.MyEvent.getEvent(RadioButton.RadioButton_PREFIX + s._groupName);
+                    var myevent = codeBase.MyEvent.getEvent(s.UI_PREFIX + s._groupName);
                     myevent.addItem("caller", s);
                     myevent.addItem("groupName", s._groupName);
-                    myevent.send();
+                    myevent.send(); //向内部单选按钮组发送事件
                 }
                 s.invalidate();
             },
@@ -97,11 +98,11 @@ var codeBase;
             set: function (value) {
                 var s = this;
                 if (codeBase.StringUtil.isUsage(s._groupName)) {
-                    codeBase.EventManager.removeEventListener(RadioButton.RadioButton_PREFIX + s._groupName, s.onEventToggle, s);
+                    codeBase.EventManager.removeEventListener(s.UI_PREFIX + s._groupName, s.onEventToggle, s);
                 }
                 s._groupName = value; //新的group
                 if (codeBase.StringUtil.isUsage(s._groupName)) {
-                    codeBase.EventManager.addEventListener(RadioButton.RadioButton_PREFIX + s._groupName, s.onEventToggle, s);
+                    codeBase.EventManager.addEventListener(s.UI_PREFIX + s._groupName, s.onEventToggle, s); //添加单选按钮组内部事件监听
                 }
             },
             enumerable: true,
@@ -110,18 +111,16 @@ var codeBase;
         RadioButton.prototype.onEventToggle = function (event) {
             var s = this;
             if (codeBase.StringUtil.isUsage(s._groupName) && event.getItem("groupName") == s._groupName) {
-                s.dispatchEventWith(codeBase.BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState });
                 //console.log("0000 onEventToggle group=" + this._toggleGroup + ", data=" + this._data.id);
                 if (event.getItem("caller") != s) {
                     s.selected = false;
-                    //this._currentState = Button.STATE_UP;
-                    s.invalidate();
                 }
                 else {
                     if (s.clickFun && s.clickFunObj) {
                         s.clickFun.call(s.clickFunObj, event);
                     }
                 }
+                s.dispatchEventWith(codeBase.BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState }); //向外部监听发送事件
             }
         };
         /**
@@ -131,7 +130,7 @@ var codeBase;
         RadioButton.prototype.setSkins = function (skins) {
             var s = this;
             if (!skins || skins.length < 1 || skins.length > 2) {
-                console.warn("CHECKBOX皮肤数量不能小于1或者大于2");
+                console.warn("RadioButton皮肤数量不能小于1或者大于2");
                 return;
             }
             //初始化按钮状态皮肤
@@ -150,7 +149,6 @@ var codeBase;
                 s.setSize(skins[0].textureWidth, skins[0].textureHeight);
             s.invalidate();
         };
-        RadioButton.RadioButton_PREFIX = "ui#radioButton#"; //RadioButton事件的前缀,尽量避免受到其他事件名称的混淆
         return RadioButton;
     }(codeBase.CheckBox));
     codeBase.RadioButton = RadioButton;

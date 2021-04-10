@@ -24,7 +24,7 @@ var codeBase;
             s.touchEnabled = true; //事件接收
             s.touchChildren = false;
             //box显示
-            s._imgDisplay = new egret.Bitmap;
+            s._imgDisplay = new codeBase.Image;
             s.addChild(s._imgDisplay);
             // s._imgDisplay.width = s.width;
             // s._imgDisplay.height = s.height;
@@ -41,11 +41,11 @@ var codeBase;
             s._label.vAlign = egret.VerticalAlign.MIDDLE;
             s._label.showBg = false;
             s.addChild(s._label);
-            s.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouchEvent, s, true);
-            //this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchEvent, this);
-            s.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouchEvent, s, true);
-            s.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s, true);
-            s.addEventListener(egret.TouchEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s, true);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_BEGIN, s.onTouchEvent, s, true);
+            //s.addEventListener(BasicUIEvent.TOUCH_MOVE, s.onTouchEvent, s);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_END, s.onTouchEvent, s, true);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s, true);
+            s.addEventListener(codeBase.BasicUIEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s, true);
         };
         CheckBox.prototype.initData = function () {
             var s = this;
@@ -53,15 +53,15 @@ var codeBase;
             //初始化默认的皮肤
             if (!CheckBox.normalTexture) {
                 var normalSpr = codeBase.UISkin.checkBoxOff;
-                var normalRenderTex = new egret.RenderTexture;
+                var normalRenderTex = new codeBase.RenderTexture;
                 normalRenderTex.drawToTexture(normalSpr);
                 CheckBox.normalTexture = normalRenderTex;
                 var checkSpr = codeBase.UISkin.checkBoxOn;
-                var checkRenderTex = new egret.RenderTexture;
+                var checkRenderTex = new codeBase.RenderTexture;
                 checkRenderTex.drawToTexture(checkSpr);
                 CheckBox.checkTexture = checkRenderTex;
-                var disableSpr = codeBase.UISkin.checkBoxDisabel;
-                var disableRenderTex = new egret.RenderTexture;
+                var disableSpr = codeBase.UISkin.checkBoxDisable;
+                var disableRenderTex = new codeBase.RenderTexture;
                 disableRenderTex.drawToTexture(disableSpr);
                 CheckBox.disableTexture = disableRenderTex;
             }
@@ -79,11 +79,11 @@ var codeBase;
                     event.stopImmediatePropagation();
                     return;
                 }
-                if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
+                if (event.type == codeBase.BasicUIEvent.TOUCH_BEGIN) {
                     s.alpha = 0.8;
                     s.touchId = event.touchPointID;
                 }
-                else if (event.type == egret.TouchEvent.TOUCH_END) {
+                else if (event.type == codeBase.BasicUIEvent.TOUCH_END) {
                     if (s.touchId == -1)
                         return;
                     s.touchId = -1;
@@ -112,11 +112,7 @@ var codeBase;
                 var s = this;
                 s._selected = value;
                 s._currentState = (s._selected ? codeBase.Button.STATUS_CHECKED : codeBase.Button.STATUS_NORMAL);
-                s.dispatchEventWith(codeBase.BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState });
-                //if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
-                // var myevent: MyEvent = MyEvent.getEvent(BasicUIEvent.CHANGE);
-                // myevent.addItem("caller", s);
-                // myevent.send();
+                s.dispatchEventWith(codeBase.BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState }); //发送外部事件监听
                 if (s.clickFun && s.clickFunObj) {
                     s.clickFun.call(s.clickFunObj, event);
                 }

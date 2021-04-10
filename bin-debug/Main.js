@@ -79,8 +79,9 @@ var Main = (function (_super) {
         // console.log(userInfo);
     };
     Main.prototype.loadRes = function () {
+        var _this = this;
         this.loadResource();
-        this.createGameScene();
+        //this.createGameScene();
         // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", ()=>{
         //     codeBase.ResManager.loadGroups(["preload", "res"], ()=>{
         //         this.createGameScene();
@@ -110,7 +111,7 @@ var Main = (function (_super) {
         codeBase.ResLoader.getInstance().resLoad("http://dev4iandcode.oss-cn-shenzhen.aliyuncs.com/s/platform/interactive/common/interactiveTemplate/mainScratch/moduleRelease/test.pkg", null, function (data) {
             console.log(data);
             //codeBase.EgretProto.inject();
-            //this.createGameScene();
+            _this.createGameScene();
         }, this, "get", "arraybuffer");
     };
     Main.prototype.onComplete = function (event) {

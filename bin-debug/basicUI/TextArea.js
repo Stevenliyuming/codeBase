@@ -60,9 +60,9 @@ var codeBase;
         TextArea.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
             //this.setSize(Style.SLIDER_WIDTH, Style.SLIDER_WIDTH);
-            this._textField = new egret.TextField();
+            this._textField = new codeBase.TextField();
             this._textField.multiline = true;
-            this._textField.addEventListener(egret.Event.CHANGE, this.onTextChange, this);
+            this._textField.addEventListener(codeBase.BasicUIEvent.CHANGE, this.onTextChange, this);
             this.addChild(this._textField);
             this.touchChildren = false;
         };
@@ -78,11 +78,11 @@ var codeBase;
                 this.touchNonePixel = true;
                 this.touchEnabled = true;
                 //滚动监听
-                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-                this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-                this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-                this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
-                this.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
+                this.addEventListener(codeBase.BasicUIEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+                this.addEventListener(codeBase.BasicUIEvent.TOUCH_END, this.onTouchEnd, this);
+                this.addEventListener(codeBase.BasicUIEvent.TOUCH_MOVE, this.onTouchMove, this);
+                this.addEventListener(codeBase.BasicUIEvent.TOUCH_CANCEL, this.onTouchCancel, this);
+                this.addEventListener(codeBase.BasicUIEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
                 //console.log("onSetScrollText true");
             }
             else if (!scroll && this.isAddScollListener) {
@@ -90,11 +90,11 @@ var codeBase;
                 this.touchNonePixel = false;
                 this.touchEnabled = false;
                 //滚动监听
-                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-                this.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-                this.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-                this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
-                this.removeEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
+                this.removeEventListener(codeBase.BasicUIEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+                this.removeEventListener(codeBase.BasicUIEvent.TOUCH_END, this.onTouchEnd, this);
+                this.removeEventListener(codeBase.BasicUIEvent.TOUCH_MOVE, this.onTouchMove, this);
+                this.removeEventListener(codeBase.BasicUIEvent.TOUCH_CANCEL, this.onTouchCancel, this);
+                this.removeEventListener(codeBase.BasicUIEvent.TOUCH_RELEASE_OUTSIDE, this.onTouchCancel, this);
                 //console.log("onSetScrollText false");
             }
         };
@@ -103,7 +103,7 @@ var codeBase;
             this._isTouchBegin = true;
             this.moveDelta = 0;
             if (this._touchPoint == null)
-                this._touchPoint = new egret.Point();
+                this._touchPoint = new codeBase.Point();
             this._touchPoint.x = event.stageX;
             this._touchPoint.y = event.stageY;
         };

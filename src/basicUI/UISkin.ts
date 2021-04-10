@@ -18,7 +18,7 @@ module codeBase {
 		/**默认复选框 */
 		public static get checkBoxOff(): Sprite { return UISkin.getCheckBoxRect(UIColor.white, UIColor.white) };
 		public static get checkBoxOn(): Sprite { return UISkin.getCheckBoxRect(UIColor.white, UIColor.black, 1) };
-		public static get checkBoxDisabel(): Sprite { return UISkin.getCheckBoxRect(UIColor.gray, UIColor.white) };
+		public static get checkBoxDisable(): Sprite { return UISkin.getCheckBoxRect(UIColor.gray, UIColor.white) };
 		/**默认开关 */
 		public static get switchOff(): Sprite { return UISkin.getSwitch(UIColor.skinNormal, UIColor.white) };
 		public static get switchOn(): Sprite { return UISkin.getSwitch(UIColor.skinNormal, UIColor.white, 1) };

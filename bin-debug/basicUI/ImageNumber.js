@@ -95,7 +95,7 @@ var codeBase;
                         numberBitmap = s.numberImagePool.pop();
                     }
                     else {
-                        numberBitmap = new egret.Bitmap;
+                        numberBitmap = new codeBase.Image;
                     }
                     tex = s.numberTexture[s.imageAlias + name_1];
                     if (!tex) {

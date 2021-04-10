@@ -88,63 +88,63 @@ module codeBase {
 			// console.log(proto === Object.prototype);
 			// console.log(proto.constructor === Group);
 
-			// let group = new Group;
-			// group.width = 300;
-			// group.height = 200;
-			// group.x = 600;
-			// group.y = 600;
-			// s.group_play.addChild(group);
-			// group.showBg = true;
-			// group.border = true;
+			let group = new Group;
+			group.width = 300;
+			group.height = 200;
+			group.x = 600;
+			group.y = 600;
+			s.group_play.addChild(group);
+			group.showBg = true;
+			group.border = true;
 
-			// let label:Label = new Label;
-			// //label.setSize(800, 50);
-			// label.text = "这是一个具有布局约束的文本";
-			// s.group_play.addChild(label);
-			// label.left = 50;
-			// label.top = 500;
-			// label.showBg = true;
-			// console.log("label.width:" + label.width + "  label.height:" + label.height);
-			// // label.autoSize = false;
-			// // label.paddingLeft = 20;
-			// // label.paddingRight = 20;
-			// egret.setTimeout(()=>{
-			// 	label.text = "一个具有布局约束的文本00000000000";
-			// }, s, 100);
+			let label:Label = new Label;
+			//label.setSize(800, 50);
+			label.text = "这是一个具有布局约束的文本";
+			s.group_play.addChild(label);
+			label.left = 50;
+			label.top = 500;
+			label.showBg = true;
+			console.log("label.width:" + label.width + "  label.height:" + label.height);
+			// label.autoSize = false;
+			// label.paddingLeft = 20;
+			// label.paddingRight = 20;
+			egret.setTimeout(()=>{
+				label.text = "一个具有布局约束的文本00000000000";
+			}, s, 100);
 
-			// let hand = new Image;
-			// hand.texture = RES.getRes("comRes_1_json.hand");
-			// s.group_play.addChild(hand);
-			// hand.left = 0;
-			// hand.top = 300;
-			// console.log("hand.width:" + hand.width + "  hand.height:" + hand.height);
+			let hand = new Image;
+			hand.texture = RES.getRes("comRes_1_json.hand");
+			s.group_play.addChild(hand);
+			hand.left = 0;
+			hand.top = 300;
+			console.log("hand.width:" + hand.width + "  hand.height:" + hand.height);
 
-			// let textInput = new TextInput;
-			// textInput.width = 100;
-			// textInput.height = 60;
-			// s.group_play.addChild(textInput);
-			// textInput.x = 1000;
-			// textInput.y = 650;
-			// textInput.showBg = true;
-			// textInput.paddingLeft = 10;
-			// textInput.paddingTop = 5;
-			// textInput.paddingRight = 10;
-			// textInput.paddingBottom = 5;
-			// textInput.vAlign = egret.VerticalAlign.MIDDLE;
+			let textInput = new TextInput;
+			textInput.width = 100;
+			textInput.height = 60;
+			s.group_play.addChild(textInput);
+			textInput.x = 1000;
+			textInput.y = 650;
+			textInput.showBg = true;
+			textInput.paddingLeft = 10;
+			textInput.paddingTop = 5;
+			textInput.paddingRight = 10;
+			textInput.paddingBottom = 5;
+			textInput.vAlign = egret.VerticalAlign.MIDDLE;
 
-			// let textArea = new TextArea;
-			// textArea.width = 300;
-			// textArea.height = 300;
-			// s.group_play.addChild(textArea);
-			// textArea.x = 50;
-			// textArea.y = 100;
-			// textArea.showBg = true;
-			// textArea.text = "1月1日"
-			// // textArea.editable = true;
-			// // textArea.paddingLeft = 10;
-			// // textArea.paddingTop = 20;
-			// // textArea.paddingRight = 10;
-			// // textArea.paddingBottom = 20;
+			let textArea = new TextArea;
+			textArea.width = 300;
+			textArea.height = 300;
+			s.group_play.addChild(textArea);
+			textArea.x = 50;
+			textArea.y = 100;
+			textArea.showBg = true;
+			textArea.text = "1月1日"
+			// textArea.editable = true;
+			// textArea.paddingLeft = 10;
+			// textArea.paddingTop = 20;
+			// textArea.paddingRight = 10;
+			// textArea.paddingBottom = 20;
 
 			let buttonSkins: any[] = [RES.getRes("A_png"), RES.getRes("A点击_png")];
 
@@ -178,66 +178,67 @@ module codeBase {
 			// s.group_play.addChild(scrollBar);
 			// scrollBar.setMouseWheelEnable(true);
 
-			// let listItemDataArr:any[] = [
-			// 	{
-			// 		res: "A_png"
-			// 	},
-			// 	{
-			// 		res: "A点击_png"
-			// 	},
-			// 	{
-			// 		res: "A_png"
-			// 	},
-			// 	{
-			// 		res: "A点击_png"
-			// 	},
-			// 	{
-			// 		res: "A_png"
-			// 	},				
-			// 	{
-			// 		res: "A点击_png"
-			// 	},				
-			// 	{
-			// 		res: "A_png"
-			// 	},
-			// 	{
-			// 		res: "A点击_png"
-			// 	},
-			// 	{
-			// 		res: "A_png"
-			// 	},
-			// 	{
-			// 		res: "A点击_png"
-			// 	},
-			// 	{
-			// 		res: "A_png"
-			// 	},				
-			// 	{
-			// 		res: "A点击_png"
-			// 	},
-			// ];
-			// let listGroup = new List;
-			// s.group_play.addChild(listGroup);
-			// listGroup.x = 1300;
-			// listGroup.y = 0;
-			// listGroup.width = 700;
-			// listGroup.height = 600;
-			// listGroup.itemRenderer = ListItemRenderer;
-			// listGroup.gap = 100;
-			// listGroup.line = 2;
-			// listGroup.lineGap = 20;
-			// //listGroup.layout = Style.HORIZONTAL;
-			// listGroup.data = listItemDataArr;
-			// listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
-			// 	console.log(ev.data);
-			// }, s);
+			let listItemDataArr:any[] = [
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},				
+				{
+					res: "A点击_png"
+				},				
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},
+				{
+					res: "A点击_png"
+				},
+				{
+					res: "A_png"
+				},				
+				{
+					res: "A点击_png"
+				},
+			];
+			let listGroup = new List;
+			s.group_play.addChild(listGroup);
+			listGroup.x = 1300;
+			listGroup.y = 0;
+			listGroup.width = 700;
+			listGroup.height = 600;
+			listGroup.itemRenderer = ListItemRenderer;
+			listGroup.gap = 100;
+			listGroup.line = 2;
+			listGroup.lineGap = 20;
+			//listGroup.layout = Style.HORIZONTAL;
+			listGroup.data = listItemDataArr;
+			listGroup.addEventListener(List.ITEM_SELECTED, (ev:egret.Event)=>{
+				console.log(ev.data);
+			}, s);
 
-			// let listGroup2 = new ListGroup(322, 600, Style.VERTICAL, 20);
-			// listGroup2.renderList(ListItemRenderer, listItemDataArr, true);
-			// s.group_play.addChild(listGroup2);
-			// listGroup2.x = 600;
-			// listGroup2.y = 0;
-			// listGroup2.scrollBar.sliderBarSkins(UICreator.createBitmap("slider_bar_v_png"), UICreator.createBitmap("slider_bar_h_png"));
+			let listGroup2 = new ListGroup(322, 600, Style.VERTICAL, 20);
+			listGroup2.renderList(ListItemRenderer, listItemDataArr, true);
+			s.group_play.addChild(listGroup2);
+			listGroup2.x = 600;
+			listGroup2.y = 0;
+			listGroup2.setMouseWheelEnable(true);
+			listGroup2.scrollBar.sliderBarSkins(UICreator.createBitmap("slider_bar_v_png"), UICreator.createBitmap("slider_bar_h_png"));
 
 			// let img = UICreator.createImage(s.group_play, 0, 0, RES.getRes("A点击_png"));
 			// img.anchorOffsetX = 0.5;
@@ -348,6 +349,13 @@ module codeBase {
 					console.log(e);
 				}, s);
 			}
+
+        	let res = ResLoader.getInstance().getRes("res/testNumber.png");
+			UICreator.createImage(s.group_play, 300, 0, res.res);
+
+			console.log(egret.Event.CHANGE);
+
+			console.log(is(checkBox, "codeBase.BasicGroup"));
 
 			// let img = UICreator.createImage(s.group_play, 1000, 200, RES.getRes("A点击_png"));
 			// // img.anchorOffsetX = 0.5;

@@ -1,18 +1,18 @@
 module codeBase {
     export class Image extends BasicGroup {
-        private _bitmap: egret.Bitmap = null;
-        private _texture: egret.Texture = null;
-        private _scale9GridRect: egret.Rectangle = null;//九宫拉伸的尺寸
+        private _bitmap: Bitmap = null;
+        private _texture: Texture = null;
+        private _scale9GridRect: Rectangle = null;//九宫拉伸的尺寸
         private scale9RectData: number[] = [];
-        private _fillMode: string = egret.BitmapFillMode.SCALE;//scale, repeat, clip
+        private _fillMode: string = Style.SCALE;//scale, repeat, clip
         private _smoothing: boolean = false;
         private explicitWidth: number = NaN;
         private explicitHeight: number = NaN;
 
         public constructor() {
             super();
-            this._bitmap = new egret.Bitmap();
-            this._bitmap.fillMode = egret.BitmapFillMode.SCALE;
+            this._bitmap = new Bitmap();
+            this._bitmap.fillMode = Style.SCALE;
             this.addChild(this._bitmap);
         }
 
@@ -22,6 +22,7 @@ module codeBase {
 		 */
         public createChildren(): void {
             super.createChildren();
+            this.touchEnabled = true;
         }
 
         /**
@@ -40,10 +41,10 @@ module codeBase {
         /**
          * 设置贴图.
          */
-        public get texture(): egret.Texture {
+        public get texture(): Texture {
             return this._texture;
         }
-        public set texture(value: egret.Texture) {
+        public set texture(value: Texture) {
             let s = this;
             if (s._texture != value) {
                 s._texture = value;
@@ -69,7 +70,7 @@ module codeBase {
             this.invalidate();
         }
         private scale9Rect() {
-            let rect = new egret.Rectangle();
+            let rect = new Rectangle();
             rect.x = 1;
             rect.y = 1;
             rect.width = 1;
@@ -152,7 +153,7 @@ module codeBase {
                 s._bitmap.scale9Grid = null;
             }
             s._bitmap.fillMode = s._fillMode;
-            if (s._fillMode != egret.BitmapFillMode.SCALE) {
+            if (s._fillMode != Style.SCALE) {
                 s._bitmap.width = s.width;
                 s._bitmap.height = s.height;
             } else {
@@ -164,7 +165,7 @@ module codeBase {
             // s.anchorOffsetY = s.anchorY * s.height;
         }
 
-        public getBitmap(): egret.Bitmap {
+        public getBitmap(): Bitmap {
             return this._bitmap;
         }
 
@@ -176,7 +177,7 @@ module codeBase {
         public getPixel32(x: number, y: number): Array<number> {
             let s = this;
             if (s._bitmap && s._bitmap.texture) {
-                var locolPoint: egret.Point = s.globalToLocal(x, y);
+                var locolPoint: Point = s.globalToLocal(x, y);
                 return s._bitmap.texture.getPixel32(locolPoint.x, locolPoint.y);
             }
             return [];

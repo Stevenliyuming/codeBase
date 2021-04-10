@@ -29,24 +29,24 @@ var codeBase;
             this.skinBar = bar || codeBase.UISkin.sliderBar;
             this.addChild(this.skinBar);
             this.skinBar.touchEnabled = true;
-            this.skinBar.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouch, this);
+            this.skinBar.addEventListener(codeBase.BasicUIEvent.TOUCH_BEGIN, this.onTouch, this);
             this.layout();
             this.value = 0;
         };
         Slider.prototype.onTouch = function (e) {
             switch (e.type) {
-                case egret.TouchEvent.TOUCH_BEGIN:
-                    this.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
-                    this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
+                case codeBase.BasicUIEvent.TOUCH_BEGIN:
+                    this.stage.addEventListener(codeBase.BasicUIEvent.TOUCH_END, this.onTouch, this);
+                    this.stage.addEventListener(codeBase.BasicUIEvent.TOUCH_MOVE, this.onTouch, this);
                     this.dispEvent(codeBase.BasicUIEvent.START);
                     break;
-                case egret.TouchEvent.TOUCH_MOVE:
+                case codeBase.BasicUIEvent.TOUCH_MOVE:
                     this.moveDo(e.stageX, e.stageY);
                     this.dispEvent(codeBase.BasicUIEvent.MOVE);
                     break;
-                case egret.TouchEvent.TOUCH_END:
-                    this.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouch, this);
-                    this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouch, this);
+                case codeBase.BasicUIEvent.TOUCH_END:
+                    this.stage.removeEventListener(codeBase.BasicUIEvent.TOUCH_END, this.onTouch, this);
+                    this.stage.removeEventListener(codeBase.BasicUIEvent.TOUCH_MOVE, this.onTouch, this);
                     this.dispEvent(codeBase.BasicUIEvent.OVER);
                     break;
             }

@@ -1,8 +1,8 @@
 module codeBase {
 	export class CheckBox extends Button {
-		protected static normalTexture: egret.Texture;
-		protected static checkTexture: egret.Texture;
-		protected static disableTexture: egret.Texture;
+		private static normalTexture: Texture;
+		private static checkTexture: Texture;
+		private static disableTexture: Texture;
 		protected touchId: number = -1;
 		public constructor() {
 			super();
@@ -15,7 +15,7 @@ module codeBase {
 			s.touchEnabled = true;//事件接收
 			s.touchChildren = false;
 			//box显示
-			s._imgDisplay = new egret.Bitmap;
+			s._imgDisplay = new Image;
 			s.addChild(s._imgDisplay);
 			// s._imgDisplay.width = s.width;
 			// s._imgDisplay.height = s.height;
@@ -34,11 +34,11 @@ module codeBase {
 			s._label.showBg = false;
 			s.addChild(s._label);
 
-			s.addEventListener(egret.TouchEvent.TOUCH_BEGIN, s.onTouchEvent, s, true);
-			//this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchEvent, this);
-			s.addEventListener(egret.TouchEvent.TOUCH_END, s.onTouchEvent, s, true);
-			s.addEventListener(egret.TouchEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s, true);
-			s.addEventListener(egret.TouchEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s, true);
+			s.addEventListener(BasicUIEvent.TOUCH_BEGIN, s.onTouchEvent, s, true);
+			//s.addEventListener(BasicUIEvent.TOUCH_MOVE, s.onTouchEvent, s);
+			s.addEventListener(BasicUIEvent.TOUCH_END, s.onTouchEvent, s, true);
+			s.addEventListener(BasicUIEvent.TOUCH_RELEASE_OUTSIDE, s.onTouchReleaseOutside, s, true);
+			s.addEventListener(BasicUIEvent.TOUCH_CANCEL, s.onTouchReleaseOutside, s, true);
 		}
 
 		public initData() {
@@ -47,23 +47,23 @@ module codeBase {
 			//初始化默认的皮肤
 			if (!CheckBox.normalTexture) {
 				let normalSpr: DisplayObject = UISkin.checkBoxOff;
-				let normalRenderTex = new egret.RenderTexture;
+				let normalRenderTex = new RenderTexture;
 				normalRenderTex.drawToTexture(normalSpr);
-				CheckBox.normalTexture = <egret.Texture>normalRenderTex;
+				CheckBox.normalTexture = <Texture>normalRenderTex;
 
 				let checkSpr: DisplayObject = UISkin.checkBoxOn;
-				let checkRenderTex = new egret.RenderTexture;
+				let checkRenderTex = new RenderTexture;
 				checkRenderTex.drawToTexture(checkSpr);
-				CheckBox.checkTexture = <egret.Texture>checkRenderTex;
+				CheckBox.checkTexture = <Texture>checkRenderTex;
 
-				let disableSpr: DisplayObject = UISkin.checkBoxDisabel;
-				let disableRenderTex = new egret.RenderTexture;
+				let disableSpr: DisplayObject = UISkin.checkBoxDisable;
+				let disableRenderTex = new RenderTexture;
 				disableRenderTex.drawToTexture(disableSpr);
-				CheckBox.disableTexture = <egret.Texture>disableRenderTex;
+				CheckBox.disableTexture = <Texture>disableRenderTex;
 			}
 		}
 
-		public onTouchEvent(event: egret.TouchEvent): void {
+		public onTouchEvent(event: TouchEvent): void {
 			let s = this;
 			if (!s.enabled || s.currentState == Button.STATUS_DISABLE) {
 				event.stopImmediatePropagation();
@@ -76,11 +76,11 @@ module codeBase {
 					event.stopImmediatePropagation();
 					return;
 				}
-				if (event.type == egret.TouchEvent.TOUCH_BEGIN) {
+				if (event.type == BasicUIEvent.TOUCH_BEGIN) {
 					s.alpha = 0.8;
 					s.touchId = event.touchPointID;
 				}
-				else if (event.type == egret.TouchEvent.TOUCH_END) {
+				else if (event.type == BasicUIEvent.TOUCH_END) {
 					if (s.touchId == -1) return;
 					s.touchId = -1;
 					s.alpha = 1;
@@ -96,7 +96,7 @@ module codeBase {
          * 在外释放
          * @param event
          */
-		public onTouchReleaseOutside(event: egret.TouchEvent): void {
+		public onTouchReleaseOutside(event: TouchEvent): void {
 			let s = this;
 			s.alpha = 1;
 			s.touchId = -1;
@@ -106,11 +106,7 @@ module codeBase {
 			let s = this;
 			s._selected = value;
 			s._currentState = (s._selected ? Button.STATUS_CHECKED : Button.STATUS_NORMAL);
-			s.dispatchEventWith(BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState });
-			//if (this._data)console.log("button data=" + this._data.id + ", selected=" + this._selected);
-			// var myevent: MyEvent = MyEvent.getEvent(BasicUIEvent.CHANGE);
-			// myevent.addItem("caller", s);
-			// myevent.send();
+			s.dispatchEventWith(BasicUIEvent.CHANGE, false, { caller: s, status: s.currentState });//发送外部事件监听
 			if (s.clickFun && s.clickFunObj) {
 				s.clickFun.call(s.clickFunObj, event);
 			}
@@ -172,7 +168,7 @@ module codeBase {
 		 * 设置按钮可用状态皮肤
 		 * <p>[STATE_NORMAL, STATE_CHECK, STATE_DISABLE]</p>
 		 */
-		public setSkins(skins: egret.Texture[]) {
+		public setSkins(skins: Texture[]) {
 			let s = this;
 			if (!skins || skins.length < 2) {
 				console.warn("CHECKBOX皮肤数量不能小于2");

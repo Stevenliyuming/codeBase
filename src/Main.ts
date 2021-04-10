@@ -41,7 +41,7 @@ class  Main extends egret.DisplayObjectContainer {
 
     private loadRes() {
         this.loadResource()
-        this.createGameScene();
+        //this.createGameScene();
 
         // codeBase.ResManager.loadConfig("resource/default.res.json", "resource/", ()=>{
         //     codeBase.ResManager.loadGroups(["preload", "res"], ()=>{
@@ -77,7 +77,7 @@ class  Main extends egret.DisplayObjectContainer {
             console.log(data);
             //codeBase.EgretProto.inject();
 
-            //this.createGameScene();
+            this.createGameScene();
         }, this, "get", "arraybuffer");
     }
 

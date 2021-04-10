@@ -15,10 +15,10 @@ module codeBase {
 		/**
 		 * 默认背景的显示对象
 		 */
-		public _bgImage: egret.Bitmap = null;
-		private _bgTexture: egret.Texture = null;//背景材质
+		public _bgImage: Image = null;
+		private _bgTexture: Texture = null;//背景材质
 		//默认背景的显示对象九宫拉伸的设定
-		private _scale9GridRect: egret.Rectangle = null;//九宫拉伸的尺寸
+		private _scale9GridRect: Rectangle = null;//九宫拉伸的尺寸
 		private scale9RectData:number[] = [];
 		private _fillMode: string = "scale";//scale, repeat.
 		/**
@@ -112,7 +112,7 @@ module codeBase {
 			super.draw();
 			//console.log("Group draw this._clip=" + this._clip + ", _showBg=" + this._showBg);
 			if (s._clip) {//剪裁
-				var rect: egret.Rectangle = ObjectPool.getByClass(egret.Rectangle);
+				var rect: Rectangle = ObjectPool.getByClass(Rectangle);
 				if (s.scrollRect) {
 					ObjectPool.recycleClass(s.scrollRect);
 					s.scrollRect = null;
@@ -155,11 +155,11 @@ module codeBase {
 			let s = this;
 			if (s.width > 0 && s.height > 0) {
 				if (s._bgImage == null) {
-					s._bgImage = new egret.Bitmap();
+					s._bgImage = new Image;
 				}
 				if (s._bgTexture == null) {//生成默认材质
-					s._bgImage.fillMode = egret.BitmapFillMode.SCALE;//拉伸放大方式铺满
-					var shape: egret.Shape = new egret.Shape();
+					s._bgImage.fillMode = Style.SCALE;//拉伸放大方式铺满
+					var shape: Shape = new Shape();
 					shape.width = s.width;
 					shape.height = s.height;
 					shape.graphics.beginFill(s._bgColor, 1);
@@ -169,7 +169,7 @@ module codeBase {
 						shape.graphics.lineStyle(1, 0x00ff00, 1);
 						shape.graphics.drawRect(0, 0, s.width, s.height);
 					}
-					var renderTexture: egret.RenderTexture = new egret.RenderTexture();
+					var renderTexture: RenderTexture = new RenderTexture();
 					renderTexture.drawToTexture(shape);
 					s._bgTexture = renderTexture;
 					s._bgImage.texture = s._bgTexture;
@@ -181,12 +181,13 @@ module codeBase {
 			if (s._bgImage && (s._showBg || (s._touchNonePixel && s.touchEnabled))) {
 				if (!s._bgImage.parent) s.addChildAt(s._bgImage, 0);
 				if (s.scale9RectData.length == 4) {
-					if(s._scale9GridRect == null) s._scale9GridRect = s.scale9Rect();
-					s._scale9GridRect.x = s.scale9RectData[0];
-					s._scale9GridRect.y = s.scale9RectData[2];
-					s._scale9GridRect.width = s._bgImage.texture.$getTextureWidth() - (s.scale9RectData[0] + s.scale9RectData[1]);
-					s._scale9GridRect.height = s._bgImage.texture.$getTextureHeight() - (s.scale9RectData[2] + s.scale9RectData[3]);
-					s._bgImage.scale9Grid = s._scale9GridRect;
+					// if(s._scale9GridRect == null) s._scale9GridRect = s.scale9Rect();
+					// s._scale9GridRect.x = s.scale9RectData[0];
+					// s._scale9GridRect.y = s.scale9RectData[2];
+					// s._scale9GridRect.width = s._bgImage.texture.$getTextureWidth() - (s.scale9RectData[0] + s.scale9RectData[1]);
+					// s._scale9GridRect.height = s._bgImage.texture.$getTextureHeight() - (s.scale9RectData[2] + s.scale9RectData[3]);
+					// s._bgImage.scale9Grid = s._scale9GridRect;
+					s._bgImage.scale9Grid(s.scale9RectData);
 				} else {
 					s._bgImage.scale9Grid = null;
 				}
@@ -214,9 +215,9 @@ module codeBase {
 
 		/**
 		 * 获取背景图显示对象
-		 * @returns {egret.Bitmap}
+		 * @returns {Image}
 		 */
-		public getDefaultSkin(): egret.Bitmap {
+		public getDefaultSkin(): Image {
 			return this._bgImage;
 		}
 
@@ -225,13 +226,13 @@ module codeBase {
 		 * 会取代自动绘制的背景图
 		 * @param value
 		 */
-		public set bgTexture(value: egret.Texture) {
+		public set bgTexture(value: Texture) {
 			if (this._bgTexture != value) {
 				this._bgTexture = value;
 				this.invalidate();
 			}
 		}
-		public get bgTexture(): egret.Texture {
+		public get bgTexture(): Texture {
 			return this._bgTexture;
 		}
 
@@ -263,7 +264,7 @@ module codeBase {
 		}
 
 		private scale9Rect() {
-			let rect = new egret.Rectangle();
+			let rect = new Rectangle();
 			rect.x = 1;
 			rect.y = 1;
 			rect.width = 1;

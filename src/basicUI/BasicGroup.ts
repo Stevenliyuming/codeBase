@@ -1,5 +1,5 @@
 module codeBase {
-	export class BasicGroup extends egret.DisplayObjectContainer {
+	export class BasicGroup extends Sprite {
 		//是否已加入过显示列表中,可用来判断各组件是否已经具备显示赋值的作用
 		private _isAddedToStage: boolean = false;
 		private _top: number = NaN;
@@ -19,12 +19,12 @@ module codeBase {
 		//可携带的数据
 		public _data: any = null;
 		private dataEvent: Object = new Object;
-		private elements: egret.DisplayObject[] = [];
+		private elements: DisplayObject[] = [];
 
 		public constructor() {
 			super();
 			let s = this;
-			s.addEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
+			s.addEventListener(BasicUIEvent.ADDED_TO_STAGE, s.onAddToStage, s);
 			//console.log("this._drawDelay=" + this._drawDelay)
 		}
 
@@ -34,7 +34,7 @@ module codeBase {
 		public onAddToStage(event: Event): void {
 			let s = this;
 			s._isAddedToStage = true;
-			s.removeEventListener(egret.Event.ADDED_TO_STAGE, s.onAddToStage, s);
+			s.removeEventListener(BasicUIEvent.ADDED_TO_STAGE, s.onAddToStage, s);
 			s.createChildren();
 			s.initData();
 			s.onInvalidatePosition();
@@ -199,7 +199,7 @@ module codeBase {
 			if (!s._hasInvalidatePosition) {
 				//console.log("onInvalidatePosition 111 name=" + this.name);
 				s._hasInvalidatePosition = true;
-				s.addEventListener(egret.Event.ENTER_FRAME, s.resetPosition, s);
+				s.addEventListener(BasicUIEvent.ENTER_FRAME, s.resetPosition, s);
 				let child: any;
 				for (var i: number = 0; i < s.numChildren; i++) {
 					child = s.getChildAt(i);
@@ -216,7 +216,7 @@ module codeBase {
 		public resetPosition(): void {
 			let s = this;
 			//console.log("resetPosition name=" + s.name);
-			var pr: egret.DisplayObjectContainer = s.parent;
+			var pr: DisplayObjectContainer = s.parent;
 			if (pr != null) {
 				var parentWidth: number = pr.width;
 				var parentHeight: number = pr.height;
@@ -299,18 +299,18 @@ module codeBase {
 					if ((widthChanged || heightChanged) && child instanceof BasicGroup) {
 						child.onInvalidatePosition();
 					} else {
-						if (egret.is(child, "eui.UIComponent")) {
+						if (is(child, "eui.UIComponent")) {
 							BasicGroup.resetChildPosition(child);
 						}
 					}
 				}
 			}
-			s.removeEventListener(egret.Event.ENTER_FRAME, s.resetPosition, s);
+			s.removeEventListener(BasicUIEvent.ENTER_FRAME, s.resetPosition, s);
 			s._hasInvalidatePosition = false;
 		}
 
-		private static resetChildPosition(child: egret.DisplayObjectContainer) {
-			var pr: egret.DisplayObjectContainer = child.parent;
+		private static resetChildPosition(child: DisplayObjectContainer) {
+			var pr: DisplayObjectContainer = child.parent;
 			//确保是白鹭具有布局约束的组件
 			if (pr != null && child['top'] !== undefined && child['bottom'] !== undefined && child['left'] !== undefined && child['right'] !== undefined && child['horizontalCenter'] !== undefined && child['verticalCenter'] !== undefined) {
 				var parentWidth: number = pr.width;
@@ -385,31 +385,13 @@ module codeBase {
 			}
 		}
 
-		/**
-		 * 添加实现了eui.UIComponent约束布局的元素
-		 * 例如：eui.Image
-		 */
-		public addElement(child: egret.DisplayObject) {
-			// let s = this;
-			// if (s.elements.indexOf(child) >= 0 || child.parent === s) {
-			// 	console.warn("子元素不能重复添加到同一个父级节点中");
-			// 	return;
-			// }
-			// if (egret.is(child, "eui.UIComponent")) {
-			// 	s.elements.push(child);
-			// } else {
-			// 	s.addChild(child);
-			// }
-			// s.onInvalidatePosition();
-		}
-
 		public addChild(child: DisplayObject): DisplayObject {
 			let s = this;
 			if (child.parent === s) {
 				console.warn("子元素不能重复添加到同一个父级节点中");
 				return;
 			}
-			if (egret.is(child, "eui.UIComponent")) {
+			if (is(child, "eui.UIComponent")) {
 				if (s.elements.indexOf(child) >= 0) {
 					console.warn("子元素不能重复添加到同一个父级节点中");
 					return;
@@ -420,6 +402,18 @@ module codeBase {
 			}
 			//super.addChild(child);
 			s.onInvalidatePosition();
+		}
+
+		public addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number):any {
+			return super.$addListener(type, listener, thisObject, useCapture, priority);
+		}
+
+		public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {
+			return super.removeEventListener(type, listener, thisObject, useCapture);
+		}
+
+		public dispatchEventWith(type: string, bubbles?: boolean, data?: any, cancelable?: boolean): boolean {
+			return super.dispatchEventWith(type, bubbles, data, cancelable);
 		}
 
 		/**
@@ -466,11 +460,11 @@ module codeBase {
 
 		/**
 		 * 返回全局x,y值
-		 * @returns {egret.Point}
+		 * @returns {Point}
 		 */
-		public getGlobalXY(): egret.Point {
+		public getGlobalXY(): Point {
 			let s = this;
-			let point: egret.Point = new egret.Point(s.anchorOffsetX, s.anchorOffsetY);
+			let point: Point = new Point(s.anchorOffsetX, s.anchorOffsetY);
 			this.localToGlobal(point.x, point.y, point);
 			return point;
 		}
@@ -499,7 +493,7 @@ module codeBase {
 			let s = this;
 			if (!s._hasInvalidate && !s._drawDelay) {
 				//console.log("add invalidate draw")
-				s.addEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+				s.addEventListener(BasicUIEvent.ENTER_FRAME, s.onInvalidate, s);
 				s._hasInvalidate = true;
 			}
 		}
@@ -508,10 +502,10 @@ module codeBase {
 		 * 重绘
 		 * 外部可以调用此接口立即执行重绘以达到一些数据的计算
 		 */
-		public onInvalidate(event: egret.Event): void {
+		public onInvalidate(event: Event): void {
 			let s = this;
 			s.draw();
-			s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+			s.removeEventListener(BasicUIEvent.ENTER_FRAME, s.onInvalidate, s);
 			s._hasInvalidate = false;
 		}
 
@@ -528,7 +522,7 @@ module codeBase {
 			let s = this;
 			s._drawDelay = delay;
 			if (s._drawDelay) {
-				s.removeEventListener(egret.Event.ENTER_FRAME, s.onInvalidate, s);
+				s.removeEventListener(BasicUIEvent.ENTER_FRAME, s.onInvalidate, s);
 				s._hasInvalidate = false;
 			} else {
 				s.invalidate();

@@ -5,8 +5,8 @@ module codeBase {
     export class LabelImage extends HGroup {
         private _text: string = "";//文本内容
         private _textureDict: Object = {};//切割好的材质,对应的材质映射表
-        private _texture: egret.Texture = null;
-        private _shape: egret.Shape = null;
+        private _texture:Texture = null;
+        private _shape: Shape = null;
         /**
          * 是否已初始化材质数据
          */
@@ -100,14 +100,14 @@ module codeBase {
             s.onPlaySound();
         }
 
-        public get texture(): egret.Texture {
+        public get texture(): Texture {
             return this._texture;
         }
         /**
          * 设置材质
          * @param value
          */
-        public set texture(value: egret.Texture) {
+        public set texture(value: Texture) {
             if (this._texture != value) {
                 this._texture = value;
                 this._initDisplayData = false;
@@ -204,20 +204,20 @@ module codeBase {
                 s._bgImage.parent.removeChild(s._bgImage);
             }
             //回收旧资源
-            var bitmap: egret.Bitmap = null;
+            var bitmap: Bitmap = null;
             for (var i = s.numChildren - 1; i >= 0; --i) {
-                bitmap = <egret.Bitmap>s.getChildAt(i);
+                bitmap = <Bitmap>s.getChildAt(i);
                 bitmap.texture = null;
                 bitmap.parent.removeChild(bitmap);
                 ObjectPool.recycleClass(bitmap, "labelimg");
             }
             //根据字符显示材质内容
-            var texture: egret.Texture = null;
+            var texture: Texture = null;
             if (StringUtil.isUsage(s._text)) {
                 for (var i = 0; i < s._text.length; ++i) {
                     texture = s._textureDict[s._text.charAt(i)];
                     if (texture) {
-                        bitmap = ObjectPool.getByClass(egret.Bitmap, "labelimg");
+                        bitmap = ObjectPool.getByClass(Bitmap, "labelimg");
                         s.addChild(bitmap);
                         bitmap.texture = texture;
                         bitmap.width = texture.textureWidth;
@@ -337,7 +337,7 @@ module codeBase {
         public onInvalidatePosition(): void {//重新计算布局位置
             if (!this._hasInvalidatePosition) {
                 this._hasInvalidatePosition = true;
-                this.addEventListener(egret.Event.ENTER_FRAME, this.resetPosition, this);
+                this.addEventListener(BasicUIEvent.ENTER_FRAME, this.resetPosition, this);
             }
         }
 

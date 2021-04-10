@@ -18,12 +18,12 @@ var codeBase;
             _this._texture = null;
             _this._scale9GridRect = null; //九宫拉伸的尺寸
             _this.scale9RectData = [];
-            _this._fillMode = egret.BitmapFillMode.SCALE; //scale, repeat, clip
+            _this._fillMode = codeBase.Style.SCALE; //scale, repeat, clip
             _this._smoothing = false;
             _this.explicitWidth = NaN;
             _this.explicitHeight = NaN;
-            _this._bitmap = new egret.Bitmap();
-            _this._bitmap.fillMode = egret.BitmapFillMode.SCALE;
+            _this._bitmap = new codeBase.Bitmap();
+            _this._bitmap.fillMode = codeBase.Style.SCALE;
             _this.addChild(_this._bitmap);
             return _this;
         }
@@ -33,6 +33,7 @@ var codeBase;
          */
         Image.prototype.createChildren = function () {
             _super.prototype.createChildren.call(this);
+            this.touchEnabled = true;
         };
         Object.defineProperty(Image.prototype, "fillMode", {
             /**
@@ -87,7 +88,7 @@ var codeBase;
             this.invalidate();
         };
         Image.prototype.scale9Rect = function () {
-            var rect = new egret.Rectangle();
+            var rect = new codeBase.Rectangle();
             rect.x = 1;
             rect.y = 1;
             rect.width = 1;
@@ -180,7 +181,7 @@ var codeBase;
                 s._bitmap.scale9Grid = null;
             }
             s._bitmap.fillMode = s._fillMode;
-            if (s._fillMode != egret.BitmapFillMode.SCALE) {
+            if (s._fillMode != codeBase.Style.SCALE) {
                 s._bitmap.width = s.width;
                 s._bitmap.height = s.height;
             }

@@ -46,6 +46,14 @@ var codeBase;
         BasicUIEvent.PLAY = "play"; //播放
         BasicUIEvent.OPEN = "open"; //开启
         BasicUIEvent.CLOSE = "close"; //关闭
+        //egret event
+        BasicUIEvent.ADDED_TO_STAGE = egret.Event.ADDED_TO_STAGE;
+        BasicUIEvent.ENTER_FRAME = egret.Event.ENTER_FRAME;
+        BasicUIEvent.TOUCH_BEGIN = egret.TouchEvent.TOUCH_BEGIN;
+        BasicUIEvent.TOUCH_MOVE = egret.TouchEvent.TOUCH_MOVE;
+        BasicUIEvent.TOUCH_END = egret.TouchEvent.TOUCH_END;
+        BasicUIEvent.TOUCH_RELEASE_OUTSIDE = egret.TouchEvent.TOUCH_RELEASE_OUTSIDE;
+        BasicUIEvent.TOUCH_CANCEL = egret.TouchEvent.TOUCH_CANCEL;
         return BasicUIEvent;
     }(egret.EventDispatcher));
     codeBase.BasicUIEvent = BasicUIEvent;
